@@ -12,8 +12,7 @@ git clone https://github.com/wenzhixin/bootstrap-table.git
 git checkout -b 1.18.2 
 
 
-3) bootstrap-validator
-git clone https://github.com/1000hz/bootstrap-validator.git
+3) bootstrap-validator scaricato lo zip
 
 
 ## ancora da mettere in locale jquery e bootstrap!!
