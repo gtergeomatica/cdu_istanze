@@ -42,18 +42,19 @@ require('navbar.php');
                     </div>
                 </div>
             </div>
-        </header>
+</header>
 
 
 
 
-        <section class="page-section bg-primary" id="about">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-8 text-center">
+<section class="page-section bg-primary" id="about">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
 
-<img src="./assets/img/logo-postgis.png" style="width:25%;" alt="">
-<hr class="light">
+            <!--img src="./assets/img/logo-postgis.png" style="width:25%;" alt=""-->
+            <i class="fa fa-3x fa-user wow bounceIn " data-wow-delay=".1s" style="color:white;"></i>
+            <hr class="light">
 
 
 <?php
@@ -63,81 +64,58 @@ if(isset($_POST['Submit'])){
 
     if(empty($_POST['username']))
     {
-        $this->HandleError("UserName is empty!");
+        $this->HandleError("Inserire lo Username!");
         return false;
     }
      
     if(empty($_POST['password']))
     {
-        $this->HandleError("Password is empty!");
+        $this->HandleError("Inserire la Password!");
         return false;
     }
      
     $username = pg_escape_string($_POST['username']);
     $password = pg_escape_string($_POST['password']);
-	$dbname = pg_escape_string($_POST['dbname']);
+	//$dbname = pg_escape_string($_POST['dbname']);
     $_SESSION['user']=$username;
     $_SESSION['pwd']=$password;
 
+    /* echo $_SESSION['pwd'];
+    echo "<br>" .$password; */
 
-	$conn = @pg_connect('host=localhost port=5432 dbname='.$dbname.' user='.$username.' password='.$password.'');
+
+	//$conn = @pg_connect('host=localhost port=5432 dbname='.$dbname.' user='.$username.' password='.$password.'');
 	$check=0;
-	if(!$conn) {
+	//if(!$conn) {
 		// non c'è postGis MA ESISTE UN UTENTE
-		$query = "SELECT * FROM \"gishosting_admin\".\"users\" where \"nome\"='".$_SESSION['user']."' AND \"pwd\"='".$password."' ;";
-		$result = pg_query($conn2, $query);
-		while($r = pg_fetch_assoc($result)) {
-    		$nome=$r["nome"];
-			$check=1;
-		}
+    $query = "SELECT * FROM utenti.utenti where usr_login=$1";
+    $result = pg_prepare($conn_isernia, "myquery0", $query);
+    $result = pg_execute($conn_isernia, "myquery0", array($_SESSION['user']));
+    while($r = pg_fetch_assoc($result)) {
+        if (password_verify($_SESSION['pwd'], $r["usr_password"])){
+            $nome=$r["usr_login"];
+            $check=1;
+        }
+        else{
+            die('<h1>Caro <i>'.$username.'</i>,<br> password errata.</h1> <hr class="light"><a href="dashboard.php" class=\'btn btn-light btn-xl\'>Riprova</a></div></div></div></section>');
+        }
+    }
 
-		if ($check==1){
-			echo "<h1>Caro <i>". $_SESSION['user']."</i>, <br> il tuo piano non prevede l'utilizzo del DataBase PostGIS</h1>";
-			echo "<hr class=\"light\"><a href=\"dashboard.php\" class='btn btn-default'>New check</a></div></div></div></section>";
-			include("dati_utente.php");
-		} else {
-    		//die('<h1>Dear <i>'.$username.'</i>,<br> your connection details are wrong or you do not have a PostGIS DB in your GisHosting page.</h1> <hr class="light"><a href="dashboard.php" class=\'btn btn-default\'>New check</a></div></div></div></section>');
-			die('<h1>Caro <i>'.$username.'</i>,<br> utente o password errati.</h1> <hr class="light"><a href="dashboard.php" class=\'btn btn-default\'>New check</a></div></div></div></section>');
-		}
-	} else {
-
-
-		$query = " SELECT pg_size_pretty(pg_database_size('".$dbname."'));";
-
-		$result = pg_query($conn, $query);
+    if ($check==1){
+        include("dati_utente.php");
+    } else {
+        //die('<h1>Dear <i>'.$username.'</i>,<br> your connection details are wrong or you do not have a PostGIS DB in your GisHosting page.</h1> <hr class="light"><a href="dashboard.php" class=\'btn btn-default\'>New check</a></div></div></div></section>');
+        die('<h1>l\'utente <i>'.$username.'</i> non esiste.</h1> <hr class="light"><a href="dashboard.php" class=\'btn btn-light btn-xl\'>Riprova</a></div></div></div></section>');
+    }
 
 
-		while($r = pg_fetch_assoc($result)) {
-					echo "<h1>Dear <i>". $_SESSION['user']."</i>, <br> you are using <b>". $r["pg_size_pretty"]. "</b> of your PostGIS geoDB</h1>";
-					echo "<hr class=\"light\"><a href=\"dashboard.php\" class='btn btn-default'>New check</a></div></div></div></section>";
-			}
-	
-
-	pg_close($conn);
-
-	include("dati_utente.php");
-	
-
-	}	
-
-		
-
-    		//$rows[] = $rows[]. "<a href='puntimodifica.php?id=" . $r["NAME"] . "'>edit <img src='../../famfamfam_silk_icons_v013/icons/database_edit.png' width='16' height='16' alt='' /> </a>";
-	//}
-
-
-pg_close($conn2);
+pg_close($conn_isernia);
 
 ?>
 
 
 
 <?php
-
-
-
-			
-
 } else {
 ?>
 
@@ -154,24 +132,9 @@ pg_close($conn2);
  </div>
  
 <div class="form-group">
-<label for='password' >Nome DB*:</label>
-<input type='text' class="form-control" name='dbname' id='dbname' maxlength="50" required=""/>
- </div>
-<!--input type='submit' name='Submit' value='Submit' /-->
-
-<div class="form-group">
-<button type="submit" name='Submit' class="btn btn-default">Submit</button>
+<button type="submit" name='Submit' class="btn btn-light btn-xl">Invia</button>
 </div>
 </form>
-
-
-
-
-</div>
-</div>
-</div>
-</section>
-
 
 
 <?php
@@ -179,10 +142,10 @@ pg_close($conn2);
 }
 ?>
 
-
-
-
-
+</div>
+</div>
+</div>
+</section>
 
 <?php
 require('footer.php');

@@ -98,6 +98,15 @@ $subtitle2=str_replace("'","\'",str_replace(' ','_',$subtitle));
     left: 100%;
     margin-top: -1px;
 }
+.has-error label{
+    color: yellow;
+    border-color: yellow;
+}
+.has-error input,
+.has-error textarea {
+    color: yellow;
+    background-color: yellow;
+}
 </style>
 
 
