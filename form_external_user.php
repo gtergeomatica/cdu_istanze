@@ -147,7 +147,7 @@ if ($check_user==1){
 
 	//$result = pg_query($conn2, $query);
 
-	pg_close($conn2);
+	//pg_close($conn2);
 
 
 	// creo l'utente lizmap

@@ -19,6 +19,7 @@ $subtitle2=str_replace("'","\'",str_replace(' ','_',$subtitle));
 
 
 	<script src="./bootstrap-table/dist/bootstrap-table.js" ></script>
+	<script src="./bootstrap-table/dist/extensions/auto-refresh/bootstrap-table-auto-refresh.js"></script>
 	<script src="./bootstrap-table/dist/extensions/export/bootstrap-table-export.js" ></script> 
 	<script src="./bootstrap-table/dist/extensions/print/bootstrap-table-print.min.js" ></script> 
 	<script src="./bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.js" ></script> 

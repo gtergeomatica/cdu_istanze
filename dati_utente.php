@@ -25,14 +25,14 @@
 
 <hr class="light">
 <div>
-	<a class="btn btn-light btn-xl" href="https://www.gter.it/">Richiedi CDU</a>
+	<a class="btn btn-light btn-xl" href="form_istanza_cdu.php?u=<?php echo $r["id"]; ?>&user=<?php echo $r["usr_login"]; ?>">Richiedi CDU</a>
 </div>
 <hr class="light">
 
 
 </div>
 <div>
-    <h2> <i class="fas fa-user-clock" style="color:white;"></i> Istanze CDU di <?php echo $r["usr_login"]; ?></h2>
+    <h2> <i class="fas fa-file" style="color:white;"></i> Istanze CDU di <?php echo $r["usr_login"]; ?></h2>
 	<!--div id="toolbar2">
             <select class="form-control">
                 <option value="">Esporta i dati visualizzati</option>
