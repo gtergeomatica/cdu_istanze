@@ -9,7 +9,7 @@ if(!$conn_isernia) {
     die('Connessione fallita !<br />');
 } else {
 
-	$query1 = "SELECT data, foglio, mappale from istanze.istanze_temp where id_utente=$1 and data > now() - interval '60 minutes' ";
+	$query1 = "SELECT data, id_utente, foglio, mappale from istanze.istanze_temp where id_utente=$1 and data > now() - interval '60 minutes' ";
     $result1 = pg_prepare($conn_isernia, "myquery1", $query1);
     $result1 = pg_execute($conn_isernia, "myquery1", array($user_idn));
 	//echo $query."<br>";
@@ -41,10 +41,11 @@ if(!$conn_isernia) {
 		array_push($rows,$rl);
 	}
 	 */
-	pg_close($conn_isernia);
+	//pg_close($conn_isernia);
 	if (empty($rows)==FALSE){
 		//print $rows;
 		print json_encode($rows);
+		
 	} else {
 		echo $query1;
 		echo "[{\"NOTE\":'Nessun dato presente'}]";

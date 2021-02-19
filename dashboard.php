@@ -50,7 +50,7 @@ require('navbar.php');
 <section class="page-section bg-primary" id="about">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-lg-8 text-center">
+            <div class="text-center">
 
             <!--img src="./assets/img/logo-postgis.png" style="width:25%;" alt=""-->
             <i class="fa fa-3x fa-user wow bounceIn " data-wow-delay=".1s" style="color:white;"></i>

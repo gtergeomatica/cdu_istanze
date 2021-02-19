@@ -32,7 +32,7 @@
 
 </div>
 <div>
-    <h2> <i class="fas fa-file" style="color:white;"></i> Istanze CDU di <?php echo $r["usr_login"]; ?></h2>
+    <h2> <i class="fas fa-copy" style="color:white;"></i> Istanze CDU di <?php echo $r["usr_login"]; ?></h2>
 	<!--div id="toolbar2">
             <select class="form-control">
                 <option value="">Esporta i dati visualizzati</option>
@@ -42,21 +42,21 @@
         </div-->
 	<div style="overflow-x:auto;">
     <table style="background-color:white;" id="log" class="table-hover" data-toggle="table" data-filter-control="true" 
-  data-show-search-clear-button="true" data-page-size="50" 
+  data-show-search-clear-button="true" data-page-size="25" 
   data-url="griglia_richieste.php?u=<?php echo $r["id"]; ?>" 
 	data-show-export="false" data-search="true" data-click-to-select="true" data-pagination="true" 
   data-sidePagination="true" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-toolbar="#toolbar2">
 <thead>
 
  <tr>
-            <th data-field="state" data-checkbox="true"></th>
-			<th data-field="id_istanza" data-sortable="true" data-filter-control="select" data-visible="true">Codice Istanza</th>
+            <!--th data-field="state" data-checkbox="true"></th-->
+			<th data-field="id" data-sortable="false" data-formatter="nameFormatterRemove" data-visible="true">Rimuovi</th>
+			<th data-field="id_istanza" data-sortable="false" data-formatter="nameFormatterSend" data-visible="true">Invia</th>
             <th data-field="data_istanza" data-sortable="true" data-filter-control="select" data-visible="true">Data Istanza</th>
             <th data-field="terreni" data-sortable="true" data-filter-control="select" data-visible="true">Terreni</th>
-            <!--th data-field="mappale" data-sortable="true" data-filter-control="input" data-visible="true">Mappale</th>
-            <th data-field="log_repository" data-sortable="true" data-filter-control="select" data-visible="true">Repository</th>
-            <th data-field="log_project" data-sortable="true" data-filter-control="select" data-visible="true">Progetti</th-->
-
+            <th data-field="file_s" data-sortable="false" data-formatter="nameFormatterFile1" data-visible="true">Segreteria</th>
+            <th data-field="file_bi" data-sortable="false" data-formatter="nameFormatterFile2" data-visible="true">Bollo Istanza</th>
+            <th data-field="file_bc" data-sortable="false" data-formatter="nameFormatterFile3" data-visible="true">Bollo CDU</th>
         </tr>
 </thead>
 
@@ -65,7 +65,37 @@
 </div>	
 
 
-</div>	
+</div>
+<script>
+function nameFormatterSend(value, row) {
+	//var test_id= row.id;
+	return' <a type="button" class="btn btn-info" href="invia_istanza.php?idi='+row.id_istanza+'"><i class="fas fa-play-circle"></i></a>';
+}
+</script>
+<script>
+function nameFormatterRemove(value, row) {
+	//var test_id= row.id;
+	return' <a type="button" class="btn btn-info" href="remove_ist.php?idu='+row.id_istanza+'"><i class="fas fa-trash-alt"></i></a>';
+}
+</script>
+<script>
+function nameFormatterFile1(value, row) {
+	//var test_id= row.id;
+	return' <a type="button" class="btn btn-info" href="remove_ist.php?idu='+row.id_istanza+'"><i class="fas fa-file-upload"></i></a>';
+}
+</script>
+<script>
+function nameFormatterFile2(value, row) {
+	//var test_id= row.id;
+	return' <a type="button" class="btn btn-info" href="remove_ist.php?idu='+row.id_istanza+'"><i class="fas fa-file-upload"></i></a>';
+}
+</script>
+<script>
+function nameFormatterFile3(value, row) {
+	//var test_id= row.id;
+	return' <a type="button" class="btn btn-info" href="remove_ist.php?idu='+row.id_istanza+'"><i class="fas fa-file-upload"></i></a>';
+}
+</script>
 <?php
 }
 ?>

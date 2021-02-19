@@ -10,10 +10,10 @@ if(!$conn_isernia) {
 } else {
 
 	
-	$query_istanza = "SELECT id_istanza, string_agg(concat('F',foglio,' M',mappale), ', ') as terreni, data_istanza 
-		FROM istanze.dettagli_istanze d, istanze.istanze i 
+	$query_istanza = "SELECT id_istanza, string_agg(concat('F',foglio,' M',mappale), ', ') as terreni, data_istanza, file_s, file_bi, file_bc
+		FROM istanze.dettagli_istanze d, istanze.istanze i, istanze.pagamento_segreteria ps, istanze.pagamento_bollo_ist pbi, istanze.pagamento_bollo_cdu pbc 
 		where d.id_istanza = i.id and i.id_utente = $1
-		group by d.id_istanza, i.data_istanza 
+		group by d.id_istanza, i.data_istanza, ps.file_s, pbi.file_bi, pbc.file_bc
 		;";
 	//echo $query."<br>";
 	$result = pg_prepare($conn_isernia, "myquery0", $query_istanza);

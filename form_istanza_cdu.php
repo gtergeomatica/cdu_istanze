@@ -65,7 +65,8 @@ if(isset($_POST['Submit2'])){
 	//include("get_foglio_mappale.php");
 
 
-echo "L'istnza è stata inviata.";
+echo "L'istnza è stata aggiunta.";
+echo '<br><br><br><a href="./dashboard.php#about" class="btn btn-light btn-xl"> Torna alla Dashboard </a>';
 //print_r($list_mappali);
 
 // check if name exist
@@ -90,8 +91,15 @@ $query1 = "SELECT data, foglio, mappale from istanze.istanze_temp where id_utent
         $result = pg_prepare($conn_isernia, "myquery3", $query);
         $result = pg_execute($conn_isernia, "myquery3", array($id_istanza, $r["foglio"], $r["mappale"]));
     }
+
+$query0 = "DELETE from istanze.istanze_temp where id_utente=$1";
+$result0 = pg_prepare($conn_isernia, "myquery5", $query0);
+$result0 = pg_execute($conn_isernia, "myquery5", array($user_idn));
 	
 } else {
+    $query0 = "DELETE from istanze.istanze_temp where data < now() - interval '60 minutes' ";
+    $result0 = pg_prepare($conn_isernia, "myquery4", $query0);
+    $result0 = pg_execute($conn_isernia, "myquery4", array());
 ?>
 <!--form id="defaultForm" method="post" class="form-horizontal"-->
 <?php
@@ -132,6 +140,7 @@ while ($row = $result->fetch()) {
 
  <tr>
             <th data-field="state" data-checkbox="true"></th>
+            <th data-field="id" data-sortable="true" data-formatter="nameFormatterEdit" data-visible="true" >Rimuovi</th>
 			<th data-field="data" data-sortable="true" data-filter-control="select" data-visible="true">Data</th>
             <th data-field="foglio" data-sortable="true" data-filter-control="select" data-visible="true">Foglio</th>
             <th data-field="mappale" data-sortable="true" data-filter-control="select" data-visible="true">Mappale</th>
@@ -147,6 +156,7 @@ while ($row = $result->fetch()) {
 </div>	
 </div>	
 
+<!--form id='login' action='./dashboard.php#about' method='post' accept-charset='UTF-8'-->
 <form id='login' action='form_istanza_cdu.php?u=<?php echo $user_id; ?>' method='post' accept-charset='UTF-8'>
 <input type='hidden' name='submitted' id='submitted' value='1'/>
 
@@ -178,7 +188,7 @@ while($r = pg_fetch_assoc($result)) {
 <!--input type='submit' name='Submit' value='Submit' /-->
 
 <div class="form-group">
-<button id="btnsubmit2" type="submit" name='Submit2' class="btn btn-light btn-xl" disabled>Invia Istanza</button>
+<button id="btnsubmit2" type="submit" name='Submit2' class="btn btn-light btn-xl">Aggiungi Istanza</button>
 </div>
 </form>
 
@@ -256,15 +266,32 @@ $(document).ready(function(){
 		$.post("get_foglio_mappale.php", {u: <?php echo $user_id?> , m: mappale_value, f: foglio_value},
 			function(data){ //this will be executed once the `script_that_receives_value.php` ends its execution, `data` contains everything said script echoed.
 				//data.split(",");
-                //console.log(data[0]);
+                //console.log($('#ist').bootstrapTable('getData').length);
                 //$("#num_map").append(data);
                 $('#ist').bootstrapTable('refresh', {silent: true});
 				//alert(data); //just to see what it returns
 			}
 		);
-		$('#btnsubmit2').removeAttr('disabled');
+		//$('#btnsubmit2').removeAttr('disabled');
 	} 
 
+</script>
+<script>
+    $(window).bind('load', function(){
+        console.log('ciao');
+        if ($('#ist').bootstrapTable('getData').length > 0){
+            console.log('ciao2');
+            $('#btnsubmit2').removeAttr('disabled');
+        }
+        
+    });
+</script>
+<script>
+
+function nameFormatterEdit(value, row) {
+	//var test_id= row.id;
+	return' <a type="button" class="btn btn-info" href="remove_temp.php?idu='+row.id_utente+'&f='+row.foglio+'&m='+row.mappale+'&user=<?php echo $usr_login; ?>"><i class="fas fa-trash-alt"></i></a>';
+}
 </script>
 
 </body>
