@@ -82,9 +82,9 @@ $subtitle2=str_replace("'","\'",str_replace(' ','_',$subtitle));
     color: red;
 }
 
-.modal {
+/*.modal {
   display:block;
-}
+}*/
 .navbar-nav li:hover > ul.dropdown-menu {
     display: block;
 }

@@ -6,20 +6,31 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-lg-8 text-center">
-                        <h2 class="mt-0">Let's Get In Touch!</h2>
+                        <h2 class="mt-0">Contattaci!</h2>
                         <hr class="divider my-4" />
-                        <p class="text-muted mb-5">Contatti ufficio angiolilli</p>
+                        <p class="text-muted mb-5">SETTORE III - TECNICO SERVIZIO 8° Urbanistica<br>
+                    Dott. Enrico Angiolilli</p>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-4 ml-auto text-center mb-5 mb-lg-0">
+                    <div class="col-lg-3 ml-auto text-center mb-5 mb-lg-0">
                         <i class="fas fa-phone fa-3x mb-3 text-muted"></i>
-                        <div>+1 (555) 123-4567</div>
+                        <div>0865449603</div>
                     </div>
-                    <div class="col-lg-4 mr-auto text-center">
+                    <div class="col-lg-3 mr-auto text-center">
                         <i class="fas fa-envelope fa-3x mb-3 text-muted"></i>
                         <!-- Make sure to change the email address in BOTH the anchor text and the link target below!-->
-                        <a class="d-block" href="mailto:contact@yourwebsite.com">contact@yourwebsite.com</a>
+                        <a class="d-block" href="mailto:e.angiolilli@comune.isernia.it">e.angiolilli@comune.isernia.it</a>
+                    </div>
+                    <div class="col-lg-3 mr-auto text-center">
+                        <i class="fas fa-map-marker-alt fa-3x mb-3 text-muted"></i>
+                        <!-- Make sure to change the email address in BOTH the anchor text and the link target below!-->
+                        <div>Piazza Marconi, 3 - 86170 Isernia</div>
+                    </div>
+                    <div class="col-lg-3 mr-auto text-center">
+                        <i class="fas fa-globe fa-3x mb-3 text-muted"></i>
+                        <!-- Make sure to change the email address in BOTH the anchor text and the link target below!-->
+                        <a class="d-block" href="http://comuneisernia.asitechspa.it/">comuneisernia.asitechspa.it</a>
                     </div>
                 </div>
             </div>

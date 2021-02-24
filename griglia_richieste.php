@@ -10,11 +10,24 @@ if(!$conn_isernia) {
 } else {
 
 	
-	$query_istanza = "SELECT id_istanza, string_agg(concat('F',foglio,' M',mappale), ', ') as terreni, data_istanza, file_s, file_bi, file_bc
+	/* $query_istanza = "SELECT id_istanza, string_agg(concat('F',foglio,' M',mappale), ', ') as terreni, data_istanza, file_s, file_bi, file_bc
 		FROM istanze.dettagli_istanze d, istanze.istanze i, istanze.pagamento_segreteria ps, istanze.pagamento_bollo_ist pbi, istanze.pagamento_bollo_cdu pbc 
-		where d.id_istanza = i.id and i.id_utente = $1
+		where d.id_istanza = i.id and i.id_utente = $1 and d.id_istanza = ps.id_istanza_s and d.id_istanza = pbi.id_istanza_bi and d.id_istanza = pbc.id_istanza_bc
 		group by d.id_istanza, i.data_istanza, ps.file_s, pbi.file_bi, pbc.file_bc
-		;";
+		;"; */
+	$query_istanza = "SELECT id_istanza, string_agg(concat('F',foglio,' M',mappale), ', ') as terreni, data_istanza, file_s, file_bi, file_bc
+		FROM istanze.dettagli_istanze d
+		left join istanze.istanze i
+		on d.id_istanza = i.id
+		left join istanze.pagamento_segreteria ps
+		on d.id_istanza = ps.id_istanza_s
+		left join istanze.pagamento_bollo_ist pbi
+		on d.id_istanza = pbi.id_istanza_bi
+		left join istanze.pagamento_bollo_cdu pbc 
+		on d.id_istanza = pbc.id_istanza_bc
+		where i.id_utente = $1
+		group by d.id_istanza, i.data_istanza, ps.file_s, pbi.file_bi, pbc.file_bc
+		order by i.data_istanza;";
 	//echo $query."<br>";
 	$result = pg_prepare($conn_isernia, "myquery0", $query_istanza);
     $result = pg_execute($conn_isernia, "myquery0", array($user_id));

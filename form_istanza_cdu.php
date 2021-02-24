@@ -83,6 +83,18 @@ while($r = pg_fetch_assoc($result)) {
 	$id_istanza=$r['ids'];
 }
 
+/* $query = "INSERT into istanze.pagamento_bollo_ist (id_istanza_bi)  values($1);";
+$result = pg_prepare($conn_isernia, "myquery6", $query);
+$result = pg_execute($conn_isernia, "myquery6", array($id_istanza));
+
+$query = "INSERT into istanze.pagamento_segreteria (id_istanza_s)  values($1);";
+$result = pg_prepare($conn_isernia, "myquery6", $query);
+$result = pg_execute($conn_isernia, "myquery6", array($id_istanza));
+
+$query = "INSERT into istanze.pagamento_bollo_cdu (id_istanza_bc)  values($1);";
+$result = pg_prepare($conn_isernia, "myquery6", $query);
+$result = pg_execute($conn_isernia, "myquery6", array($id_istanza)); */
+
 $query1 = "SELECT data, foglio, mappale from istanze.istanze_temp where id_utente=$1 and data > now() - interval '60 minutes' ";
     $result1 = pg_prepare($conn_isernia, "myquery2", $query1);
     $result1 = pg_execute($conn_isernia, "myquery2", array($user_idn));
@@ -108,7 +120,7 @@ $result = $conn_catasto->prepare($query_foglio);
 //$result = $result->bindValue(":Fg", $foglio);
 $result->execute();
 ?>
-<select name="foglio" id="foglio">
+<select class="form-control form-control-sm" style="display: inline; width: auto;" name="foglio" id="foglio">
 <option value="">Selezionare un foglio...</option>
 <?php
 while ($row = $result->fetch()) {
@@ -117,7 +129,7 @@ while ($row = $result->fetch()) {
 }
 ?>
 </select>
-<select name="mappale" id="mappale"></select>
+<select class="form-control form-control-sm" style="display: inline; width: auto;" name="mappale" id="mappale"></select>
 <input id="fgmp" type="button" name="fgmp" value="+" onclick="showmappale()"/>
 <div id="num_map"></div>
 <br>

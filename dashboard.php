@@ -1,3 +1,6 @@
+<?php
+    session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -58,30 +61,35 @@ require('navbar.php');
 
 
 <?php
-session_start();
-if(isset($_POST['Submit'])){
+//session_start();
+/* echo $_SESSION['user'];
+echo $_SESSION['pwd']; */
+if(isset($_POST['Submit']) || $_SESSION['user'] != ''){
 	include("root_connection.php");
+    if ($_SESSION['user'] == ''){
 
-    if(empty($_POST['username']))
-    {
-        $this->HandleError("Inserire lo Username!");
-        return false;
-    }
+        if(empty($_POST['username']))
+        {
+            $this->HandleError("Inserire lo Username!");
+            return false;
+        }
+        
+        if(empty($_POST['password']))
+        {
+            $this->HandleError("Inserire la Password!");
+            return false;
+        }
      
-    if(empty($_POST['password']))
-    {
-        $this->HandleError("Inserire la Password!");
-        return false;
-    }
-     
-    $username = pg_escape_string($_POST['username']);
-    $password = pg_escape_string($_POST['password']);
+    
 	//$dbname = pg_escape_string($_POST['dbname']);
-    $_SESSION['user']=$username;
-    $_SESSION['pwd']=$password;
+    
 
-    /* echo $_SESSION['pwd'];
-    echo "<br>" .$password; */
+        $username = pg_escape_string($_POST['username']);
+        $password = pg_escape_string($_POST['password']);
+        $_SESSION['user']=$username;
+        $_SESSION['pwd']=$password;
+    }
+    /* echo "<br>" .$password; */
 
 
 	//$conn = @pg_connect('host=localhost port=5432 dbname='.$dbname.' user='.$username.' password='.$password.'');
@@ -129,6 +137,10 @@ pg_close($conn_isernia);
 <div class="form-group">
 <label for='password' >Password*:</label>
 <input type='password' class="form-control" name='password' id='password' maxlength="50" required=""/>
+ </div>
+
+ <div class="form-group">
+ <a class="text-white mt-0" href="./cambia_password.php">Hai dimenticato la tua password?</a>
  </div>
  
 <div class="form-group">
