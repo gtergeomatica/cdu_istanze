@@ -34,6 +34,7 @@ $cliente = 'Comune di Isernia';
                     <ul class="navbar-nav ml-auto my-2 my-lg-0">
                         <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#about">Come funziona</a></li>
                         <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#account">Crea account</a></li>
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#moduli">Moduli</a></li>
                         <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#contact">Contatti</a></li>
                         <li class="nav-item"><a class="nav-link js-scroll-trigger" href="./dashboard.php">Accedi</a></li>
                     </ul>
@@ -167,13 +168,14 @@ $cliente = 'Comune di Isernia';
                 </div>
             </div>
         </div-->
-        <!-- Call to action-->
-        <!--section class="page-section bg-dark text-white">
+        <!-- Scarica autocertificazioni -->
+        <section class="page-section bg-dark text-white" id="moduli">
             <div class="container text-center">
-                <h2 class="mb-4">Free Download at Start Bootstrap!</h2>
-                <a class="btn btn-light btn-xl" href="https://startbootstrap.com/theme/creative/">Download Now!</a>
+                <h2 class="mb-4">Scarica i moduli per le autocertificazioni di pagamento</h2>
+                <a style="margin-right:20px;" class="btn btn-light btn-xl" href="./download2.php">Diritti Istruttori</a>
+                <a style="margin-left:20px;" class="btn btn-light btn-xl" href="./download.php">Marca da Bollo</a>
             </div>
-        </section-->
+        </section>
 
 <?php
 require('footer.php');

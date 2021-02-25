@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <?php
 
 $user_admin="comuneisernia";
@@ -64,17 +64,28 @@ session_start();
 if(isset($_POST['Submit2'])){
 	//include("get_foglio_mappale.php");
 
+    $ruolo = $_POST['ruolo'];
+    $motivo = $_POST['motivo'];
 
-echo "L'istnza è stata aggiunta.";
-echo '<br><br><br><a href="./dashboard.php#about" class="btn btn-light btn-xl"> Torna alla Dashboard </a>';
+    if ($motivo == 'Altro'){
+		$motivo = pg_escape_string($_POST['motivotxt']);
+	}
+
+
+echo "L'istanza è stata aggiunta. Riceverai una mail con i dettagli per il pagamento.";
+echo $prezzo;
+echo '<br><br><a href="./dashboard.php#about" class="btn btn-light btn-xl"> Torna alla Dashboard </a>';
+
+
 //print_r($list_mappali);
 
 // check if name exist
 /*$query = "SELECT nome, mail from jlx_user where usr_login ='".$username."';";
 $result = pg_query($conn_lizmap, $query);*/
-$query = "INSERT into istanze.istanze (doc_id, id_utente) select doc_id, id from utenti.utenti where id=$1;";
+$query = "INSERT into istanze.istanze (doc_id, id_utente, ruolo, motivo) 
+            values((select doc_id from utenti.utenti where id=$1), (select id from utenti.utenti where id=$1), $2, $3) ;";
 $result = pg_prepare($conn_isernia, "myquery0", $query);
-$result = pg_execute($conn_isernia, "myquery0", array($user_idn));
+$result = pg_execute($conn_isernia, "myquery0", array($user_idn, $ruolo, $motivo));
 
 $query = "SELECT max(id) as ids from istanze.istanze where id_utente=$1;";
 $result = pg_prepare($conn_isernia, "myquery1", $query);
@@ -83,30 +94,72 @@ while($r = pg_fetch_assoc($result)) {
 	$id_istanza=$r['ids'];
 }
 
-/* $query = "INSERT into istanze.pagamento_bollo_ist (id_istanza_bi)  values($1);";
-$result = pg_prepare($conn_isernia, "myquery6", $query);
-$result = pg_execute($conn_isernia, "myquery6", array($id_istanza));
-
-$query = "INSERT into istanze.pagamento_segreteria (id_istanza_s)  values($1);";
-$result = pg_prepare($conn_isernia, "myquery6", $query);
-$result = pg_execute($conn_isernia, "myquery6", array($id_istanza));
-
-$query = "INSERT into istanze.pagamento_bollo_cdu (id_istanza_bc)  values($1);";
-$result = pg_prepare($conn_isernia, "myquery6", $query);
-$result = pg_execute($conn_isernia, "myquery6", array($id_istanza)); */
-
 $query1 = "SELECT data, foglio, mappale from istanze.istanze_temp where id_utente=$1 and data > now() - interval '60 minutes' ";
     $result1 = pg_prepare($conn_isernia, "myquery2", $query1);
     $result1 = pg_execute($conn_isernia, "myquery2", array($user_idn));
+    $rows_num = pg_num_rows($result1);
     while($r = pg_fetch_assoc($result1)) {
         $query = "INSERT into istanze.dettagli_istanze (id_istanza, foglio, mappale) values($1, $2, $3);";
         $result = pg_prepare($conn_isernia, "myquery3", $query);
         $result = pg_execute($conn_isernia, "myquery3", array($id_istanza, $r["foglio"], $r["mappale"]));
     }
 
+$queryprezzo = "SELECT prezzo from istanze.listino where id=$1";
+$resultprezzo = pg_prepare($conn_isernia, "myquery6", $queryprezzo);
+$resultprezzo = pg_execute($conn_isernia, "myquery6", array($rows_num));
+while($r = pg_fetch_assoc($resultprezzo)) {
+    $prezzo = $r['prezzo'];
+}
+
 $query0 = "DELETE from istanze.istanze_temp where id_utente=$1";
 $result0 = pg_prepare($conn_isernia, "myquery5", $query0);
 $result0 = pg_execute($conn_isernia, "myquery5", array($user_idn));
+
+$query = "SELECT * FROM utenti.utenti where id=$1";
+$result = pg_prepare($conn_isernia, "myquery7", $query);
+$result = pg_execute($conn_isernia, "myquery7", array($user_idn));
+while($r = pg_fetch_assoc($result)) {
+        //$rows[] = $r;
+        $fullname=$r["firstname"]. " " .$r["lastname"];
+        $user_email=$r["usr_email"];
+}
+
+$nostro_recapito = "From: GisHosting Gter <gishosting.gter@gmail.com>\r\n";
+$loro_recapito = "robifagandini@gmail.com";
+$testo = "
+
+Egr. " . $fullname. ",\n 
+questa mail e' stata generata automaticamente in quanto ha appena aggiunto un'istanza di CDU dal sistema online del Comune di Isernia.\n
+In particolare, il CDU è stato richiesto per n° " . $rows_num . " mappali. Di seguito sono riportati i dettagli di pagamento:\n
+    - Diritti istruttori da versare: " . $prezzo ." euro \n
+    - Marca da bollo da 16,00 euro \n
+
+I Diritti Istruttori sono da versare su Conto Corrente Postale n. 14459861 intestato a COMUNE DI ISERNIA Servizio Tesoreria con CAUSALE: Capitolo n. 377 - Diritti di Istruttoria. \n
+La marca da bollo da 16,00 euro può essere assolta tramite Modello F23 o acquistata presso un rivenditore.\n
+
+Una volta effettuati i pagamenti, dovrà caricare sulla sua dashboard, in corrispondenza dell'istanza presentata, i moduli di autocertificazione di avvenuto pagamento compilati.
+Può scaricare i moduli di autocertificazione a questo link: https://gishosting.gter.it/isernia/#moduli \n
+Una volta caricati i moduli potrà inviare l'istanza al Comune che provvederà a compilare il CDU richiesto.
+    
+Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di comunicarlo immediatamente all'amministratore del sistema rispondendo a questa mail.\n
+In caso di problemi o richieste non esiti a contattare l'amministratore del sistema al seguente indirizzo segreteriagenerale@comune.isernia.it.\n \n
+            
+Cordiali saluti, \n
+L'amministratore del sistema.
+        
+-- 
+Comune di Isernia
+Piazza Marconi, 3 - 86170 Isernia (IS)
+E-mail: segreteriagenerale@comune.isernia.it
+
+Servizio basato su GisHosting di Gter srl\n
+
+";
+
+	$oggetto ="Aggiunta istanza di CDU online del Comune di Isernia";
+    $headers = $nostro_recapito .
+    "Reply-To: " .$loro_recapito. "\r\n";
+	mail ("$user_email", "$oggetto", "$testo","$headers");
 	
 } else {
     $query0 = "DELETE from istanze.istanze_temp where data < now() - interval '60 minutes' ";
@@ -131,7 +184,7 @@ while ($row = $result->fetch()) {
 </select>
 <select class="form-control form-control-sm" style="display: inline; width: auto;" name="mappale" id="mappale"></select>
 <input id="fgmp" type="button" name="fgmp" value="+" onclick="showmappale()"/>
-<div id="num_map"></div>
+<div id="num_map"><small id="num_mapHelp" class="form-text text-muted">E' possibile selezionare un massimo di 20 mappali</small></div>
 <br>
 <div>
     <h2> <i class="fas fa-file-alt" style="color:white;"></i> Dettagli Istanza CDU di <?php echo $usr_login; ?></h2>
@@ -147,7 +200,7 @@ while ($row = $result->fetch()) {
   data-show-search-clear-button="true" data-page-size="50" 
   data-url="griglia_istanze.php?u=<?php echo $user_id; ?>" 
 	data-show-export="false" data-search="true" data-click-to-select="true" data-pagination="true" 
-  data-sidePagination="true" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-toolbar="#toolbar2">
+  data-sidePagination="true" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-toolbar="#toolbar2" data-locale="it-IT">
 <thead>
 
  <tr>
@@ -166,41 +219,45 @@ while ($row = $result->fetch()) {
 </table>
 
 </div>	
-</div>	
-
+</div>
+<div id="maxrow">
+</div>
+<hr class="light">
 <!--form id='login' action='./dashboard.php#about' method='post' accept-charset='UTF-8'-->
-<form id='login' action='form_istanza_cdu.php?u=<?php echo $user_id; ?>' method='post' accept-charset='UTF-8'>
+<form id='istanza' action='form_istanza_cdu.php?u=<?php echo $user_id; ?>' method='post' accept-charset='UTF-8'>
 <input type='hidden' name='submitted' id='submitted' value='1'/>
 
 <div class="form-group">
-    <!--h3>L'utente creato sarà automaticamente inserito nel Gruppo di <!--?php echo $cliente; ?></h3-->
-    <!--select multiple class="form-control" id="gruppi" name="gruppi"-->
-	<!--ul-->
-<!--?php 
-$query="SELECT g.id_aclgrp, g.name FROM jacl2_group g
-JOIN jacl2_user_group ug ON ug.id_aclgrp=g.id_aclgrp
-where ug.login='".$user_admin."';";
-				
-$result = pg_query($conn_lizmap, $query);
-$i=0;
-while($r = pg_fetch_assoc($result)) {
-?-->	
-	<!--br><input name="gruppi[]" type="checkbox" value="<!--?php echo $r['id_aclgrp'];?>" required><label--><!--?php echo $r['id_aclgrp'];?></label><!--/li-->
-	<!--option--><!--?php echo $r['id_aclgrp'];?></option-->
-<!--?php
-	$i=$i+1;   
-}
-?-->
-<!--/ul-->
-<!--/select-->
+    <label>Il presente CDU è richiesto in qualità di*</label>
+    <input type="text" class="form-control" data-error="Il campo è obbligatorio, non può essere lasciato vuoto" name="ruolo" required>
+    <div class="help-block with-errors"></div>
 </div>
-<?php //echo $query;?>
+<div class="form-group">
+    <label>Il presente CDU è richiesto per uso:*</label><br>
+    <div class="form-check form-check-inline">
+    <input class="form-check-input motivo1" type="radio" name="motivo" id="inlineRadio1" value="Atto notarile" required>
+    <label class="form-check-label" for="inlineRadio1">Stipula atto notarile</label>
+    </div>
+    <div class="form-check form-check-inline">
+    <input class="form-check-input motivo1" type="radio" name="motivo" id="inlineRadio2" value="Successione ereditaria">
+    <label class="form-check-label" for="inlineRadio2">Successione ereditaria</label>
+    </div>
+    <div class="form-check form-check-inline">
+    <!--input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="Altro" onclick="if (this.checked){ document.getElementById('altrotxt').style.display = 'block';}else{document.getElementById('altrotxt').style.display = 'none';}"-->
+    <input class="form-check-input motivo1" type="radio" name="motivo" id="inlineRadio3" value="Altro">
+    <label class="form-check-label" for="inlineRadio3">Altro</label>
+    <input style="display: none; margin-left:10px;" placeholder='es. esproprio, sgravi fiscali, ecc.' type="text" id="altrotxt" class="form-control" data-error="Il campo è obbligatorio, non può essere lasciato vuoto" name="motivotxt" style="margin-left: 10px;">
+    </div>
+    <div class="help-block with-errors"></div>
+
+</div>
 
 <hr class="light">
 <!--input type='submit' name='Submit' value='Submit' /-->
 
-<div class="form-group">
-<button id="btnsubmit2" type="submit" name='Submit2' class="btn btn-light btn-xl">Aggiungi Istanza</button>
+<div class="form-group mytip" id="mytip">
+<button id="btnsubmit2" type="submit" name='Submit2' class="btn btn-light btn-xl" disabled>Aggiungi Istanza</button>
+<span class="tooltiptext">Seleziona almeno un mappale</span>
 </div>
 </form>
 
@@ -223,6 +280,19 @@ while($r = pg_fetch_assoc($result)) {
 require('footer.php');
 require('req_bottom.php');
 ?>
+
+<script type="text/javascript">
+$(document).ready(function() {
+// Generate a simple captcha
+
+$('#istanza').validator();
+});
+</script>
+<!-- <script>
+    if ($('#ist').bootstrapTable('getOptions').totalRows == 0){
+        $('#btnsubmit2').prop( "disabled", true );
+    }
+</script> -->
 
 <script>
 /* var selected_option_value=$("#foglio option:selected").val();
@@ -281,6 +351,9 @@ $(document).ready(function(){
                 //console.log($('#ist').bootstrapTable('getData').length);
                 //$("#num_map").append(data);
                 $('#ist').bootstrapTable('refresh', {silent: true});
+                /* if ($('#btnsubmit2').prop( "disabled")){
+                    $('#btnsubmit2').prop( "disabled", false );
+                } */
 				//alert(data); //just to see what it returns
 			}
 		);
@@ -289,15 +362,40 @@ $(document).ready(function(){
 
 </script>
 <script>
-    $(window).bind('load', function(){
-        console.log('ciao');
-        if ($('#ist').bootstrapTable('getData').length > 0){
-            console.log('ciao2');
-            $('#btnsubmit2').removeAttr('disabled');
-        }
-        
-    });
+    //$('#ist').on('load-success.bs.table', function (data){
+        $('#ist').bootstrapTable({
+            onLoadSuccess: function(data){
+                console.log($('#ist').bootstrapTable('getData').length);
+                if ($('#ist').bootstrapTable('getData').length >= 20){
+                    //console.log('ciao2');
+                    $('#fgmp').prop( "disabled", true );
+                    $('#foglio').prop( "disabled", true );
+                    $('#mappale').prop( "disabled", true );
+                    $("#maxrow").append("ATTENZIONE: hai raggiunto il numero massimo di particelle. Se necessiti di ulteriori particelle devi generare una nuova istanza.");
+                }else if ($('#ist').bootstrapTable('getData').length >= 1){
+                    $('#btnsubmit2').prop( "disabled", false );
+                    $('#mytip').removeClass('mytip');
+                }
+            }
+        });
 </script>
+
+<!-- <script>
+    //$('#ist').on('load-success.bs.table', function (data){
+        $('#ist').bootstrapTable({
+            onLoadSuccess: function(data){
+                console.log($('#ist').bootstrapTable('getData').length);
+                console.log($('#ist').bootstrapTable('getOptions').totalRows);
+                if ($('#ist').bootstrapTable('getOptions').totalRows < 1){
+                    $('#btnsubmit2').prop( "disabled", true );
+                }else{
+                    $('#btnsubmit2').prop( "disabled", false );
+                }
+            }
+        });
+                
+</script> -->
+
 <script>
 
 function nameFormatterEdit(value, row) {
@@ -305,7 +403,19 @@ function nameFormatterEdit(value, row) {
 	return' <a type="button" class="btn btn-info" href="remove_temp.php?idu='+row.id_utente+'&f='+row.foglio+'&m='+row.mappale+'&user=<?php echo $usr_login; ?>"><i class="fas fa-trash-alt"></i></a>';
 }
 </script>
-
+<script>
+    $(".motivo1").change(function () {
+        //check if its checked. If checked move inside and check for others value
+        if (this.checked && this.value === "Altro") {
+            //add a text box next to it
+            $("#altrotxt").show();
+            $("#altrotxt").prop( "required", true );
+        } else {
+            //remove if unchecked
+            $("#altrotxt").hide();
+        }
+    });
+</script>
 </body>
 <?php
 }

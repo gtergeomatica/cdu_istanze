@@ -70,7 +70,7 @@
   data-show-search-clear-button="true" data-page-size="25" 
   data-url="griglia_richieste.php?u=<?php echo $r["id"]; ?>" 
 	data-show-export="false" data-search="true" data-click-to-select="true" data-pagination="true" 
-  data-sidePagination="true" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-toolbar="#toolbar2">
+  data-sidePagination="true" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-toolbar="#toolbar2" data-locale="it-IT">
 <thead>
 
  <tr>
@@ -231,64 +231,67 @@ function nameFormatterFile2(value, row) {
 }
 
 function nameFormatterFile3(value, row) {
-	//var test_id= row.id;
-  if (row.file_bc == null){
-	return' <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBc'+row.id_istanza+'" title="Carica pagamento Bollo per CDU"><i class="fas fa-file-upload"></i></button>\
-    <div class="modal fade" id="myModalBc'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
-  <div class="modal-dialog modal-dialog-centered" role="document">\
-    <div class="modal-content">\
-      <div class="modal-header">\
-        <h5 class="modal-title" id="exampleModalLabelBc'+row.id_istanza+'">Bollo CDU</h5>\
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
-          <span aria-hidden="true">&times;</span>\
-        </button>\
+	if (row.file_s != null && row.file_bi != null){
+      if (row.file_bc == null){
+      return' <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBc'+row.id_istanza+'" title="Carica pagamento Bollo per CDU"><i class="fas fa-file-upload"></i></button>\
+        <div class="modal fade" id="myModalBc'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
+      <div class="modal-dialog modal-dialog-centered" role="document">\
+        <div class="modal-content">\
+          <div class="modal-header">\
+            <h5 class="modal-title" id="exampleModalLabelBc'+row.id_istanza+'">Bollo CDU</h5>\
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
+              <span aria-hidden="true">&times;</span>\
+            </button>\
+          </div>\
+          <div class="modal-body">\
+        <form action="upload_bc.php?idi='+row.id_istanza+'" method="post" enctype="multipart/form-data">\
+        <div class="form-group">\
+          Seleziona la ricevuta di pagamento:<br><br>\
+          <input type="hidden" name="userBc" id="userBc'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
+          <input type="file" name="fileToUploadBc" id="fileToUploadBc'+row.id_istanza+'"><br><br>\
+          <input type="submit" value="Carica file" name="submitfile">\
+          </div>\
+        </form>\
+          </div>\
+          <div class="modal-footer">\
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>\
+            <!--button type="button" class="btn btn-primary">Save changes</button-->\
+          </div>\
+        </div>\
       </div>\
-      <div class="modal-body">\
-	  <form action="upload_bc.php?idi='+row.id_istanza+'" method="post" enctype="multipart/form-data">\
-	  <div class="form-group">\
-  		Seleziona la ricevuta di pagamento:<br><br>\
-      <input type="hidden" name="userBc" id="userBc'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
-  		<input type="file" name="fileToUploadBc" id="fileToUploadBc'+row.id_istanza+'"><br><br>\
-  		<input type="submit" value="Carica file" name="submitfile">\
-		  </div>\
-		</form>\
+    </div>' ;
+    } else{
+      return' <span><a href="../isernia_upload/bollo_cdu/'+ row.file_bc.split("/").pop() +'">Vedi file</a></span><br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBc'+row.id_istanza+'" title="Modifica file pagamento Bollo per CDU"><i class="fas fa-file-upload"></i></button>\
+        <div class="modal fade" id="myModalBc'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
+      <div class="modal-dialog modal-dialog-centered" role="document">\
+        <div class="modal-content">\
+          <div class="modal-header">\
+            <h5 class="modal-title" id="exampleModalLabelBc'+row.id_istanza+'">Bollo CDU</h5>\
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
+              <span aria-hidden="true">&times;</span>\
+            </button>\
+          </div>\
+          <div class="modal-body">\
+        <form action="upload_bc.php?idi='+row.id_istanza+'" method="post" enctype="multipart/form-data">\
+        <div class="form-group">\
+          Seleziona la ricevuta di pagamento:<br><br>\
+          <input type="hidden" name="userBc" id="userBc'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
+          <input type="file" name="fileToUploadBc" id="fileToUploadBc'+row.id_istanza+'"><br><br>\
+          <input type="submit" value="Carica file" name="submitfile">\
+          </div>\
+        </form>\
+          </div>\
+          <div class="modal-footer">\
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>\
+            <!--button type="button" class="btn btn-primary">Save changes</button-->\
+          </div>\
+        </div>\
       </div>\
-      <div class="modal-footer">\
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>\
-        <!--button type="button" class="btn btn-primary">Save changes</button-->\
-      </div>\
-    </div>\
-  </div>\
-</div>' ;
-} else{
-	return' <span><a href="../isernia_upload/bollo_cdu/'+ row.file_bc.split("/").pop() +'">Vedi file</a></span><br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBc'+row.id_istanza+'" title="Modifica file pagamento Bollo per CDU"><i class="fas fa-file-upload"></i></button>\
-    <div class="modal fade" id="myModalBc'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
-  <div class="modal-dialog modal-dialog-centered" role="document">\
-    <div class="modal-content">\
-      <div class="modal-header">\
-        <h5 class="modal-title" id="exampleModalLabelBc'+row.id_istanza+'">Bollo CDU</h5>\
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
-          <span aria-hidden="true">&times;</span>\
-        </button>\
-      </div>\
-      <div class="modal-body">\
-	  <form action="upload_bc.php?idi='+row.id_istanza+'" method="post" enctype="multipart/form-data">\
-	  <div class="form-group">\
-  		Seleziona la ricevuta di pagamento:<br><br>\
-      <input type="hidden" name="userBc" id="userBc'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
-  		<input type="file" name="fileToUploadBc" id="fileToUploadBc'+row.id_istanza+'"><br><br>\
-  		<input type="submit" value="Carica file" name="submitfile">\
-		  </div>\
-		</form>\
-      </div>\
-      <div class="modal-footer">\
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>\
-        <!--button type="button" class="btn btn-primary">Save changes</button-->\
-      </div>\
-    </div>\
-  </div>\
-</div>' ;
-}
+    </div>' ;
+    }
+  }else{
+    return' <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBc'+row.id_istanza+'" title="Carica pagamento Bollo per CDU" disabled><i class="fas fa-file-upload"></i></button>';
+  }
 }
 </script>
 <?php

@@ -20,6 +20,7 @@
                         <!--li class="nav-item"><a class="nav-link js-scroll-trigger" href="./index.php#account">Services</a></li-->
                         <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#contact">Contatti</a></li>
                         <li class="nav-item"><a class="nav-link js-scroll-trigger" href="./logout.php">Esci</a></li>
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger"><?php echo $_SESSION['user'];?></a></li>
                     </ul>
                 </div>
             </div>

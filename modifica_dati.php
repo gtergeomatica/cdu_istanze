@@ -154,22 +154,6 @@ if(isset($_POST['Submit'])){
 		$affil = pg_escape_string($_POST['affil']);
 	}
 
-	
-
-	
-
-	
-
-	
-
-	
-
-	//$address = pg_escape_string($_POST['address']);
-
-	//$note = pg_escape_string($_POST['note']);
-
-
-
 $check_user=1;
 // check if name exist
 /*$query = "SELECT nome, mail from jlx_user where usr_login ='".$username."';";

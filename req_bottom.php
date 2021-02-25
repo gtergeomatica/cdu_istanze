@@ -22,7 +22,8 @@ $subtitle2=str_replace("'","\'",str_replace(' ','_',$subtitle));
 	<script src="./bootstrap-table/dist/extensions/auto-refresh/bootstrap-table-auto-refresh.js"></script>
 	<script src="./bootstrap-table/dist/extensions/export/bootstrap-table-export.js" ></script> 
 	<script src="./bootstrap-table/dist/extensions/print/bootstrap-table-print.min.js" ></script> 
-	<script src="./bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.js" ></script> 
+	<script src="./bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.js" ></script>
+	<script src="./bootstrap-table/src/locale/bootstrap-table-it-IT.js" ></script> 
 	<!--script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script-->
 	<!--script src="./bootstrap_plugin_export/tableExport.js"></script-->
 	<script type="text/javascript" src="./bootstrap-validator-0.11.9/dist/validator.min.js"></script>
