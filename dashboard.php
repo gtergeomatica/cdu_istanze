@@ -26,10 +26,11 @@ require('req.php');
 </head>
 
 <body id="page-top">
+<div id="navbar1">
 <?php
 require('navbar.php');
 ?>
-
+</div>
 
 <!-- Masthead-->
 <header class="masthead">
@@ -120,8 +121,9 @@ if(isset($_POST['Submit']) || $_SESSION['user'] != ''){
 pg_close($conn_isernia);
 
 ?>
-
-
+<script>
+    $('#navbar1').load('navbar.php');
+</script>
 
 <?php
 } else {
@@ -140,7 +142,7 @@ pg_close($conn_isernia);
  </div>
 
  <div class="form-group">
- <a class="text-white mt-0" href="./cambia_password.php">Hai dimenticato la tua password?</a>
+ <a class="text-white mt-0" href="./cambia_password.php" onclick="myFunction()">Hai dimenticato la tua password?</a>
  </div>
  
 <div class="form-group">
@@ -163,7 +165,11 @@ pg_close($conn_isernia);
 require('footer.php');
 require('req_bottom.php');
 ?>
-
+<script>
+function myFunction() {
+  console.log("YOU CLICKED ME!");
+}
+</script>
 
 </body>
 

@@ -76,7 +76,7 @@ include("root_connection.php");
 
 if(isset($_POST['Submit'])){
 
-	$query = "SELECT * from utenti.utenti where id=$1;";
+	/* $query = "SELECT * from utenti.utenti where id=$1;";
 	$result = pg_prepare($conn_isernia, "myquery0", $query);
 	$result = pg_execute($conn_isernia, "myquery0", array($idu));
 	while($r = pg_fetch_assoc($result)) {
@@ -90,69 +90,21 @@ if(isset($_POST['Submit'])){
 		$citydb = $r["city"];
 		$teldb = $r["phonenumber"];
 		$affildb = $r["organization"];
-	}
+	} */
 
     //echo $password2;
     //exit;
-	if (empty($_POST['mail'])){
-		$mail = $maildb;
-	}else{
-		$mail = pg_escape_string($_POST['mail']);
-	}
 
-	if (empty($_POST['name'])){
-		$name = $nomedb;
-	}else{
-		$name = pg_escape_string($_POST['name']);
-	}
-
-	if (empty($_POST['surname'])){
-		$surname = $cognomedb;
-	}else{
-		$surname = pg_escape_string($_POST['surname']);
-	}
-
-	if (empty($_POST['codfisc'])){
-		$codfisc = $cfdb;
-	}else{
-		$codfisc = pg_escape_string($_POST['codfisc']);
-	}
-
-	if (empty($_POST['docid'])){
-		$docid = $docdb;
-	}else{
-		$docid = pg_escape_string($_POST['docid']);
-	}
-
-	if (empty($_POST['street'])){
-		$street = $streetdb;
-	}else{
-		$street = pg_escape_string($_POST['street']);
-	}
-
-	if (empty($_POST['cap'])){
-		$cap = $capdb;
-	}else{
-		$cap = pg_escape_string($_POST['cap']);
-	}
-
-	if (empty($_POST['city'])){
-		$city = $citydb;
-	}else{
-		$city = pg_escape_string($_POST['city']);
-	}
-
-	if (empty($_POST['tel'])){
-		$tel = $teldb;
-	}else{
-		$tel = pg_escape_string($_POST['tel']);
-	}
-
-	if (empty($_POST['affil'])){
-		$affil = $affildb;
-	}else{
-		$affil = pg_escape_string($_POST['affil']);
-	}
+	$mail = pg_escape_string($_POST['mail']);
+	$name = pg_escape_string($_POST['name']);
+	$surname = pg_escape_string($_POST['surname']);
+	$codfisc = pg_escape_string($_POST['codfisc']);
+	$docid = pg_escape_string($_POST['docid']);
+	$street = pg_escape_string($_POST['street']);
+	$cap = pg_escape_string($_POST['cap']);
+	$city = pg_escape_string($_POST['city']);
+	$tel = pg_escape_string($_POST['tel']);
+	$affil = pg_escape_string($_POST['affil']);
 
 $check_user=1;
 // check if name exist
@@ -191,8 +143,23 @@ $result = pg_query($conn_lizmap, $query);*/
 	
 } else {
 ?>
-<!--form id="defaultForm" method="post" class="form-horizontal"-->
-
+<?php
+$query = "SELECT * from utenti.utenti where id=$1;";
+	$result = pg_prepare($conn_isernia, "myquery1", $query);
+	$result = pg_execute($conn_isernia, "myquery1", array($idu));
+	while($r = pg_fetch_assoc($result)) {
+		$maildb = $r["usr_email"];
+		$nomedb = $r["firstname"];
+		$cognomedb = $r["lastname"];
+		$cfdb = $r["cf"];
+		$docdb = $r["doc_id"];
+		$streetdb = $r["street"];
+		$capdb = $r["postcode"];
+		$citydb = $r["city"];
+		$teldb = $r["phonenumber"];
+		$affildb = $r["organization"];
+	}
+?>
 
 
 
@@ -225,61 +192,61 @@ while($r = pg_fetch_assoc($result)) {
 
 <div class="form-group">
 <label>E-mail</label>
-<input type="email" class="form-control" name="mail">
+<input type="email" class="form-control" name="mail" value="<?php echo $maildb; ?>" required>
 <div class="help-block with-errors"></div>
 </div>
 
 <div class="form-group">
 <label>Nome</label>
-<input type="text" class="form-control" name="name">
+<input type="text" class="form-control" name="name" value="<?php echo $nomedb; ?>" required>
 <div class="help-block with-errors"></div>
 </div>
 
 <div class="form-group">
 <label>Cognome</label>
-<input type="text" class="form-control" name="surname">
+<input type="text" class="form-control" name="surname" value="<?php echo $cognomedb; ?>" required>
 <div class="help-block with-errors"></div>
 </div>
 
 <div class="form-group">
 <label>Codice Fiscale</label>
-<input type="text" class="form-control" name="codfisc" maxlength="16">
+<input type="text" class="form-control" name="codfisc" maxlength="16" value="<?php echo $cfdb; ?>" required>
 <div class="help-block with-errors"></div>
 </div>
 
 <div class="form-group">
 <label>Numero Documento di Identità</label>
-<input type="text" class="form-control" name="docid">
+<input type="text" class="form-control" name="docid" value="<?php echo $docdb; ?>" required>
 <div class="help-block with-errors"></div>
 </div>
 
 <div class="form-group">
 <label>Via e civico</label>
-<input type="text" class="form-control" name="street">
+<input type="text" class="form-control" name="street" value="<?php echo $streetdb; ?>" required>
 <div class="help-block with-errors"></div>
 </div>
 
 <div class="form-group">
 <label>Codice di Avviamento Postale</label>
-<input type="text" class="form-control" name="cap">
+<input type="text" class="form-control" name="cap" value="<?php echo $capdb; ?>" required>
 <div class="help-block with-errors"></div>
 </div>
 
 <div class="form-group">
 <label>Città</label>
-<input type="text" class="form-control" name="city">
+<input type="text" class="form-control" name="city" value="<?php echo $citydb; ?>" required>
 <div class="help-block with-errors"></div>
 </div>
 
 <div class="form-group">
 <label>Telefono</label>
-<input type="text" class="form-control" name="tel">
+<input type="text" class="form-control" name="tel" value="<?php echo $teldb; ?>" required>
 <div class="help-block with-errors"></div>
 </div>
 
 <div class="form-group">
 <label>Affiliazione</label>
-<input type="text" class="form-control" name="affil">
+<input type="text" class="form-control" name="affil" value="<?php echo $affildb; ?>" required>
 </div>
 <hr class="light">
 <div class="form-group">
@@ -327,6 +294,13 @@ require('footer.php');
 require('req_bottom.php');
 ?>
 
+<script type="text/javascript">
+	$(document).ready(function() {
+	// Generate a simple captcha
+
+	$('#login').validator();
+	});
+</script>
 
 <script> 
 	$('#consenso').click(function () {

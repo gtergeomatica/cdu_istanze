@@ -10,6 +10,10 @@ if(!$conn_isernia) {
     die('Connessione fallita !<br />');
 } else {
 
+	$query = "UPDATE istanze.istanze SET inviato = true where id = $1;";
+	$result2 = pg_prepare($conn_isernia, "myquery2", $query);
+	$result2 = pg_execute($conn_isernia, "myquery2", array($id_istanza));
+
 	$query_user = "SELECT * from utenti.utenti where id=$1";
 	$result_usr = pg_prepare($conn_isernia, "myquery0", $query_user);
 	$result_usr = pg_execute($conn_isernia, "myquery0", array($id_utente));
@@ -42,28 +46,34 @@ if(!$conn_isernia) {
 	}	
 	fclose($fp);
 
-		// INVIO MAIL
+	$query_istanza = "SELECT ruolo, motivo from istanze.istanze where id_istanza=$1";
+	$result_ist = pg_prepare($conn_isernia, "myquery3", $query_istanza);
+	$result_ist = pg_execute($conn_isernia, "myquery3", array($id_istanza));
+	while($r = pg_fetch_assoc($result_ist)) {
+		//$rows[] = $r;
+		$ruolo=$r["ruolo"];
+		$motivo=$r["motivo"];
+	}
 
-	$nostro_recapito = "From: GisHosting Gter <gishosting.gter@gmail.com>\r\n";
-	$nostra_mail = "gishosting.gter@gmail.com";
-    //$loro_recapito = "segreteriagenerale@comune.isernia.it";
-	$loro_recapito = "robifagandini@gmail.com";
-	$mail_admin = "roberta.fagandini@gter.it";
+		// INVIO MAIL
+	require('mail_address.php');
 
 
     $oggetto = "Nuovo istanza CDU";
 
     $testo = "
 
-Questa mail è stata generata automaticamente in quanto è appena stata inviata un'istanza di CDU.\n
-Dati del richiedente:\n
+Questa mail è stata generata automaticamente in quanto è appena stata inviata un'istanza di CDU da:\n
 	Nome: ". $nome . " \n
 	Cognome: ". $cognome . " \n
 	Codice Fiscale: ". $cf . " \n
 	N° Documento: ". $doc . " \n
 	Tel: ". $telefono . " \n
 	Mail: ". $mail . " \n
-	Indirizzo: ". $via . ", " . $cap . ", " . $city . " \n \n
+	Indirizzo: ". $via . ", " . $cap . ", " . $city . " \n
+	In qualità di " . $ruolo . " \n\n
+
+La presente richiesta è per uso: " . $motivo . " \n
 
 In allegato il file di testo con l'elenco delle particelle.
 

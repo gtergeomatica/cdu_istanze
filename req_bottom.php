@@ -54,8 +54,17 @@ $subtitle2=str_replace("'","\'",str_replace(' ','_',$subtitle));
 	<script src="js/creative.js"></script-->  
 
 	
+<!--script>
+// reload navbar ogni 30''
+$(document).ready(function(){
+  var timeout = setInterval(reloadChat, 30000); 
+});
 
-	
+function reloadChat () {
+     //$('#navbar_emergenze').load('navbar_up.php?r=true&&s\'<?php echo $subtitle;?>\'');
+	 $('#navbar1').load('navbar.php');
+}
+</script-->
 
 
 <?php

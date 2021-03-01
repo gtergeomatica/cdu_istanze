@@ -124,8 +124,7 @@ while($r = pg_fetch_assoc($result)) {
         $user_email=$r["usr_email"];
 }
 
-$nostro_recapito = "From: GisHosting Gter <gishosting.gter@gmail.com>\r\n";
-$loro_recapito = "robifagandini@gmail.com";
+require('mail_address.php');
 $testo = "
 
 Egr. " . $fullname. ",\n 
@@ -243,10 +242,14 @@ while ($row = $result->fetch()) {
     <label class="form-check-label" for="inlineRadio2">Successione ereditaria</label>
     </div>
     <div class="form-check form-check-inline">
+    <input class="form-check-input motivo1" type="radio" name="motivo" id="inlineRadio4" value="Esproprio">
+    <label class="form-check-label" for="inlineRadio4">Esproprio</label>
+    </div>
+    <div class="form-check form-check-inline">
     <!--input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="Altro" onclick="if (this.checked){ document.getElementById('altrotxt').style.display = 'block';}else{document.getElementById('altrotxt').style.display = 'none';}"-->
     <input class="form-check-input motivo1" type="radio" name="motivo" id="inlineRadio3" value="Altro">
     <label class="form-check-label" for="inlineRadio3">Altro</label>
-    <input style="display: none; margin-left:10px;" placeholder='es. esproprio, sgravi fiscali, ecc.' type="text" id="altrotxt" class="form-control" data-error="Il campo è obbligatorio, non può essere lasciato vuoto" name="motivotxt" style="margin-left: 10px;">
+    <input style="display: none; margin-left:10px;" placeholder='es. sgravi fiscali, ecc.' type="text" id="altrotxt" class="form-control" data-error="Il campo è obbligatorio, non può essere lasciato vuoto" name="motivotxt" style="margin-left: 10px;">
     </div>
     <div class="help-block with-errors"></div>
 

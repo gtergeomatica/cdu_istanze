@@ -15,7 +15,7 @@ if(!$conn_isernia) {
 		where d.id_istanza = i.id and i.id_utente = $1 and d.id_istanza = ps.id_istanza_s and d.id_istanza = pbi.id_istanza_bi and d.id_istanza = pbc.id_istanza_bc
 		group by d.id_istanza, i.data_istanza, ps.file_s, pbi.file_bi, pbc.file_bc
 		;"; */
-	$query_istanza = "SELECT id_istanza, string_agg(concat('F',foglio,' M',mappale), ', ') as terreni, data_istanza, file_s, file_bi, file_bc
+	$query_istanza = "SELECT id_istanza, string_agg(concat('F',foglio,' M',mappale), ', ') as terreni, data_istanza, inviato, file_s, file_bi, file_bc
 		FROM istanze.dettagli_istanze d
 		left join istanze.istanze i
 		on d.id_istanza = i.id
@@ -26,7 +26,7 @@ if(!$conn_isernia) {
 		left join istanze.pagamento_bollo_cdu pbc 
 		on d.id_istanza = pbc.id_istanza_bc
 		where i.id_utente = $1
-		group by d.id_istanza, i.data_istanza, ps.file_s, pbi.file_bi, pbc.file_bc
+		group by d.id_istanza, i.data_istanza, i.inviato, ps.file_s, pbi.file_bi, pbc.file_bc
 		order by i.data_istanza;";
 	//echo $query."<br>";
 	$result = pg_prepare($conn_isernia, "myquery0", $query_istanza);

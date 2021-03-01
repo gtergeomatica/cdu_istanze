@@ -211,13 +211,7 @@ if ($check_user==1){
     //echo '<br><h1>la mail è: '. $mail_admin .'</h1>';
 	//*******************************************************//
 	// INVIO MAIL
-
-	$nostro_recapito = "From: GisHosting Gter <gishosting.gter@gmail.com>\r\n";
-    //$loro_recapito = "segreteriagenerale@comune.isernia.it";
-	$loro_recapito = "robifagandini@gmail.com";
-
-
-
+	require('mail_address.php');
     $oggetto = "Nuovo utente per istanza CDU registrato";
 
     $testo = "
