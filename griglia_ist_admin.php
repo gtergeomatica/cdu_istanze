@@ -15,22 +15,24 @@ if(!$conn_isernia) {
 		where d.id_istanza = i.id and i.id_utente = $1 and d.id_istanza = ps.id_istanza_s and d.id_istanza = pbi.id_istanza_bi and d.id_istanza = pbc.id_istanza_bc
 		group by d.id_istanza, i.data_istanza, ps.file_s, pbi.file_bi, pbc.file_bc
 		;"; */
-	$query_istanza = "SELECT id_istanza, string_agg(concat('F',foglio,' M',mappale), ', ') as terreni, data_istanza, inviato, n_bolli, file_s, file_bi, file_bc, file_cdu, terminato
-		FROM istanze.dettagli_istanze d
-		left join istanze.istanze i
-		on d.id_istanza = i.id
-		left join istanze.pagamento_segreteria ps
-		on d.id_istanza = ps.id_istanza_s
-		left join istanze.pagamento_bollo_ist pbi
-		on d.id_istanza = pbi.id_istanza_bi
-		left join istanze.pagamento_bollo_cdu pbc 
-		on d.id_istanza = pbc.id_istanza_bc
-		where i.id_utente = $1
-		group by d.id_istanza, i.data_istanza, i.inviato, i.n_bolli, ps.file_s, pbi.file_bi, pbc.file_bc, i.file_cdu, i.terminato
-		order by i.data_istanza;";
+	$query_istanza = "SELECT id_istanza, string_agg(concat('F',foglio,' M',mappale), ', ') as terreni, usr_login, usr_email, data_istanza, inviato, file_txt, n_bolli, file_s, file_bi, file_bc, file_cdu, terminato
+			FROM istanze.dettagli_istanze d
+			left join istanze.istanze i
+			on d.id_istanza = i.id
+			left join istanze.pagamento_segreteria ps
+			on d.id_istanza = ps.id_istanza_s
+			left join istanze.pagamento_bollo_ist pbi
+			on d.id_istanza = pbi.id_istanza_bi
+			left join istanze.pagamento_bollo_cdu pbc 
+			on d.id_istanza = pbc.id_istanza_bc
+			left join utenti.utenti u
+			on u.id = i.id_utente 
+			where i.inviato = true
+			group by d.id_istanza, u.usr_login, u.usr_email, i.data_istanza, i.inviato, i.file_txt, i.n_bolli, ps.file_s, pbi.file_bi, pbc.file_bc, i.file_cdu, i.terminato
+			order by i.data_istanza;";
 	//echo $query."<br>";
 	$result = pg_prepare($conn_isernia, "myquery0", $query_istanza);
-    $result = pg_execute($conn_isernia, "myquery0", array($user_id));
+    $result = pg_execute($conn_isernia, "myquery0", array());
 	//echo $user_id;
 	//exit;
 	$rows = array();

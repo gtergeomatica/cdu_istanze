@@ -103,6 +103,7 @@ if(isset($_POST['Submit']) || $_SESSION['user'] != ''){
     while($r = pg_fetch_assoc($result)) {
         if (password_verify($_SESSION['pwd'], $r["usr_password"])){
             $nome=$r["usr_login"];
+            $_SESSION['admin']=$r["admin"];
             $check=1;
         }
         else{
@@ -110,9 +111,14 @@ if(isset($_POST['Submit']) || $_SESSION['user'] != ''){
         }
     }
 
-    if ($check==1){
+    if ($check==1 && $_SESSION['admin']!='t'){
         include("dati_utente.php");
+    }elseif ($check==1 && $_SESSION['admin']=='t'){
+        include("dati_admin.php");
     } else {
+        //echo $check;
+        $_SESSION['user'] = '';
+        $_SESSION['pwd'] = '';
         //die('<h1>Dear <i>'.$username.'</i>,<br> your connection details are wrong or you do not have a PostGIS DB in your GisHosting page.</h1> <hr class="light"><a href="dashboard.php" class=\'btn btn-default\'>New check</a></div></div></div></section>');
         die('<h1>l\'utente <i>'.$username.'</i> non esiste.</h1> <hr class="light"><a href="dashboard.php" class=\'btn btn-light btn-xl\'>Riprova</a></div></div></div></section>');
     }

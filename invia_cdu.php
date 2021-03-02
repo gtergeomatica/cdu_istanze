@@ -14,7 +14,7 @@ if(!$conn_isernia) {
 	$result2 = pg_prepare($conn_isernia, "myquery2", $query);
 	$result2 = pg_execute($conn_isernia, "myquery2", array($id_istanza)); */
 
-	$query_user = "SELECT * from utenti.utenti where id=$1";
+	$query_user = "SELECT * from utenti.utenti where usr_login=$1";
 	$result_usr = pg_prepare($conn_isernia, "myquery0", $query_user);
 	$result_usr = pg_execute($conn_isernia, "myquery0", array($id_utente));
 	while($r = pg_fetch_assoc($result_usr)) {
@@ -31,43 +31,28 @@ if(!$conn_isernia) {
 		$telefono=$r["phonenumber"];
 	}
 
-	$dest_dir = "/var/www/html/isernia_upload/mappali_cdu/";
-	$dest_name = date("Ymd_his") ."_istanza_" .$id_istanza.".txt";
-	$dest_file = $dest_dir. $dest_name;
-	$fp = fopen( $dest_file, 'a');
-
-	$query_mappali = "SELECT foglio, mappale from istanze.dettagli_istanze where id_istanza=$1";
-	$result_map = pg_prepare($conn_isernia, "myquery1", $query_mappali);
-	$result_map = pg_execute($conn_isernia, "myquery1", array($id_istanza));
-	while($r = pg_fetch_assoc($result_map)) {
-		//$rows[] = $r;
-		$rows=array($r["foglio"],$r["mappale"]);
-		$test=fputs($fp, implode(',',$rows)."\n");
-	}	
-	fclose($fp);
-
-	$query = "UPDATE istanze.istanze SET file_txt = $1, inviato = true where id = $2;";
+	$query = "UPDATE istanze.istanze SET terminato = true where id = $1;";
 	$result2 = pg_prepare($conn_isernia, "myquery2", $query);
-	$result2 = pg_execute($conn_isernia, "myquery2", array($dest_file, $id_istanza));
+	$result2 = pg_execute($conn_isernia, "myquery2", array($id_istanza));
 
 	$query_istanza = "SELECT * from istanze.istanze where id=$1";
 	$result_ist = pg_prepare($conn_isernia, "myquery3", $query_istanza);
 	$result_ist = pg_execute($conn_isernia, "myquery3", array($id_istanza));
 	while($r = pg_fetch_assoc($result_ist)) {
 		//$rows[] = $r;
-		$ruolo=$r["ruolo"];
-		$motivo=$r["motivo"];
+		$data=$r["data_istanza"];
+		$file=$r["file_cdu"];
 	}
 
 		// INVIO MAIL
 	require('mail_address.php');
 
 
-    $oggetto = "Nuovo istanza CDU";
+    $oggetto = "CDU inviato";
 
     $testo = "
 
-Questa mail è stata generata automaticamente in quanto è appena stata inviata un'istanza di CDU da:\n
+Questa mail e' stata generata automaticamente in quanto e' appena stato inviato il file del CDU relativo all'istanza n. " . $id_istanza . " a:\n
 	Nome: ". $nome . " \n
 	Cognome: ". $cognome . " \n
 	Codice Fiscale: ". $cf . " \n
@@ -75,11 +60,6 @@ Questa mail è stata generata automaticamente in quanto è appena stata inviata 
 	Tel: ". $telefono . " \n
 	Mail: ". $mail . " \n
 	Indirizzo: ". $via . ", " . $cap . ", " . $city . " \n
-	In qualità di " . $ruolo . " \n\n
-
-La presente richiesta è per uso: " . $motivo . " \n
-
-In allegato il file di testo con l'elenco delle particelle.
 
 Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di  darcene  immediata  comunicazione  anche  inviando  un  messaggio  di  ritorno  all'indirizzo  e-mail  del mittente. 	In caso di problemi o richieste non esiti a ricontattarci.\n \n
             
@@ -99,64 +79,15 @@ Le informazioni, i dati e le notizie contenute nella presente comunicazione e i 
 Se avete ricevuto questo messaggio per errore, vi preghiamo di distruggerlo e di  darcene  immediata  comunicazione  anche  inviando  un  messaggio  di  ritorno  all’indirizzo  e-mail  del mittente.			
 
 ";
-
-// Boundary  
-//$semi_rand = md5(time());  
-//$mime_boundary = "==Multipart_Boundary_x{$semi_rand}x"; 
-
-// Headers for attachment  
-//$headers = "\nMIME-Version: 1.0\n" . "Content-Type: multipart/mixed;\n" . " boundary=\"{$mime_boundary}\""; 
- 
-// Multipart boundary  
-$message = "--{$mime_boundary}\n" . "Content-Type: text/html; charset=\"UTF-8\"\n" . 
-"Content-Transfer-Encoding: 7bit\n\n" . $testo . "\n\n";  
- 
-// Preparing attachment 
-if(!empty($dest_file) > 0){ 
-	//echo $dest_file;
-    if(is_file($dest_file)){
-		//echo $dest_file;
-        //$message .= "--{$mime_boundary}\n"; 
-        $fpr = fopen($dest_file,"r"); 
-        $data = fread($fpr,filesize($dest_file)); 
-		//echo $data;
-        fclose($fpr);
-		$encoded_content = chunk_split(base64_encode($data)); 
-  
-    	$boundary = md5("random"); // define boundary with a md5 hashed value 
-    } 
-}
-//header 
-$headers = "MIME-Version: 1.0\r\n"; // Defining the MIME version 
-$headers .= "From: GisHosting Gter <".$nostra_mail.">\r\n"; // Sender Email 
-//$headers .= "Reply-To: ".$mail_admin."\r\n"; // Email addrress to reach back
-$headers .= "Cc: ".$mail_admin."\r\n"; // Email addrress to reach back 
-$headers .= "Content-Type: multipart/mixed;\r\n"; // Defining Content-Type 
-$headers .= "boundary = $boundary\r\n"; //Defining the Boundary 
-	  
-//plain text  
-$body = "--$boundary\r\n"; 
-$body .= "Content-Type: text/plain; charset=UTF-8\r\n"; 
-$body .= "Content-Transfer-Encoding: base64\r\n\r\n";  
-$body .= chunk_split(base64_encode($testo));  
-	  
-//attachment 
-$body .= "--$boundary\r\n"; 
-$body .="Content-Type: text/plain; name=".$dest_name."\r\n"; 
-$body .="Content-Disposition: attachment; filename=".$dest_name."\r\n"; 
-$body .="Content-Transfer-Encoding: base64\r\n"; 
-$body .="X-Attachment-Id: ".rand(1000, 99999)."\r\n\r\n";  
-$body .= $encoded_content; // Attaching the encoded file with email 
-//$message .= "--{$mime_boundary}--";
-
-
-	mail ($loro_recapito, $oggetto, $body, $headers);
+	$headers = $nostro_recapito .
+	"Cc: " .$mail_admin. "\r\n";
+	mail ($loro_recapito, $oggetto, $testo, $headers);
     
     $testo2 = "
 
 Egr. " . $nome . " " .$cognome. ",\n 
-questa mail e' stata generata automaticamente in quanto ha appena inviato un'istanza di CDU.\n
-
+questa mail e' stata generata automaticamente in quanto e' appena stato reso disponibile dal Comune di Isernia il file del CDU per l'istanza aggiunta in data " . $data . ".\n
+Accedendo alla sua dashboard potrà scaricare il file del CDU.
     
 Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di comunicarlo immediatamente all'amministratore del sistema rispondendo a questa mail. Se invece ha effettivamente inviato un'istanza di CDU, riceverà una nuova mail non appena il documento sarà disponibile sulla sua dashboard al seguente link https://gishosting.gter.it/isernia/dashboard.php \n
 In caso di problemi o richieste non esiti a contattare l'amministratore del sistema al seguente indirizzo DL_Cartografia@astergenova.it.\n \n
@@ -173,7 +104,7 @@ Servizio basato su GisHosting di Gter srl\n
 
 ";
 
-	$oggetto2 ="Nuova Istanza CDU";
+	$oggetto2 ="CDU disponibile per il download";
     $headers2 = $nostro_recapito .
     "Reply-To: " .$loro_recapito. "\r\n" .
     "Cc: " .$mail_admin. "\r\n";

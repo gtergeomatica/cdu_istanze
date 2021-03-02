@@ -81,7 +81,9 @@
             <th data-field="terreni" data-sortable="true" data-filter-control="select" data-visible="true">Terreni</th>
             <th data-field="file_s" data-sortable="false" data-formatter="nameFormatterFile1" data-visible="true">Segreteria</th>
             <th data-field="file_bi" data-sortable="false" data-formatter="nameFormatterFile2" data-visible="true">Bollo Istanza</th>
+            <th data-field="n_bolli" data-sortable="false" data-filter-control="select" data-visible="true">N. Bolli</th>
             <th data-field="file_bc" data-sortable="false" data-formatter="nameFormatterFile3" data-visible="true">Bollo CDU</th>
+            <th data-field="file_cdu" data-sortable="false" data-formatter="nameFormatterFile4" data-visible="true">File CDU</th>
         </tr>
 </thead>
 
@@ -307,6 +309,14 @@ function nameFormatterFile3(value, row) {
     }
   }else{
     return' <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBc'+row.id_istanza+'" title="Carica pagamento Bollo per CDU" disabled><i class="fas fa-file-upload"></i></button>';
+  }
+}
+
+function nameFormatterFile4(value, row) {
+  if(row.terminato == 't' && row.file_cdu != null){
+    return' <span><a href="../isernia_upload/cdu/'+ row.file_cdu.split("/").pop() +'">Vedi file</a></span><br><a class="btn btn-primary" href="./download_cdu.php?f='+ row.file_cdu.split("/").pop() +'"><i class="fas fa-file-download"></i></a>';
+  }else{
+    return' <span> - </span>';
   }
 }
 </script>
