@@ -73,6 +73,12 @@ $subtitle2=str_replace("'","\'",str_replace(' ','_',$subtitle));
     <![endif]-->
 
 <style>
+body{
+    font-family: Arial, Helvetica, sans-serif;
+}
+table th, .table td {
+    padding: 0.5rem;
+}
 /* Green check. */
 .glyphicon-ok {
     color: green;
