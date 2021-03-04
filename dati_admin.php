@@ -79,9 +79,9 @@ $cliente = 'Comune di Isernia';
             <!--th data-field="state" data-checkbox="true"></th-->
 			<!--th data-field="id" data-sortable="false" data-formatter="nameFormatterRemove" data-visible="true">Rimuovi</th-->
 			<th data-field="id_istanza" data-sortable="false" data-formatter="nameFormatterSend" data-visible="true">Invia</th>
-            <th data-field="usr_login" data-sortable="true" data-filter-control="select" data-visible="true">Utente</th>
-            <th data-field="usr_email" data-sortable="true" data-filter-control="select" data-visible="true">E-mail</th>
-            <th data-field="data_istanza" data-sortable="true" data-filter-control="select" data-visible="true">Data Istanza</th>
+            <th data-field="usr_login" data-sortable="true" data-filter-control="input" data-visible="true">Utente</th>
+            <th data-field="usr_email" data-sortable="true" data-filter-control="input" data-visible="true">E-mail</th>
+            <th data-field="data_istanza" data-sortable="true" data-filter-control="input" data-visible="true">Data Istanza</th>
             <!--th data-field="terreni" data-sortable="true" data-filter-control="select" data-visible="true">Terreni</th-->
             <th data-field="file_txt" data-sortable="false" data-formatter="nameFormatterFile0" data-visible="true">File Terreni</th>
             <th data-field="file_s" data-sortable="false" data-formatter="nameFormatterFile1" data-visible="true">Segreteria</th>
@@ -121,16 +121,16 @@ $cliente = 'Comune di Isernia';
 
  <tr>
             <!--th data-field="state" data-checkbox="true"></th-->
-			<!--th data-field="id" data-sortable="false" data-formatter="nameFormatterRemove" data-visible="true">Rimuovi</th-->
+			      <th data-field="id" data-sortable="false" data-formatter="nameFormatterRemove" data-visible="true">Rimuovi</th>
 			      <!--th data-field="id_istanza" data-sortable="false" data-formatter="nameFormatterSend" data-visible="true">Invia</th-->
-            <th data-field="usr_login" data-sortable="true" data-filter-control="select" data-visible="true">Utente</th>
-            <th data-field="nome" data-sortable="true" data-filter-control="select" data-visible="true">Nome</th>
-            <th data-field="usr_email" data-sortable="true" data-filter-control="select" data-visible="true">E-mail</th>
-            <th data-field="cf" data-sortable="true" data-filter-control="select" data-visible="true">CF</th>
-            <th data-field="doc_id" data-sortable="true" data-filter-control="select" data-visible="true">Documento</th>
-            <th data-field="indirizzo" data-sortable="true" data-filter-control="select" data-visible="true">Indirizzo</th>
-            <th data-field="phonenumber" data-sortable="true" data-filter-control="select" data-visible="true">Telefono</th>
-            <th data-field="organization" data-sortable="true" data-filter-control="select" data-visible="true">Affiliazione</th>
+            <th data-field="usr_login" data-sortable="true" data-filter-control="input" data-visible="true">Utente</th>
+            <th data-field="nome" data-sortable="true" data-filter-control="input" data-visible="true">Nome</th>
+            <th data-field="usr_email" data-sortable="true" data-filter-control="input" data-visible="true">E-mail</th>
+            <th data-field="cf" data-sortable="true" data-filter-control="input" data-visible="true">CF</th>
+            <th data-field="doc_id" data-sortable="true" data-filter-control="input" data-visible="true">Documento</th>
+            <th data-field="indirizzo" data-sortable="true" data-filter-control="input" data-visible="true">Indirizzo</th>
+            <th data-field="phonenumber" data-sortable="true" data-filter-control="input" data-visible="true">Telefono</th>
+            <th data-field="organization" data-sortable="true" data-filter-control="input" data-visible="true">Affiliazione</th>
             <th data-field="admin" data-sortable="false" data-formatter="nameFormatterFile6" data-visible="true">Admin</th>
         </tr>
 </thead>
@@ -157,11 +157,11 @@ function nameFormatterSend(value, row) {
 
 }
 
-/* function nameFormatterRemove(value, row) {
+function nameFormatterRemove(value, row) {
 	//var test_id= row.id;
 	//return' <button type="button" class="btn btn-info" data-target="remove_ist.php?idu='+row.id_istanza+'"><i class="fas fa-trash-alt"></i></button>';
 	  return' <a type="button" class="btn btn-info" href="remove_user.php?idu='+row.id+'"><i class="fas fa-trash-alt"></i></a>';
-} */
+}
 
 /* function nameFormatterFile6(value, row) {
   if (row.admin == 't'){
@@ -173,7 +173,7 @@ function nameFormatterSend(value, row) {
 
 function nameFormatterFile6(value, row) {
   if (row.admin == 't'){
-    return' <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalAd'+row.id+'" title="Rendi amministratore"><i class="fas fa-user-shield"></i></button>\
+    return' <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalAd'+row.id+'" title="Rimuovi da amministratore"><i class="fas fa-user-shield"></i></button>\
         <div class="modal fade" id="myModalAd'+row.id+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
       <div class="modal-dialog modal-dialog-centered" role="document">\
         <div class="modal-content">\
@@ -201,7 +201,7 @@ function nameFormatterFile6(value, row) {
       </div>\
     </div>' ;
   }else{
-    return' <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalAd'+row.id+'" title="Rendi amministratore"><i class="fas fa-user"></i></button>\
+    return' <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalAd'+row.id+'" title="Rendi amministratore" style="background-color: #38c038; border-color: #38c038;"><i class="fas fa-user"></i></button>\
         <div class="modal fade" id="myModalAd'+row.id+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
       <div class="modal-dialog modal-dialog-centered" role="document">\
         <div class="modal-content">\
@@ -233,23 +233,23 @@ function nameFormatterFile6(value, row) {
 
 function nameFormatterFile0(value, row) {
   if (row.file_txt != null){
-    return' <span><a href="../isernia_upload/mappali_cdu/'+ row.file_txt.split("/").pop() +'">Vedi file</a></span><br><a class="btn btn-primary" href="./download_txt.php?f='+ row.file_txt.split("/").pop() +'"><i class="fas fa-file-download"></i></a>';
+    return' <span><a href="../isernia_upload/mappali_cdu/'+ row.file_txt.split("/").pop() +'" target="_blank">Vedi file</a></span><br><a class="btn btn-primary" href="./download_txt.php?f='+ row.file_txt.split("/").pop() +'"><i class="fas fa-file-download"></i></a>';
   }else{
     return' <span>'+ row.file_txt +'</span>';
   }
 }
 
 function nameFormatterFile1(value, row) {
-  return' <span><a href="../isernia_upload/segreteria/'+ row.file_s.split("/").pop() +'">Vedi file</a></span>';
+  return' <span><a href="../isernia_upload/segreteria/'+ row.file_s.split("/").pop() +'" target="_blank">Vedi file</a></span>';
 }
 
 function nameFormatterFile2(value, row) {
-  return' <span><a href="../isernia_upload/bollo_istanza/'+ row.file_bi.split("/").pop() +'">Vedi file</a></span>';
+  return' <span><a href="../isernia_upload/bollo_istanza/'+ row.file_bi.split("/").pop() +'" target="_blank">Vedi file</a></span>';
 }
 
 function nameFormatterFile3(value, row) {
   if (row.file_bc != null){
-    return' <span><a href="../isernia_upload/bollo_cdu/'+ row.file_bc.split("/").pop() +'">Vedi file</a></span>';
+    return' <span><a href="../isernia_upload/bollo_cdu/'+ row.file_bc.split("/").pop() +'" target="_blank">Vedi file</a></span>';
   }else{
     return' <span>'+ row.file_bc +'</span>';
   }
@@ -350,7 +350,7 @@ function nameFormatterFile4(value, row) {
     </div>' ;
     } else{
       if (row.terminato != 't'){
-        return' <span><a href="../isernia_upload/cdu/'+ row.file_cdu.split("/").pop() +'">Vedi file</a></span><br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalCdu'+row.id_istanza+'" title="Modifica file CDU"><i class="fas fa-file-upload"></i></button>\
+        return' <span><a href="../isernia_upload/cdu/'+ row.file_cdu.split("/").pop() +'" target="_blank">Vedi file</a></span><br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalCdu'+row.id_istanza+'" title="Modifica file CDU"><i class="fas fa-file-upload"></i></button>\
           <div class="modal fade" id="myModalCdu'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
         <div class="modal-dialog modal-dialog-centered" role="document">\
           <div class="modal-content">\
@@ -378,7 +378,7 @@ function nameFormatterFile4(value, row) {
         </div>\
       </div>' ;
       }else{
-        return' <span><a href="../isernia_upload/cdu/'+ row.file_cdu.split("/").pop() +'">Vedi file</a></span>';
+        return' <span><a href="../isernia_upload/cdu/'+ row.file_cdu.split("/").pop() +'" target="_blank">Vedi file</a></span>';
       }
     }
 }

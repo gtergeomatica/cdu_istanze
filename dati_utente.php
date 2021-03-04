@@ -77,11 +77,11 @@
             <!--th data-field="state" data-checkbox="true"></th-->
 			<th data-field="id" data-sortable="false" data-formatter="nameFormatterRemove" data-visible="true">Rimuovi</th>
 			<th data-field="id_istanza" data-sortable="false" data-formatter="nameFormatterSend" data-visible="true">Invia</th>
-            <th data-field="data_istanza" data-sortable="true" data-filter-control="select" data-visible="true">Data Istanza</th>
-            <th data-field="terreni" data-sortable="true" data-filter-control="select" data-visible="true">Terreni</th>
+            <th data-field="data_istanza" data-sortable="true" data-filter-control="input" data-visible="true">Data Istanza</th>
+            <th data-field="terreni" data-sortable="true" data-filter-control="input" data-visible="true">Terreni</th>
             <th data-field="file_s" data-sortable="false" data-formatter="nameFormatterFile1" data-visible="true">Segreteria</th>
             <th data-field="file_bi" data-sortable="false" data-formatter="nameFormatterFile2" data-visible="true">Bollo Istanza</th>
-            <th data-field="n_bolli" data-sortable="false" data-filter-control="select" data-visible="true">N. Bolli</th>
+            <th data-field="n_bolli" data-sortable="false" data-filter-control="input" data-visible="true">N. Bolli</th>
             <th data-field="file_bc" data-sortable="false" data-formatter="nameFormatterFile3" data-visible="true">Bollo CDU</th>
             <th data-field="file_cdu" data-sortable="false" data-formatter="nameFormatterFile4" data-visible="true">File CDU</th>
         </tr>
@@ -150,7 +150,7 @@ function nameFormatterFile1(value, row) {
 </div>' ;
 } else{
   if (row.inviato != 't'){
-    return' <span><a href="../isernia_upload/segreteria/'+ row.file_s.split("/").pop() +'">Vedi file</a></span><br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal'+row.id_istanza+'" title="Modifica file pagamento diritti segreteria"><i class="fas fa-file-upload"></i></button>\
+    return' <span><a href="../isernia_upload/segreteria/'+ row.file_s.split("/").pop() +'" target="_blank">Vedi file</a></span><br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal'+row.id_istanza+'" title="Modifica file pagamento diritti segreteria"><i class="fas fa-file-upload"></i></button>\
       <div class="modal fade" id="myModal'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
     <div class="modal-dialog modal-dialog-centered" role="document">\
       <div class="modal-content">\
@@ -178,7 +178,7 @@ function nameFormatterFile1(value, row) {
     </div>\
   </div>' ;
   }else{
-    return' <span><a href="../isernia_upload/segreteria/'+ row.file_s.split("/").pop() +'">Vedi file</a></span>';
+    return' <span><a href="../isernia_upload/segreteria/'+ row.file_s.split("/").pop() +'" target="_blank">Vedi file</a></span>';
   }
 }
 }
@@ -215,7 +215,7 @@ function nameFormatterFile2(value, row) {
 </div>' ;
 } else{
   if (row.inviato != 't'){
-    return' <span><a href="../isernia_upload/bollo_istanza/'+ row.file_bi.split("/").pop() +'">Vedi file</a></span><br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBi'+row.id_istanza+'" title="Modifica file pagamento Bollo per l\'Istanza"><i class="fas fa-file-upload"></i></button>\
+    return' <span><a href="../isernia_upload/bollo_istanza/'+ row.file_bi.split("/").pop() +'" target="_blank">Vedi file</a></span><br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBi'+row.id_istanza+'" title="Modifica file pagamento Bollo per l\'Istanza"><i class="fas fa-file-upload"></i></button>\
       <div class="modal fade" id="myModalBi'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
     <div class="modal-dialog modal-dialog-centered" role="document">\
       <div class="modal-content">\
@@ -243,7 +243,7 @@ function nameFormatterFile2(value, row) {
     </div>\
   </div>' ;
   }else{
-    return' <span><a href="../isernia_upload/bollo_istanza/'+ row.file_bi.split("/").pop() +'">Vedi file</a></span>';
+    return' <span><a href="../isernia_upload/bollo_istanza/'+ row.file_bi.split("/").pop() +'" target="_blank">Vedi file</a></span>';
   }
 }
 }
@@ -279,7 +279,7 @@ function nameFormatterFile3(value, row) {
       </div>\
     </div>' ;
     } else{
-      return' <span><a href="../isernia_upload/bollo_cdu/'+ row.file_bc.split("/").pop() +'">Vedi file</a></span><br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBc'+row.id_istanza+'" title="Modifica file pagamento Bollo per CDU"><i class="fas fa-file-upload"></i></button>\
+      return' <span><a href="../isernia_upload/bollo_cdu/'+ row.file_bc.split("/").pop() +'" target="_blank">Vedi file</a></span><br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBc'+row.id_istanza+'" title="Modifica file pagamento Bollo per CDU"><i class="fas fa-file-upload"></i></button>\
         <div class="modal fade" id="myModalBc'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
       <div class="modal-dialog modal-dialog-centered" role="document">\
         <div class="modal-content">\
@@ -314,7 +314,7 @@ function nameFormatterFile3(value, row) {
 
 function nameFormatterFile4(value, row) {
   if(row.terminato == 't' && row.file_cdu != null){
-    return' <span><a href="../isernia_upload/cdu/'+ row.file_cdu.split("/").pop() +'">Vedi file</a></span><br><a class="btn btn-primary" href="./download_cdu.php?f='+ row.file_cdu.split("/").pop() +'"><i class="fas fa-file-download"></i></a>';
+    return' <span><a href="../isernia_upload/cdu/'+ row.file_cdu.split("/").pop() +'" target="_blank">Vedi file</a></span><br><a class="btn btn-primary" href="./download_cdu.php?f='+ row.file_cdu.split("/").pop() +'"><i class="fas fa-file-download"></i></a>';
   }else{
     return' <span> - </span>';
   }

@@ -101,10 +101,15 @@ if(isset($_POST['Submit']) || $_SESSION['user'] != ''){
     $result = pg_prepare($conn_isernia, "myquery0", $query);
     $result = pg_execute($conn_isernia, "myquery0", array($_SESSION['user']));
     while($r = pg_fetch_assoc($result)) {
-        if (password_verify($_SESSION['pwd'], $r["usr_password"])){
+        if (password_verify($_SESSION['pwd'], $r["usr_password"]) && $r["nascosto"]!='t'){
             $nome=$r["usr_login"];
             $_SESSION['admin']=$r["admin"];
             $check=1;
+            echo $r["nascosto"];
+        }elseif($r["nascosto"]=='t'){
+            $_SESSION['user'] = '';
+            $_SESSION['pwd'] = '';
+            die('<h1>Caro <i>'.$username.'</i>,<br> Il tuo account non è più attivo, creane uno nuovo.</h1> <hr class="light"><a href="form_external_user.php" class=\'btn btn-light btn-xl\'>Crea Account</a></div></div></div></section>');
         }
         else{
             die('<h1>Caro <i>'.$username.'</i>,<br> password errata.</h1> <hr class="light"><a href="dashboard.php" class=\'btn btn-light btn-xl\'>Riprova</a></div></div></div></section>');
@@ -115,7 +120,7 @@ if(isset($_POST['Submit']) || $_SESSION['user'] != ''){
         include("dati_utente.php");
     }elseif ($check==1 && $_SESSION['admin']=='t'){
         include("dati_admin.php");
-    } else {
+    }else {
         //echo $check;
         $_SESSION['user'] = '';
         $_SESSION['pwd'] = '';
@@ -148,7 +153,7 @@ pg_close($conn_isernia);
  </div>
 
  <div class="form-group">
- <a class="text-white mt-0" href="./cambia_password.php" onclick="myFunction()">Hai dimenticato la tua password?</a>
+ <a class="text-white mt-0" href="#cambiaPwd" data-toggle="modal">Hai dimenticato la tua password?</a>
  </div>
  
 <div class="form-group">
@@ -156,6 +161,32 @@ pg_close($conn_isernia);
 </div>
 </form>
 
+<div class="modal fade" id="cambiaPwd" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Cambia la password</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+	  <form action="nuova_pwd.php" method="post" enctype="multipart/form-data">
+	  <div class="form-group">
+  		Inserisci il tuo username:<br><br>
+      <!--input type="hidden" name="user" id="user'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>"-->
+  		<input type="text" name="myUser" id="myUser"><br><br>
+  		<input type="submit" value="Invia" name="submitpwd">
+		  </div>
+		</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+        <!--button type="button" class="btn btn-primary">Save changes</button-->
+      </div>
+    </div>
+  </div>
+</div>
 
 <?php
 

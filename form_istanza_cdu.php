@@ -157,7 +157,9 @@ Servizio basato su GisHosting di Gter srl\n
 
 	$oggetto ="Aggiunta istanza di CDU online del Comune di Isernia";
     $headers = $nostro_recapito .
-    "Reply-To: " .$loro_recapito. "\r\n";
+    "Reply-To: " .$loro_recapito. "\r\n" .
+    "Content-Type: text/plain; charset=utf-8" . "\r\n";
+	"Content-Transfer-Encoding: base64" . "\r\n";
 	mail ("$user_email", "$oggetto", "$testo","$headers");
 	
 } else {

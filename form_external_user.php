@@ -129,12 +129,18 @@ $check_user=1;
 // check if name exist
 /*$query = "SELECT nome, mail from jlx_user where usr_login ='".$username."';";
 $result = pg_query($conn_lizmap, $query);*/
-$query = "SELECT usr_login, usr_email from utenti.utenti where usr_login =$1;";
+$query = "SELECT usr_login, usr_email, nascosto from utenti.utenti where usr_login =$1;";
 $result = pg_prepare($conn_isernia, "myquery0", $query);
 $result = pg_execute($conn_isernia, "myquery0", array($username));
 while($r = pg_fetch_assoc($result)) {
-	$check_user=-1;
-	$mail_old=$r['usr_email'];
+	if ($r["nascosto"]!='t'){
+		$check_user=-1;
+		$mail_old=$r['usr_email'];
+	}else{
+		$query_usrname = "UPDATE utenti.utenti SET usr_login = concat(usr_login, '_hide', to_char(now(), 'YYYYMMDDHH24MI')) where usr_login=$1";
+		$result_usr = pg_prepare($conn_isernia, "myquery3", $query_usrname);
+		$result_usr = pg_execute($conn_isernia, "myquery3", array($username));
+	}
 }
 
 if ($check_user==1){
@@ -171,34 +177,6 @@ if ($check_user==1){
 	$result = pg_execute($conn_isernia, "myquery1", array($username, $password2, $mail, $name, $surname, $codfisc, $docid, $street, $cap, $city, $tel, $affil));
 
 
-
-	/*$query_lizmap = "INSERT INTO jacl2_group(
-				id_aclgrp, name, grouptype)
-		VALUES ('".$username."_group', '".$username."_group', 0);";
-	$result = pg_query($conn_lizmap, $query_lizmap);*/
-
-
-	// Non serve perchè credo sia gestito da un trigger interno
-	/*$query_lizmap = "INSERT INTO jacl2_group(
-				id_aclgrp, name, grouptype, ownerlogin)
-		VALUES ('__priv_".$username."', '$username', 2, '$username');";
-	$result = pg_query($conn_lizmap, $query_lizmap);*/
-    
-    /* $query_lizmap = "INSERT INTO jacl2_user_group(
-				login, id_aclgrp)
-    VALUES ('$username', '".$gruppo."');";
-    $result = pg_query($conn_lizmap, $query_lizmap); */
-
-
-	/* for($i = 0; $i < count($_POST["gruppi"]); $i++) {
-		
-		$query_lizmap = "INSERT INTO jacl2_user_group(
-				login, id_aclgrp)
-		VALUES ('$username', '".$gruppo."');";
-		$result = pg_query($conn_lizmap, $query_lizmap);
-	} */
-	//exit;
-
     //recupero nome, cognome e indirizzo mail dell'amministratore per invio mail
 	$query_lizmap = "SELECT usr_email, firstname, lastname FROM jlx_user where usr_login=$1;";
 	$result = pg_prepare($conn_lizmap, "myquery2", $query_lizmap);
@@ -208,7 +186,7 @@ if ($check_user==1){
 		$f_admin = $r['firstname'];
 		$l_admin = $r['lastname'];
 	}
-    //echo '<br><h1>la mail è: '. $mail_admin .'</h1>';
+
 	//*******************************************************//
 	// INVIO MAIL
 	require('mail_address.php');
@@ -218,12 +196,13 @@ if ($check_user==1){
 
 Egr. " . $f_admin . " " .$l_admin. "\n
 questa mail e' stata generata automaticamente in quanto si è appena registrato nel sistema di istanza CDU online un utente con i seguenti dettagli:\n
+
     Username:". $username . " \n
-	Nome:". $name . " \n
-	Cognome:". $surname . " \n	
+    Nome:". $name . " \n
+    Cognome:". $surname . " \n
     Codice Fiscale:". $codfisc . " \n
     Tel:". $tel . " \n
-	Mail:". $mail . " \n
+    Mail:". $mail . " \n
     Indirizzo:". $street . " " . $cap . " " . $city . " \n \n
 
 Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di  darcene  immediata  comunicazione  anche  inviando  un  messaggio  di  ritorno  all'indirizzo  e-mail  del mittente. 	In caso di problemi o richieste non esiti a ricontattarci.\n \n
@@ -245,13 +224,16 @@ Se avete ricevuto questo messaggio per errore, vi preghiamo di distruggerlo e di
 
 ";
 
+	$headers = $nostro_recapito .
+	"Content-Type: text/plain; charset=utf-8" . "\r\n";
+	"Content-Transfer-Encoding: base64" . "\r\n";
 
-	mail ("$mail_admin", "$oggetto", "$testo", "$nostro_recapito");
+	mail ("$mail_admin", "$oggetto", "$testo", "$headers");
 
 
 	$testo2 = "
 
-INFO DI SERVIZIO!\n" . $name . " " .$surname. " e' stato appena registrato su sistema di istanza CDU online con i seguenti dettagli:\n
+INFO DI SERVIZIO!\n" . $name . " " .$surname. " è stato appena registrato su sistema di istanza CDU online con i seguenti dettagli:\n
     Username: ". $username . " \n
     Mail: ". $mail . " \n
     Affiliazione: ". $affil . " \n
@@ -273,7 +255,12 @@ www.linkedin.com/company/gter-srl-innovazione-in-geomatica-gnss-e-gis\n\n
 ";
 
 	$oggetto2 ="Nuovo utente registrato su CDU online Isernia";
-	mail ("assistenzagis@gter.it", "$oggetto2", "$testo2","$nostro_recapito");
+
+	$headers2 = $nostro_recapito .
+	"Content-Type: text/plain; charset=utf-8" . "\r\n";
+	"Content-Transfer-Encoding: base64" . "\r\n";
+
+	mail ("assistenzagis@gter.it", "$oggetto2", "$testo2","$headers2");
     
     $testo3 = "
 
@@ -304,7 +291,9 @@ Servizio basato su GisHosting di Gter srl\n
 	$oggetto3 ="Iscrizione a sistema di istanza CDU online del Comune di Isernia";
     $headers3 = $nostro_recapito .
     "Reply-To: " .$loro_recapito. "\r\n" .
-    "Cc: " .$mail_admin. "\r\n";
+    "Cc: " .$mail_admin. "\r\n" .
+	"Content-Type: text/plain; charset=utf-8" . "\r\n";
+	"Content-Transfer-Encoding: base64" . "\r\n";
 	mail ("$mail", "$oggetto3", "$testo3","$headers3");
 
 } else {

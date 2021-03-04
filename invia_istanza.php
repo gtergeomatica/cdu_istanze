@@ -68,14 +68,14 @@ if(!$conn_isernia) {
     $testo = "
 
 Questa mail è stata generata automaticamente in quanto è appena stata inviata un'istanza di CDU da:\n
-	Nome: ". $nome . " \n
-	Cognome: ". $cognome . " \n
-	Codice Fiscale: ". $cf . " \n
-	N° Documento: ". $doc . " \n
-	Tel: ". $telefono . " \n
-	Mail: ". $mail . " \n
-	Indirizzo: ". $via . ", " . $cap . ", " . $city . " \n
-	In qualità di " . $ruolo . " \n\n
+    Nome: ". $nome . " \n
+    Cognome: ". $cognome . " \n
+    Codice Fiscale: ". $cf . " \n
+    N° Documento: ". $doc . " \n
+    Tel: ". $telefono . " \n
+    Mail: ". $mail . " \n
+    Indirizzo: ". $via . ", " . $cap . ", " . $city . " \n
+    In qualità di " . $ruolo . " \n\n
 
 La presente richiesta è per uso: " . $motivo . " \n
 
@@ -176,7 +176,9 @@ Servizio basato su GisHosting di Gter srl\n
 	$oggetto2 ="Nuova Istanza CDU";
     $headers2 = $nostro_recapito .
     "Reply-To: " .$loro_recapito. "\r\n" .
-    "Cc: " .$mail_admin. "\r\n";
+    "Cc: " .$mail_admin. "\r\n" .
+	"Content-Type: text/plain; charset=utf-8" . "\r\n";
+	"Content-Transfer-Encoding: base64" . "\r\n";
 	mail ("$mail", "$oggetto2", "$testo2","$headers2");
 
 	header ("Location: dashboard.php#about");

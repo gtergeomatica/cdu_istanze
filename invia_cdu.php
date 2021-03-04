@@ -80,7 +80,9 @@ Se avete ricevuto questo messaggio per errore, vi preghiamo di distruggerlo e di
 
 ";
 	$headers = $nostro_recapito .
-	"Cc: " .$mail_admin. "\r\n";
+	"Cc: " .$mail_admin. "\r\n" .
+	"Content-Type: text/plain; charset=utf-8" . "\r\n";
+	"Content-Transfer-Encoding: base64" . "\r\n";
 	mail ($loro_recapito, $oggetto, $testo, $headers);
     
     $testo2 = "
@@ -107,7 +109,9 @@ Servizio basato su GisHosting di Gter srl\n
 	$oggetto2 ="CDU disponibile per il download";
     $headers2 = $nostro_recapito .
     "Reply-To: " .$loro_recapito. "\r\n" .
-    "Cc: " .$mail_admin. "\r\n";
+    "Cc: " .$mail_admin. "\r\n" .
+	"Content-Type: text/plain; charset=utf-8" . "\r\n";
+	"Content-Transfer-Encoding: base64" . "\r\n";
 	mail ("$mail", "$oggetto2", "$testo2","$headers2");
 
 	header ("Location: dashboard.php#about");

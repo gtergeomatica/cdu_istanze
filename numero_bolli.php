@@ -41,7 +41,7 @@ if(!$conn_isernia) {
 $testo = "
 
 Egr. " . $fullname. ",\n 
-questa mail e' stata generata automaticamente in quanto il Comune di Isernia ha elaborato la sua istanza di CDU aggiunta in data " . $data . ".\n
+questa mail è stata generata automaticamente in quanto il Comune di Isernia ha elaborato la sua istanza di CDU aggiunta in data " . $data . ".\n
 Per poter scaricare il CDU è necessario che venga caricata sulla sua dashboard l'autocertificazione di avvenuto pagamento di n° " . $numero . " bolli
 da 16,00 euro da assolvere tramite Modello F23 o acquisto presso un rivenditore.\n
 
@@ -65,7 +65,9 @@ Servizio basato su GisHosting di Gter srl\n
 
 	$oggetto ="Assolvimento Bolli per CDU del Comune di Isernia";
     $headers = $nostro_recapito .
-    "Reply-To: " .$loro_recapito. "\r\n";
+    "Reply-To: " .$loro_recapito. "\r\n" .
+	"Content-Type: text/plain; charset=utf-8" . "\r\n";
+	"Content-Transfer-Encoding: base64" . "\r\n";
 	mail ("$user_email", "$oggetto", "$testo","$headers");
 
 		header ("Location: dashboard.php#about");
