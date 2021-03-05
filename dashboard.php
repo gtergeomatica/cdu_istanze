@@ -203,11 +203,21 @@ require('footer.php');
 require('req_bottom.php');
 ?>
 <script>
-function myFunction() {
-  console.log("YOU CLICKED ME!");
-}
-</script>
+$('#usr').bootstrapTable({
+    onLoadSuccess: function(data){
+    $('#usr').bootstrapTable('getData').forEach(function(r, index){
+        //console.log(r['doc_exp'])
+        //console.log(index)
+        if (r['doc_exp'] < new Date().toISOString().substring(0,10)){
+            //$('table#usr tr[data-index="'+index+'"]').css('background-color', 'yellow');
+            $('table#usr tr[data-index="'+index+'"]').attr('style', 'background-color: yellow !important');
+        }
+    })
+    $('#usr').bootstrapTable('refresh')
+    }
+});
 
+</script>
 </body>
 
 </html>

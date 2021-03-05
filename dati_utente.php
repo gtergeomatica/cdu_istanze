@@ -1,4 +1,5 @@
 <?php
+
 ?>
 <div>
 	<h2>Dati utente</h2>
@@ -13,10 +14,15 @@
 	while($r = pg_fetch_assoc($result)) {
     		//$rows[] = $r;
 			$usr_id=$r["id"];
+      $data_exp=$r["doc_exp"];
 			echo "<b>User</b>: ".$r["usr_login"];
 			echo "<br><b>Nome e Cognome</b>: ".$r["firstname"]. " " .$r["lastname"];
 			echo "<br><b>Codice Fiscale</b>: ".$r["cf"];
 			echo "<br><b>Documento identità</b>: ".$r["doc_id"];
+      echo "<br><b>Data Scadenza Documento identità</b>: ".$r["doc_exp"];
+      if($r["doc_exp"] < date("Y-m-d")){
+        echo "<br><br><b style='color: yellow;'>ATTENZIONE il Documento è SCADUTO!<br> Se non modifichi il documento non potrai richiedere il CDU</b><br>";
+      }
 			echo "<br><b>Indirizzo</b>: ".$r["street"]. " - " .$r["postcode"]. ", " .$r["city"];
 			echo "<br><b>E-mail</b>: ".$r["usr_email"];
 			echo "<br><b>Telefono</b>: ".$r["phonenumber"];
@@ -49,8 +55,9 @@
 </div-->	
 <br><br><a class="btn btn-light btn-sm" href="modifica_dati.php?u=<?php echo $r["id"]; ?>">Modifica i tuoi dati</a>
 <hr class="light">
-<div>
-	<a class="btn btn-light btn-xl" href="form_istanza_cdu.php?u=<?php echo $r["id"]; ?>&user=<?php echo $r["usr_login"]; ?>">Richiedi CDU</a>
+<div class="mytip" id="mytip">
+	<a id="rcdu" class="btn btn-light btn-xl" href="form_istanza_cdu.php?u=<?php echo $r["id"]; ?>&user=<?php echo $r["usr_login"]; ?>">Richiedi CDU</a>
+  <span id="spantip"></span>
 </div>
 <hr class="light">
 
@@ -319,6 +326,19 @@ function nameFormatterFile4(value, row) {
     return' <span> - </span>';
   }
 }
+</script>
+<script>
+  var data_exp = "<?php echo $data_exp; ?>";
+  //console.log(data_exp);
+  var today = new Date().toISOString().substring(0,10);
+  //console.log(today);
+  if (data_exp < today){
+    console.log("documento scaduto");
+    $('#rcdu').removeAttr('href');
+    $('#rcdu').css('opacity', '0.65');
+    $('#spantip').attr('class', 'tooltiptext');
+    $('#spantip').html('impossibile richiedere CDU')
+  }
 </script>
 <?php
 }

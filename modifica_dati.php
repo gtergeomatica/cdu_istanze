@@ -76,22 +76,6 @@ include("root_connection.php");
 
 if(isset($_POST['Submit'])){
 
-	/* $query = "SELECT * from utenti.utenti where id=$1;";
-	$result = pg_prepare($conn_isernia, "myquery0", $query);
-	$result = pg_execute($conn_isernia, "myquery0", array($idu));
-	while($r = pg_fetch_assoc($result)) {
-		$maildb = $r["usr_email"];
-		$nomedb = $r["firstname"];
-		$cognomedb = $r["lastname"];
-		$cfdb = $r["cf"];
-		$docdb = $r["doc_id"];
-		$streetdb = $r["street"];
-		$capdb = $r["postcode"];
-		$citydb = $r["city"];
-		$teldb = $r["phonenumber"];
-		$affildb = $r["organization"];
-	} */
-
     //echo $password2;
     //exit;
 
@@ -100,6 +84,7 @@ if(isset($_POST['Submit'])){
 	$surname = pg_escape_string($_POST['surname']);
 	$codfisc = pg_escape_string($_POST['codfisc']);
 	$docid = pg_escape_string($_POST['docid']);
+	$docdate = pg_escape_string($_POST['docdate']);
 	$street = pg_escape_string($_POST['street']);
 	$cap = pg_escape_string($_POST['cap']);
 	$city = pg_escape_string($_POST['city']);
@@ -133,12 +118,12 @@ $result = pg_query($conn_lizmap, $query);*/
 
 	// creo l'utente lizmap
 	$query_user = "UPDATE utenti.utenti SET
-		usr_email = $1, firstname = $2, lastname = $3, cf = $4, doc_id = $5, street = $6, postcode = $7, city = $8, phonenumber = $9, organization = $10
-		where id = $11;";
+		usr_email = $1, firstname = $2, lastname = $3, cf = $4, doc_id = $5, street = $6, postcode = $7, city = $8, phonenumber = $9, organization = $10, doc_exp = $11
+		where id = $12;";
 
 	//echo $query_lizmap;
 	$result = pg_prepare($conn_isernia, "myquery1", $query_user);
-	$result = pg_execute($conn_isernia, "myquery1", array($mail, $name, $surname, $codfisc, $docid, $street, $cap, $city, $tel, $affil, $idu));
+	$result = pg_execute($conn_isernia, "myquery1", array($mail, $name, $surname, $codfisc, $docid, $street, $cap, $city, $tel, $affil, $docdate, $idu));
 
 	
 } else {
@@ -153,6 +138,7 @@ $query = "SELECT * from utenti.utenti where id=$1;";
 		$cognomedb = $r["lastname"];
 		$cfdb = $r["cf"];
 		$docdb = $r["doc_id"];
+		$docdatedb = $r["doc_exp"];
 		$streetdb = $r["street"];
 		$capdb = $r["postcode"];
 		$citydb = $r["city"];
@@ -221,6 +207,12 @@ while($r = pg_fetch_assoc($result)) {
 </div>
 
 <div class="form-group">
+<label>Data Scadenza del Documento</label>
+<input id="datePickerId" type="date" class="form-control" name="docdate" value="<?php echo $docdatedb; ?>" required>
+<div class="help-block with-errors"></div>
+</div>
+
+<div class="form-group">
 <label>Via e civico</label>
 <input type="text" class="form-control" name="street" value="<?php echo $streetdb; ?>" required>
 <div class="help-block with-errors"></div>
@@ -246,7 +238,7 @@ while($r = pg_fetch_assoc($result)) {
 
 <div class="form-group">
 <label>Affiliazione</label>
-<input type="text" class="form-control" name="affil" value="<?php echo $affildb; ?>" required>
+<input type="text" class="form-control" name="affil" value="<?php echo $affildb; ?>">
 </div>
 <hr class="light">
 <div class="form-group">
@@ -301,7 +293,9 @@ require('req_bottom.php');
 	$('#login').validator();
 	});
 </script>
-
+<script type="text/javascript">
+	datePickerId.min = new Date().toISOString().split("T")[0];
+</script>
 <script> 
 	$('#consenso').click(function () {
 		//check if checkbox is checked

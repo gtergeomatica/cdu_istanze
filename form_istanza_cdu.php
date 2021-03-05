@@ -207,9 +207,9 @@ while ($row = $result->fetch()) {
  <tr>
             <th data-field="state" data-checkbox="true"></th>
             <th data-field="id" data-sortable="true" data-formatter="nameFormatterEdit" data-visible="true" >Rimuovi</th>
-			<th data-field="data" data-sortable="true" data-filter-control="select" data-visible="true">Data</th>
-            <th data-field="foglio" data-sortable="true" data-filter-control="select" data-visible="true">Foglio</th>
-            <th data-field="mappale" data-sortable="true" data-filter-control="select" data-visible="true">Mappale</th>
+			<th data-field="data" data-sortable="true" data-filter-control="input" data-visible="true">Data</th>
+            <th data-field="foglio" data-sortable="true" data-filter-control="input" data-visible="true">Foglio</th>
+            <th data-field="mappale" data-sortable="true" data-filter-control="input" data-visible="true">Mappale</th>
             <!--th data-field="mappale" data-sortable="true" data-filter-control="input" data-visible="true">Mappale</th>
             <th data-field="log_repository" data-sortable="true" data-filter-control="select" data-visible="true">Repository</th>
             <th data-field="log_project" data-sortable="true" data-filter-control="select" data-visible="true">Progetti</th-->

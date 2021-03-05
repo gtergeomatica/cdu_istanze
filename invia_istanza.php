@@ -46,7 +46,7 @@ if(!$conn_isernia) {
 	}	
 	fclose($fp);
 
-	$query = "UPDATE istanze.istanze SET file_txt = $1, inviato = true where id = $2;";
+	$query = "UPDATE istanze.istanze SET file_txt = $1, inviato = true, data_invio = now() where id = $2;";
 	$result2 = pg_prepare($conn_isernia, "myquery2", $query);
 	$result2 = pg_execute($conn_isernia, "myquery2", array($dest_file, $id_istanza));
 

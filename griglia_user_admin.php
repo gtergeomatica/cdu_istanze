@@ -18,10 +18,10 @@ if(!$conn_isernia) {
 	$query_users = "SELECT id, usr_login, string_agg(concat(firstname,' ',lastname), '') as nome, 
 			usr_email, cf, doc_id, 
 			string_agg(concat(street ,' - ',postcode, ', ', city), '') as indirizzo,
-			phonenumber, organization, admin, nascosto
+			phonenumber, organization, admin, nascosto, doc_exp
 			from utenti.utenti
 			where nascosto is not true
-			group by id, usr_login, usr_email, cf, doc_id, phonenumber, organization, admin, lastname
+			group by id, usr_login, usr_email, cf, doc_id, phonenumber, organization, admin, lastname, doc_exp
 			order by lastname;";
 	//echo $query."<br>";
 	$result = pg_prepare($conn_isernia, "myquery0", $query_users);

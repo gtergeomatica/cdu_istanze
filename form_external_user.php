@@ -109,6 +109,11 @@ if(isset($_POST['Submit'])){
 
 	$docid = pg_escape_string($_POST['docid']);
 
+	$docdate = pg_escape_string($_POST['docdate']);
+	if($docdate < date("Y-m-d")){
+		die('<h1>Il documento di identità inserito è scaduto. Non è possibile creare l\'account.</h1> <hr class="light"><a href="index.php" class=\'btn btn-light btn-xl\'>Torna alla Home</a></div></div></div></section>');
+	}
+
 	$street = pg_escape_string($_POST['street']);
 
 	$cap = pg_escape_string($_POST['cap']);
@@ -169,12 +174,12 @@ if ($check_user==1){
 	// creo l'utente lizmap
 	$query_user = "INSERT INTO utenti.utenti(
 				usr_login, usr_password, usr_email, firstname, lastname,  
-				cf, doc_id, street, postcode, city, phonenumber, organization)
-		VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12);";
+				cf, doc_id, street, postcode, city, phonenumber, organization, doc_exp)
+		VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13);";
 
 	//echo $query_lizmap;
 	$result = pg_prepare($conn_isernia, "myquery1", $query_user);
-	$result = pg_execute($conn_isernia, "myquery1", array($username, $password2, $mail, $name, $surname, $codfisc, $docid, $street, $cap, $city, $tel, $affil));
+	$result = pg_execute($conn_isernia, "myquery1", array($username, $password2, $mail, $name, $surname, $codfisc, $docid, $street, $cap, $city, $tel, $affil, $docdate));
 
 
     //recupero nome, cognome e indirizzo mail dell'amministratore per invio mail
@@ -197,13 +202,13 @@ if ($check_user==1){
 Egr. " . $f_admin . " " .$l_admin. "\n
 questa mail e' stata generata automaticamente in quanto si è appena registrato nel sistema di istanza CDU online un utente con i seguenti dettagli:\n
 
-    Username:". $username . " \n
-    Nome:". $name . " \n
-    Cognome:". $surname . " \n
-    Codice Fiscale:". $codfisc . " \n
-    Tel:". $tel . " \n
-    Mail:". $mail . " \n
-    Indirizzo:". $street . " " . $cap . " " . $city . " \n \n
+    Username: ". $username . " \n
+    Nome: ". $name . " \n
+    Cognome: ". $surname . " \n
+    Codice Fiscale: ". $codfisc . " \n
+    Tel: ". $tel . " \n
+    Mail: ". $mail . " \n
+    Indirizzo: ". $street . " " . $cap . " " . $city . " \n \n
 
 Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di  darcene  immediata  comunicazione  anche  inviando  un  messaggio  di  ritorno  all'indirizzo  e-mail  del mittente. 	In caso di problemi o richieste non esiti a ricontattarci.\n \n
             
@@ -238,7 +243,7 @@ INFO DI SERVIZIO!\n" . $name . " " .$surname. " è stato appena registrato su si
     Mail: ". $mail . " \n
     Affiliazione: ". $affil . " \n
     Tel: ". $tel . " \n	
-    Indirizzo:". $street . " " . $cap . " " . $city . " \n \n
+    Indirizzo: ". $street . " " . $cap . " " . $city . " \n \n
     
 I dati sono stati memorizzati sul DB comuneisernia (PostgreSQL). Non sono richieste altre azioni \n \n
         
@@ -266,12 +271,13 @@ www.linkedin.com/company/gter-srl-innovazione-in-geomatica-gnss-e-gis\n\n
 
 Egr. " . $name . " " .$surname. ",\n 
 questa mail e' stata generata automaticamente in quanto si è appena registrato/a sul sistema di istanza CDU online del Comune di Isernia con i seguenti dettagli:\n
-	Username:". $username . " \n	
-	Codice Fiscale:". $codfisc . " \n
-	Documento di identita':" . $docid . "\n
-	Tel:". $tel . " \n
-	Mail:". $mail . " \n
-	Indirizzo:". $street . " " . $cap . " " . $city . " \n \n
+    Username: ". $username . " \n	
+    Codice Fiscale: ". $codfisc . " \n
+    Documento di identita': " . $docid . "\n
+    Data scadenza documento: " . $docdate . "\n
+    Tel: ". $tel . " \n
+    Mail: ". $mail . " \n
+    Indirizzo: ". $street . " " . $cap . " " . $city . " \n \n
     
 Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di comunicarlo immediatamente all'amministratore del sistema rispondendo a questa mail. Se invece si è effettivamente registrato/a le ricordiamo che il suo utente è già attivo e può quindi iniziare a consultare i dati online all'indirizzo https://gishosting.gter.it/isernia/dashboard.php \n
 In caso di problemi o richieste non esiti a contattare l'amministratore del sistema al seguente indirizzo DL_Cartografia@astergenova.it.\n \n
@@ -385,6 +391,12 @@ while($r = pg_fetch_assoc($result)) {
 </div>
 
 <div class="form-group">
+<label>Data Scadenza del Documento*</label>
+<input id="datePickerId" type="date" class="form-control" data-error="La Data di Scadenza del Documento è obbligatorio, non può essere lasciato vuoto" name="docdate" required>
+<div class="help-block with-errors"></div>
+</div>
+
+<div class="form-group">
 <label>Via e civico*</label>
 <input type="text" class="form-control" data-error="Via e Numero civico sono obbligatori, il campo non può essere lasciato vuoto" name="street" required>
 <div class="help-block with-errors"></div>
@@ -474,6 +486,9 @@ custom: {
 }
 });
 });
+</script>
+<script type="text/javascript">
+	datePickerId.min = new Date().toISOString().split("T")[0];
 </script>
 <script> 
 	$('#consenso').click(function () {

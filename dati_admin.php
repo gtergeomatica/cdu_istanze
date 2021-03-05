@@ -18,6 +18,10 @@ $cliente = 'Comune di Isernia';
 			echo "<br><b>Nome e Cognome</b>: ".$r["firstname"]. " " .$r["lastname"];
 			echo "<br><b>Codice Fiscale</b>: ".$r["cf"];
 			echo "<br><b>Documento identità</b>: ".$r["doc_id"];
+      echo "<br><b>Data Scadenza Documento identità</b>: ".$r["doc_exp"];
+      if($r["doc_exp"] < date("Y-m-d")){
+        echo "<br><br><b style='color: yellow;'>ATTENZIONE il Documento è SCADUTO!<br> Modifica i tuoi dati.</b><br>";
+      }
 			echo "<br><b>Indirizzo</b>: ".$r["street"]. " - " .$r["postcode"]. ", " .$r["city"];
 			echo "<br><b>E-mail</b>: ".$r["usr_email"];
 			echo "<br><b>Telefono</b>: ".$r["phonenumber"];
@@ -81,7 +85,7 @@ $cliente = 'Comune di Isernia';
 			<th data-field="id_istanza" data-sortable="false" data-formatter="nameFormatterSend" data-visible="true">Invia</th>
             <th data-field="usr_login" data-sortable="true" data-filter-control="input" data-visible="true">Utente</th>
             <th data-field="usr_email" data-sortable="true" data-filter-control="input" data-visible="true">E-mail</th>
-            <th data-field="data_istanza" data-sortable="true" data-filter-control="input" data-visible="true">Data Istanza</th>
+            <th data-field="data_invio" data-sortable="true" data-filter-control="input" data-visible="true">Data Istanza</th>
             <!--th data-field="terreni" data-sortable="true" data-filter-control="select" data-visible="true">Terreni</th-->
             <th data-field="file_txt" data-sortable="false" data-formatter="nameFormatterFile0" data-visible="true">File Terreni</th>
             <th data-field="file_s" data-sortable="false" data-formatter="nameFormatterFile1" data-visible="true">Segreteria</th>
@@ -128,6 +132,7 @@ $cliente = 'Comune di Isernia';
             <th data-field="usr_email" data-sortable="true" data-filter-control="input" data-visible="true">E-mail</th>
             <th data-field="cf" data-sortable="true" data-filter-control="input" data-visible="true">CF</th>
             <th data-field="doc_id" data-sortable="true" data-filter-control="input" data-visible="true">Documento</th>
+            <th data-field="doc_exp" data-sortable="true" data-filter-control="input" data-formatter="nameFormatterFile7" data-visible="true">Scadenza</th>
             <th data-field="indirizzo" data-sortable="true" data-filter-control="input" data-visible="true">Indirizzo</th>
             <th data-field="phonenumber" data-sortable="true" data-filter-control="input" data-visible="true">Telefono</th>
             <th data-field="organization" data-sortable="true" data-filter-control="input" data-visible="true">Affiliazione</th>
@@ -382,7 +387,18 @@ function nameFormatterFile4(value, row) {
       }
     }
 }
+
+function nameFormatterFile7(value, row) {
+  if (row.doc_exp < new Date().toISOString().substring(0,10)){
+    //var row_idx = $('table#usr tr').index();
+    return'<span>SCADUTO</span><a id="sendemail" type="button" class="btn btn-info" href="doc_scaduto.php?idu='+row.id+'"><i class="fas fa-bell"></i></a>';
+  }else{
+    return row.doc_exp ;
+  }
+}
+
 </script>
+
 <?php
 }
 ?>
