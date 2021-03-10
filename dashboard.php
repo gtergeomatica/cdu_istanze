@@ -202,7 +202,7 @@ pg_close($conn_isernia);
 require('footer.php');
 require('req_bottom.php');
 ?>
-<script>
+<!--script>
 $('#usr').bootstrapTable({
     onLoadSuccess: function(data){
     $('#usr').bootstrapTable('getData').forEach(function(r, index){
@@ -213,11 +213,11 @@ $('#usr').bootstrapTable({
             $('table#usr tr[data-index="'+index+'"]').attr('style', 'background-color: yellow !important');
         }
     })
-    $('#usr').bootstrapTable('refresh')
+    //$('#usr').bootstrapTable('refresh')
     }
 });
 
-</script>
+</script-->
 </body>
 
 </html>
