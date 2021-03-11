@@ -26,6 +26,7 @@ if(!$conn_isernia) {
 			else {
 				move_uploaded_file( $source_file, $dest_file )
 				or die ("Error!!");
+				$check_bollo = 0;
 				if($_FILES['fileToUploadBc']['error'] == 0) {
 					//$query = "SELECT exists (SELECT * from istanze.pagamento_segreteria where id_istanza_s = $1);";
 					$query = "SELECT * from istanze.pagamento_bollo_cdu where id_istanza_bc = $1;";
@@ -43,17 +44,81 @@ if(!$conn_isernia) {
 						$query = "UPDATE istanze.pagamento_bollo_cdu SET file_bc = $1 where id_istanza_bc = $2;";
 						$result2 = pg_prepare($conn_isernia, "myquery2", $query);
 						$result2 = pg_execute($conn_isernia, "myquery2", array($dest_file, $id_istanza));
+						$check_bollo = 1;
 					}
-				}
+					$query = "SELECT * from istanze.istanze where id = $1;";
+					$result3 = pg_prepare($conn_isernia, "myquery3", $query);
+					$result3 = pg_execute($conn_isernia, "myquery3", array($id_istanza));
+					while($r = pg_fetch_assoc($result3)) {
+						$data = $r['data_invio'];
+					}
+					require('mail_address.php');
+					if ($check_bollo == 0){
+$testo3 = "
 
-				header ("Location: dashboard.php#about");
+COMUNICAZIONE DI SERVIZIO \n
+questa mail e' stata generata automaticamente in quanto l'utente " . $_SESSION['user'] . " ha appena caricato l'autocertificazione di pagamento dei bolli dovuti per l'istanza di CDU inviata in data ". $data .".
+Verificare il pagamento e quindi inviare il CDU.
+	
+Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di comunicarlo immediatamente all'amministratore del sistema rispondendo a questa mail.\n
+			
+Cordiali saluti, \n
+L'amministratore del sistema.
+		
+-- 
+Comune di Isernia
+Piazza Marconi, 3 - 86170 Isernia (IS)
+E-mail: segreteriagenerale@comune.isernia.it
+
+Servizio basato su GisHosting di Gter srl\n
+
+";
+					
+						$oggetto3 ="Caricamento bolli per CDU";
+						$headers3 = $nostro_recapito .
+						"Content-Type: text/plain; charset=utf-8" . "\r\n";
+						"Content-Transfer-Encoding: base64" . "\r\n";
+						mail ("$loro_recapito", "$oggetto3", "$testo3","$headers3");
+					}else{
+$testo2 = "
+
+COMUNICAZIONE DI SERVIZIO \n
+questa mail e' stata generata automaticamente in quanto l'utente " . $_SESSION['user'] . " ha appena caricato una nuova autocertificazione di pagamento dei bolli dovuti per l'istanza di CDU inviata in data ". $data .".
+Verificare il pagamento e quindi inviare il CDU.
+	
+Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di comunicarlo immediatamente all'amministratore del sistema rispondendo a questa mail.\n
+			
+Cordiali saluti, \n
+L'amministratore del sistema.
+		
+-- 
+Comune di Isernia
+Piazza Marconi, 3 - 86170 Isernia (IS)
+E-mail: segreteriagenerale@comune.isernia.it
+
+Servizio basato su GisHosting di Gter srl\n
+
+";
+					
+						$oggetto2 ="Errata Corrige - Caricamento bolli per CDU";
+						$headers2 = $nostro_recapito .
+						"Content-Type: text/plain; charset=utf-8" . "\r\n";
+						"Content-Transfer-Encoding: base64" . "\r\n";
+						mail ("$loro_recapito", "$oggetto2", "$testo2","$headers2");						
+					}
+
+					header ("Location: dashboard.php#about");
+				}else{
+					print "Si è verificato un errore nel caricamento del file: ".$_FILES['fileToUploadBc']['name']."<br/>";
+					print "Codice Errore: ".$_FILES['fileToUploadBc']['error']."<br/>";
+				}
+				
 			}
-		}
-		else {
+		}else {
 			if ( $_FILES['fileToUploadBc']['type'] != "application/pdf") {
-				print "Error occured while uploading file : ".$_FILES['fileToUploadBc']['name']."<br/>";
-				print "Invalid  file extension, should be pdf !!"."<br/>";
-				print "Error Code : ".$_FILES['fileToUploadBc']['error']."<br/>";
+				print "Si è verificato un errore nel caricamento del file: ".$_FILES['fileToUploadBc']['name']."<br/>";
+				print "Estensione del file non valida, il file deve essere in formato pdf !!"."<br/>";
+				print "Codice Errore: ".$_FILES['fileToUploadBc']['error']."<br/>";
 			}
 		}
 	}

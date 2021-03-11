@@ -76,7 +76,7 @@ $cliente = 'Comune di Isernia';
   data-show-search-clear-button="true" data-page-size="25" 
   data-url="griglia_ist_admin.php" 
 	data-show-export="false" data-search="true" data-click-to-select="true" data-pagination="true" 
-  data-sidePagination="true" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-toolbar="#toolbar2" data-locale="it-IT">
+  data-sidePagination="true" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-toolbar="#toolbar2" data-locale="it-IT" data-row-style="rowStyle2">
 <thead>
 
  <tr>
@@ -403,6 +403,22 @@ function rowStyle(row, index) {
       return {
         css: {
           'background-color': 'yellow'
+        }
+      }
+    }
+    return {
+      css: {
+        'background-color': 'white'
+      }
+    }
+}
+
+function rowStyle2(row, index) {
+  //console.log(row.doc_exp)
+    if (row.terminato == 't') {
+      return {
+        css: {
+          'background-color': 'lightgreen'
         }
       }
     }

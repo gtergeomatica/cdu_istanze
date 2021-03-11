@@ -29,6 +29,7 @@ session_start();
                             <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#moduli">Moduli</a></li>
                         <?php } ?>
                         <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#contact">Contatti</a></li>
+                        <li class="nav-item"><a class="nav-link" href="https://cdu-istanze-manuale.readthedocs.io/it/latest/index.html" target="_blank"><i class="fas fa-info-circle"></i> Guida</a></li>
                         <?php if ($_SESSION['user'] != ''){ ?>
                             <li class="nav-item"><a class="nav-link js-scroll-trigger" href="./logout.php">Esci</a></li>
                             <li class="nav-item"><a class="nav-link js-scroll-trigger"><?php echo $_SESSION['user'];?></a></li>

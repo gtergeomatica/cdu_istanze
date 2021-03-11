@@ -29,7 +29,7 @@ if(!$conn_isernia) {
 			on u.id = i.id_utente 
 			where i.inviato = true and u.nascosto is not true
 			group by d.id_istanza, u.usr_login, u.usr_email, u.nascosto, i.data_istanza, i.inviato, i.file_txt, i.n_bolli, ps.file_s, pbi.file_bi, pbc.file_bc, i.file_cdu, i.terminato, i.data_invio
-			order by i.data_istanza desc;";
+			order by i.data_invio desc;";
 	//echo $query."<br>";
 	$result = pg_prepare($conn_isernia, "myquery0", $query_istanza);
     $result = pg_execute($conn_isernia, "myquery0", array());

@@ -43,16 +43,18 @@ if(!$conn_isernia) {
 						$result2 = pg_prepare($conn_isernia, "myquery2", $query);
 						$result2 = pg_execute($conn_isernia, "myquery2", array($dest_file, $id_istanza));
 					}
+					header ("Location: dashboard.php#about");
+				}else{
+					print "Si è verificato un errore nel caricamento del file: ".$_FILES['fileToUpload']['name']."<br/>";
+					print "Codice Errore: ".$_FILES['fileToUpload']['error']."<br/>";
 				}
-
-				header ("Location: dashboard.php#about");
 			}
 		}
 		else {
 			if ( $_FILES['fileToUpload']['type'] != "application/pdf") {
-				print "Error occured while uploading file : ".$_FILES['fileToUpload']['name']."<br/>";
-				print "Invalid  file extension, should be pdf !!"."<br/>";
-				print "Error Code : ".$_FILES['fileToUpload']['error']."<br/>";
+				print "Si è verificato un errore nel caricamento del file: ".$_FILES['fileToUpload']['name']."<br/>";
+				print "Estensione del file non valida, il file deve essere in formato pdf!!"."<br/>";
+				print "Codice Errore: ".$_FILES['fileToUpload']['error']."<br/>";
 			}
 		}
 	}

@@ -55,6 +55,7 @@ if(!$conn_isernia) {
 	$result_ist = pg_execute($conn_isernia, "myquery3", array($id_istanza));
 	while($r = pg_fetch_assoc($result_ist)) {
 		//$rows[] = $r;
+		$data_invio = explode(" ", $r["data_invio"]);
 		$ruolo=$r["ruolo"];
 		$motivo=$r["motivo"];
 	}
@@ -63,11 +64,11 @@ if(!$conn_isernia) {
 	require('mail_address.php');
 
 
-    $oggetto = "Nuovo istanza CDU";
+    $oggetto = "Nuova istanza CDU";
 
     $testo = "
 
-Questa mail è stata generata automaticamente in quanto è appena stata inviata un'istanza di CDU da:\n
+Questa mail è stata generata automaticamente in quanto in data " . $data_invio[0] . " alle ore " . $data_invio[1] . " è stata inviata un'istanza di CDU da:\n
     Nome: ". $nome . " \n
     Cognome: ". $cognome . " \n
     Codice Fiscale: ". $cf . " \n
@@ -79,7 +80,7 @@ Questa mail è stata generata automaticamente in quanto è appena stata inviata 
 
 La presente richiesta è per uso: " . $motivo . " \n
 
-In allegato il file di testo con l'elenco delle particelle.
+Dalla dashboard è possibile scaricare il file di testo con l'elenco delle particelle da utilizzare come input per il Plugin CDU Creator.
 
 Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di  darcene  immediata  comunicazione  anche  inviando  un  messaggio  di  ritorno  all'indirizzo  e-mail  del mittente. 	In caso di problemi o richieste non esiti a ricontattarci.\n \n
             
@@ -100,23 +101,19 @@ Se avete ricevuto questo messaggio per errore, vi preghiamo di distruggerlo e di
 
 ";
 
-// Boundary  
-//$semi_rand = md5(time());  
-//$mime_boundary = "==Multipart_Boundary_x{$semi_rand}x"; 
+	$headers = $nostro_recapito .
+	//"Reply-To: " .$loro_recapito. "\r\n" .
+	"Cc: " .$mail_admin. "\r\n" .
+	"Content-Type: text/plain; charset=utf-8" . "\r\n";
+	"Content-Transfer-Encoding: base64" . "\r\n";
 
-// Headers for attachment  
-//$headers = "\nMIME-Version: 1.0\n" . "Content-Type: multipart/mixed;\n" . " boundary=\"{$mime_boundary}\""; 
- 
-// Multipart boundary  
-$message = "--{$mime_boundary}\n" . "Content-Type: text/html; charset=\"UTF-8\"\n" . 
-"Content-Transfer-Encoding: 7bit\n\n" . $testo . "\n\n";  
- 
-// Preparing attachment 
-if(!empty($dest_file) > 0){ 
+	mail ("$loro_recapito", "$oggetto", "$testo", "$headers");
+
+// Preparing attachment questo metodo dà problemi inviando a gmail nel caso vedere https://github.com/PHPMailer/PHPMailer
+/* if(!empty($dest_file) > 0){ 
 	//echo $dest_file;
     if(is_file($dest_file)){
 		//echo $dest_file;
-        //$message .= "--{$mime_boundary}\n"; 
         $fpr = fopen($dest_file,"r"); 
         $data = fread($fpr,filesize($dest_file)); 
 		//echo $data;
@@ -147,10 +144,8 @@ $body .="Content-Disposition: attachment; filename=".$dest_name."\r\n";
 $body .="Content-Transfer-Encoding: base64\r\n"; 
 $body .="X-Attachment-Id: ".rand(1000, 99999)."\r\n\r\n";  
 $body .= $encoded_content; // Attaching the encoded file with email 
-//$message .= "--{$mime_boundary}--";
 
-
-	mail ($loro_recapito, $oggetto, $body, $headers);
+	mail ($loro_recapito, $oggetto, $body, $headers);*/
     
     $testo2 = "
 

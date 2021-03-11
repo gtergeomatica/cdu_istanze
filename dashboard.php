@@ -41,7 +41,7 @@ require('navbar.php');
                         <hr class="divider my-4" />
                     </div>
                     <div class="col-lg-8 align-self-baseline">
-                        <p class="text-white-75 font-weight-light mb-5">Descrizione rapida cdu e pubblicità del plugin???? Start Bootstrap can help you build better websites using the Bootstrap framework! Just download a theme and start customizing, no strings attached!</p>
+                        <p class="text-white-75 font-weight-light mb-5">Accedi alla tua dashboard e in pochi e semplici passi potrai ottenere il tuo CDU.<br> Scopri come richiedere il tuo CDU consultando <a  href="https://cdu-istanze-manuale.readthedocs.io/it/latest/index.html" target="_blank">il manuale del Sistema di Istanze Online!</a></p>
                         <a class="btn btn-primary btn-xl js-scroll-trigger" href="#about">Inserisci i tuoi dati</a>
                     </div>
                 </div>
