@@ -144,12 +144,14 @@ pg_close($conn_isernia);
 <input type='hidden' name='submitted' id='submitted' value='1'/>
 <div class="form-group">
 <label for='username' >UserName*:</label>
-<input type='text' class="form-control" name='username' id='username'  maxlength="50" required=""/>
+<input type='text' class="form-control" name='username' id='username' required/>
+<div class="help-block with-errors"></div>
 </div>
 
 <div class="form-group">
 <label for='password' >Password*:</label>
-<input type='password' class="form-control" name='password' id='password' maxlength="50" required=""/>
+<input type='password' class="form-control" name='password' id='password' required/>
+<div class="help-block with-errors"></div>
  </div>
 
  <div class="form-group">
@@ -175,7 +177,7 @@ pg_close($conn_isernia);
 	  <div class="form-group">
   		Inserisci il tuo username:<br><br>
       <!--input type="hidden" name="user" id="user'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>"-->
-  		<input type="text" name="myUser" id="myUser"><br><br>
+  		<input type="text" name="myUser" id="myUser" required><br><br>
   		<input type="submit" value="Invia" name="submitpwd">
 		  </div>
 		</form>
@@ -202,6 +204,13 @@ pg_close($conn_isernia);
 require('footer.php');
 require('req_bottom.php');
 ?>
+<script type="text/javascript">
+$(document).ready(function() {
+// Generate a simple captcha
+
+$('#login').validator({});
+});
+</script>
 <!--script>
 $('#usr').bootstrapTable({
     onLoadSuccess: function(data){

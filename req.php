@@ -158,11 +158,11 @@ table th, .table td {
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-<script> 
+<!-- <script> 
 setTimeout(function() {
     $('#myModal').modal();
 }, 10000);
-</script>
+</script> -->
 <!-- jQuery  da mettere in locale-->
 <script src="./jquery-3.5.1.min.js"></script>
 <!--script src="./jquery/dist/jquery.min.js"></script-->
