@@ -27,7 +27,7 @@ if(!$conn_isernia) {
 		on d.id_istanza = pbc.id_istanza_bc
 		where i.id_utente = $1
 		group by d.id_istanza, i.data_istanza, i.inviato, i.n_bolli, ps.file_s, pbi.file_bi, pbc.file_bc, i.file_cdu, i.terminato
-		order by i.data_istanza;";
+		order by i.data_istanza desc;";
 	//echo $query."<br>";
 	$result = pg_prepare($conn_isernia, "myquery0", $query_istanza);
     $result = pg_execute($conn_isernia, "myquery0", array($user_id));

@@ -77,7 +77,7 @@
   data-show-search-clear-button="true" data-page-size="25" 
   data-url="griglia_richieste.php?u=<?php echo $r["id"]; ?>" 
 	data-show-export="false" data-search="true" data-click-to-select="true" data-pagination="true" 
-  data-sidePagination="true" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-toolbar="#toolbar2" data-locale="it-IT">
+  data-sidePagination="true" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-toolbar="#toolbar2" data-locale="it-IT" data-row-style="rowStyle">
 <thead>
 
  <tr>
@@ -329,6 +329,28 @@ function nameFormatterFile4(value, row) {
   }else{
     return' <span> - </span>';
   }
+}
+
+function rowStyle(row, index) {
+  //console.log(row.doc_exp)
+    if (row.inviato == 't' && row.terminato != 't') {
+      return {
+        css: {
+          'background-color': 'bisque'
+        }
+      }
+    }else if (row.inviato == 't' && row.terminato == 't'){
+      return {
+        css: {
+          'background-color': 'lightgreen'
+        }
+      }
+    }
+    return {
+      css: {
+        'background-color': 'white'
+      }
+    }
 }
 </script>
 <script>

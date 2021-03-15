@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="it">
 <?php
-
 $user_admin="comuneisernia";
 //$gruppo = 'comuneisernia3_group';
 $cliente = 'Comune di Isernia';
 $user_id=$_GET['u'];
 $user_idn=(int)$user_id;
 $usr_login=$_GET['user'];
+$_SESSION['user']=$usr_login;
 
 $list_mappali=array();
 $list_fogli=array();
@@ -49,6 +49,11 @@ if(!$conn_catasto) {
 </head>
 
 <body id="page-top">
+<div id="navbar1">
+<?php
+require('navbar.php');
+?>
+</div>
 <section class="page-section bg-primary" id="about">
 <div class="container">
 <div class="row justify-content-center">
@@ -70,7 +75,6 @@ if(isset($_POST['Submit2'])){
     if ($motivo == 'Altro'){
 		$motivo = pg_escape_string($_POST['motivotxt']);
 	}
-
 
 echo "L'istanza è stata aggiunta. Riceverai una mail con i dettagli per il pagamento.";
 echo $prezzo;
@@ -225,7 +229,7 @@ while ($row = $result->fetch()) {
 </div>
 <hr class="light">
 <!--form id='login' action='./dashboard.php#about' method='post' accept-charset='UTF-8'-->
-<form id='istanza' action='form_istanza_cdu.php?u=<?php echo $user_id; ?>' method='post' accept-charset='UTF-8'>
+<form id='istanza' action='form_istanza_cdu.php?u=<?php echo $user_id; ?>&user=<?php echo $usr_login; ?>' method='post' accept-charset='UTF-8'>
 <input type='hidden' name='submitted' id='submitted' value='1'/>
 
 <div class="form-group">
