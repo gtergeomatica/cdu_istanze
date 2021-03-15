@@ -6,6 +6,7 @@ $user_admin="comuneisernia";
 //$gruppo = 'comuneisernia3_group';
 $cliente = 'Comune di Isernia';
 $idu = $_GET['u'];
+$_SESSION['user']=$_GET['user'];
 
 //require('navbar.php');
 include("root_connection.php");
@@ -35,6 +36,11 @@ include("root_connection.php");
 </head>
 
 <body id="page-top">
+<div id="navbar1">
+<?php
+require('navbar.php');
+?>
+</div>
 
 <!--header class="masthead">
             <div class="container h-100">

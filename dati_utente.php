@@ -53,7 +53,7 @@
 </table>
 
 </div-->	
-<br><br><a class="btn btn-light btn-sm" href="modifica_dati.php?u=<?php echo $r["id"]; ?>">Modifica i tuoi dati</a>
+<br><br><a class="btn btn-light btn-sm" href="modifica_dati.php?u=<?php echo $r["id"]; ?>&user=<?php echo $r["usr_login"]; ?>">Modifica i tuoi dati</a>
 <hr class="light">
 <div class="mytip" id="mytip">
 	<a id="rcdu" class="btn btn-light btn-xl" href="form_istanza_cdu.php?u=<?php echo $r["id"]; ?>&user=<?php echo $r["usr_login"]; ?>">Richiedi CDU</a>
