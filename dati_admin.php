@@ -4,6 +4,7 @@ $cliente = 'Comune di Isernia';
 <div>
 	<h2>Dati Amministratore</h2>
 <?php
+  //query sul DB per recuperare dati utente e stamparli nella dasboard
   //session_start();
 	$query = "SELECT * FROM utenti.utenti where  usr_login=$1";
 	$result = pg_prepare($conn_isernia, "myquery0", $query);
@@ -19,6 +20,7 @@ $cliente = 'Comune di Isernia';
 			echo "<br><b>Codice Fiscale</b>: ".$r["cf"];
 			echo "<br><b>Documento identità</b>: ".$r["doc_id"];
       echo "<br><b>Data Scadenza Documento identità</b>: ".$r["doc_exp"];
+      //check su scadenza del documento
       if($r["doc_exp"] < date("Y-m-d")){
         echo "<br><br><b style='color: yellow;'>ATTENZIONE il Documento è SCADUTO!<br> Modifica i tuoi dati.</b><br>";
       }
@@ -28,40 +30,12 @@ $cliente = 'Comune di Isernia';
 	//echo $usr_id;
 ?>
 
-<!--div style="overflow-x:auto;">
-    <table style="background-color:white;" id="log" class="table-hover" data-toggle="table" data-filter-control="true" 
-  data-show-search-clear-button="true" data-page-size="25" 
-  data-url="griglia_utente.php?u=<?php echo $r["id"]; ?>" 
-	data-show-export="false" data-search="true" data-click-to-select="true" data-pagination="true" 
-  data-sidePagination="true" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-toolbar="#toolbar2">
-<thead>
-
- <tr>
-			      <th data-field="usr_login" data-sortable="false" data-visible="true">User</th>
-			      <th data-field="firstname" data-sortable="false" data-formatter="nameFormatterSend" data-visible="true">Nome</th>
-            <th data-field="lastname" data-sortable="false" data-filter-control="select" data-visible="true">Cognome</th>
-            <th data-field="cf" data-sortable="false" data-visible="true">Codice Fiscale</th>
-            <th data-field="doc_id" data-sortable="false" data-visible="true">Documento identità</th>
-            <th data-field="indirizzo" data-sortable="false" data-visible="true">Indirizzo</th>
-            <th data-field="usr_email" data-sortable="false" data-visible="true">E-mail</th>
-            <th data-field="phonenumber" data-sortable="false" data-visible="true">Telefono</th>
-            <th data-field="id" data-sortable="false" data-formatter="nameFormatterEdit" data-visible="true">Modifica</th>
-        </tr>
-</thead>
-
-</table>
-
-</div-->	
+<!-- link a form per cambiare i dati personali tranne username e pwd richiama modifica_dati.php -->
 <br><br><a class="btn btn-light btn-sm" href="modifica_dati.php?u=<?php echo $r["id"]; ?>">Modifica i tuoi dati</a>
 <hr class="light">
-<!--div>
-	<a class="btn btn-light btn-xl" href="form_istanza_cdu.php?u=<?php echo $r["id"]; ?>&user=<?php echo $r["usr_login"]; ?>">Richiedi CDU</a>
-</div>
-<hr class="light"-->
-
 
 </div>
-<!-- tabella istanze inviate al comune -->
+<!-- tabella istanze inviate al comune che richiama griglia_ist_admin.php per i dati -->
 <div>
     <h2> <i class="fas fa-copy" style="color:white;"></i> Istanze CDU del <?php echo $cliente; ?></h2>
 	<!--div id="toolbar2">
@@ -78,7 +52,7 @@ $cliente = 'Comune di Isernia';
 	data-show-export="false" data-search="true" data-click-to-select="true" data-pagination="true" 
   data-sidePagination="true" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-toolbar="#toolbar2" data-locale="it-IT" data-row-style="rowStyle2">
 <thead>
-
+<!--data-field="colonna DB" data-formatter="nome funzione" -->
  <tr>
             <!--th data-field="state" data-checkbox="true"></th-->
 			<!--th data-field="id" data-sortable="false" data-formatter="nameFormatterRemove" data-visible="true">Rimuovi</th-->
@@ -146,8 +120,9 @@ $cliente = 'Comune di Isernia';
 
 
 </div>
-
+<!-- Script con tutte le funzioni richiamate dalle tabelle istanze e utenti -->
 <script>
+// funzione sul pulsante invia cdu richiama file invia_cdu.php
 function nameFormatterSend(value, row) {
 	//var test_id= row.id;
   if (row.file_cdu != null && row.terminato != 't'){
@@ -162,6 +137,7 @@ function nameFormatterSend(value, row) {
 
 }
 
+// funzione sul pulsante rimuovi utente richiama file remove_user.php
 function nameFormatterRemove(value, row) {
 	//var test_id= row.id;
 	//return' <button type="button" class="btn btn-info" data-target="remove_ist.php?idu='+row.id_istanza+'"><i class="fas fa-trash-alt"></i></button>';
@@ -176,6 +152,7 @@ function nameFormatterRemove(value, row) {
   }
 } */
 
+// funzione sul pulsante rendi/rimuovi utente amministratore apre modal che richiama file rm_admin.php
 function nameFormatterFile6(value, row) {
   if (row.admin == 't'){
     return' <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalAd'+row.id+'" title="Rimuovi da amministratore"><i class="fas fa-user-shield"></i></button>\
@@ -236,6 +213,7 @@ function nameFormatterFile6(value, row) {
   }
 }
 
+// funzione per visualizzare e scaricare file mappali richiama download_txt.php
 function nameFormatterFile0(value, row) {
   if (row.file_txt != null){
     return' <span><a href="../isernia_upload/mappali_cdu/'+ row.file_txt.split("/").pop() +'" target="_blank">Vedi file</a></span><br><a class="btn btn-primary" href="./download_txt.php?f='+ row.file_txt.split("/").pop() +'"><i class="fas fa-file-download"></i></a>';
@@ -244,14 +222,17 @@ function nameFormatterFile0(value, row) {
   }
 }
 
+// funzione per visualizzare autocertificazione pagamento diritti istruttori
 function nameFormatterFile1(value, row) {
   return' <span><a href="../isernia_upload/segreteria/'+ row.file_s.split("/").pop() +'" target="_blank">Vedi file</a></span>';
 }
 
+// funzione per visualizzare autocertificazione pagamento bollo istanza
 function nameFormatterFile2(value, row) {
   return' <span><a href="../isernia_upload/bollo_istanza/'+ row.file_bi.split("/").pop() +'" target="_blank">Vedi file</a></span>';
 }
 
+// funzione per visualizzare autocertificazione pagamento bollo cdu
 function nameFormatterFile3(value, row) {
   if (row.file_bc != null){
     return' <span><a href="../isernia_upload/bollo_cdu/'+ row.file_bc.split("/").pop() +'" target="_blank">Vedi file</a></span>';
@@ -260,6 +241,7 @@ function nameFormatterFile3(value, row) {
   }
 }
 
+// funzione per visualizzare/aggiungere numero di bolli apre modal che richiama file numero_bolli.php
 function nameFormatterFile5(value, row) {
     if (row.n_bolli == null){
       return' <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalNb'+row.id_istanza+'" title="Inserisci numero bolli per CDU"><i class="fas fa-edit"></i></button>\
@@ -324,6 +306,7 @@ function nameFormatterFile5(value, row) {
     }
 }
 
+// funzione per caricare file del CDU apre modal che richiama file upload_cdu.php
 function nameFormatterFile4(value, row) {
     if (row.file_cdu == null){
       return' <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalCdu'+row.id_istanza+'" title="Carica file CDU"><i class="fas fa-file-upload"></i></button>\
@@ -388,6 +371,7 @@ function nameFormatterFile4(value, row) {
     }
 }
 
+// funzione per gestire notifica all'utente di doc scaduto richiama file doc_scaduto.php
 function nameFormatterFile7(value, row) {
   if (row.doc_exp < new Date().toISOString().substring(0,10)){
     //var row_idx = $('table#usr tr').index();
@@ -397,6 +381,7 @@ function nameFormatterFile7(value, row) {
   }
 }
 
+// funzione per evidenziare gli utenti con doc scaduto (viene richiamata nella tabel con data-row-style="rowStyle")
 function rowStyle(row, index) {
   //console.log(row.doc_exp)
     if (row.doc_exp < new Date().toISOString().substring(0,10)) {
@@ -413,6 +398,7 @@ function rowStyle(row, index) {
     }
 }
 
+// funzione per evidenziare le istanze terminate (viene richiamata nella tabel con data-row-style="rowStyle2")
 function rowStyle2(row, index) {
   //console.log(row.doc_exp)
     if (row.terminato == 't') {

@@ -1,19 +1,21 @@
 <?php
 session_start();
-/* echo $_SESSION['user'] ."<br>";
-echo $_POST['user']."<br>"; */
+//questo file viene richiamato dal modal quando l'utente clicca sul bottone per caricare il bollo del cdu
+// salva in $_SESSION lo username passato tramite il value dell'input hidden con name userBC nel modal serve per check su login
 $_SESSION['user'] = pg_escape_string($_POST['userBc']);
 //echo $_SESSION['user'] ."<br>";
 
 include("root_connection.php");
 
+//recupera id istanza da url
 $id_istanza=$_GET['idi'];
 
 if(!$conn_isernia) {
     die('Connessione fallita !<br />');
 } else {
-
+	//check se bottone invio nel modal è stato cliccato
 	if ( isset( $_FILES['fileToUploadBc'] ) ) {
+		//check se file è in pdf
 		if ($_FILES['fileToUploadBc']['type'] == "application/pdf") {
 			$source_file = $_FILES['fileToUploadBc']['tmp_name'];
 			$dest_dir = "/var/www/html/isernia_upload/bollo_cdu/";
@@ -24,28 +26,33 @@ if(!$conn_isernia) {
 				print "The file name already exists!!";
 			}
 			else {
+				//sposta il file caricato nella cartella di destinazione
 				move_uploaded_file( $source_file, $dest_file )
 				or die ("Error!!");
 				$check_bollo = 0;
+				//check su eventuali errori
 				if($_FILES['fileToUploadBc']['error'] == 0) {
-					//$query = "SELECT exists (SELECT * from istanze.pagamento_segreteria where id_istanza_s = $1);";
+					//query per verificare se il bollo era già stato caricato
 					$query = "SELECT * from istanze.pagamento_bollo_cdu where id_istanza_bc = $1;";
 					$result = pg_prepare($conn_isernia, "myquery0", $query);
 					$result = pg_execute($conn_isernia, "myquery0", array($id_istanza));
 					while($r = pg_fetch_assoc($result)) {
 						$istanza = $r['id_istanza_bc'];
 					}
+					//se non è stato caricato prima inserisce i dati
 					if ($istanza == ''){
 						$query = "INSERT into istanze.pagamento_bollo_cdu (id_istanza_bc, file_bc)  values($1, $2);";
 						$result1 = pg_prepare($conn_isernia, "myquery1", $query);
 						$result1 = pg_execute($conn_isernia, "myquery1", array($id_istanza, $dest_file));
 					}
 					else{
+						//altrimenti li aggiorna
 						$query = "UPDATE istanze.pagamento_bollo_cdu SET file_bc = $1 where id_istanza_bc = $2;";
 						$result2 = pg_prepare($conn_isernia, "myquery2", $query);
 						$result2 = pg_execute($conn_isernia, "myquery2", array($dest_file, $id_istanza));
 						$check_bollo = 1;
 					}
+					//query per recuperare la data in cui l'utente ha inviato l'istanza
 					$query = "SELECT * from istanze.istanze where id = $1;";
 					$result3 = pg_prepare($conn_isernia, "myquery3", $query);
 					$result3 = pg_execute($conn_isernia, "myquery3", array($id_istanza));
@@ -53,6 +60,7 @@ if(!$conn_isernia) {
 						$data = $r['data_invio'];
 					}
 					require('mail_address.php');
+					//se è la prima volta che viene caricato manda una mail per informare il comune che l'utente ha caricato il bollo
 					if ($check_bollo == 0){
 $testo3 = "
 
@@ -80,6 +88,7 @@ Servizio basato su GisHosting di Gter srl\n
 						"Content-Transfer-Encoding: base64" . "\r\n";
 						mail ("$loro_recapito", "$oggetto3", "$testo3","$headers3");
 					}else{
+						//altrimenti manda mail per informare il comune che il file del bollo è stato modificato
 $testo2 = "
 
 COMUNICAZIONE DI SERVIZIO \n
@@ -106,7 +115,7 @@ Servizio basato su GisHosting di Gter srl\n
 						"Content-Transfer-Encoding: base64" . "\r\n";
 						mail ("$loro_recapito", "$oggetto2", "$testo2","$headers2");						
 					}
-
+					//redirect alla dashboard
 					header ("Location: dashboard.php#about");
 				}else{
 					print "Si è verificato un errore nel caricamento del file: ".$_FILES['fileToUploadBc']['name']."<br/>";

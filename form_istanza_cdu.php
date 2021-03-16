@@ -2,30 +2,24 @@
 <html lang="it">
 <?php
 $user_admin="comuneisernia";
-//$gruppo = 'comuneisernia3_group';
 $cliente = 'Comune di Isernia';
+//salva nelle variabile id e username prese da url e salva username nella var $_SESSION per check su login
 $user_id=$_GET['u'];
 $user_idn=(int)$user_id;
 $usr_login=$_GET['user'];
 $_SESSION['user']=$usr_login;
 
+//creo array vuoti per numero mappali e fogli selezionati
 $list_mappali=array();
 $list_fogli=array();
 
-//require('navbar.php');
+//richiama connessioni ai DB;
 include("root_connection.php");
 
 if(!$conn_catasto) {
     die('Connessione fallita !<br />');
 } else {
 
-
-
-
-/* while($r = pg_fetch_assoc($result)) {
-	$check_user=-1;
-	$mail_old=$r['usr_email'];
-} */
 ?>
 
 <head>
@@ -42,13 +36,14 @@ if(!$conn_catasto) {
     <title>Istanza CDU del <?php echo $cliente; ?></title>
 
     <?php
-    
+    //ruchiama stili e CSS
     require('req.php');
     ?>
 
 </head>
 
 <body id="page-top">
+<!-- Richiama navbar -->
 <div id="navbar1">
 <?php
 require('navbar.php');
@@ -66,8 +61,9 @@ require('navbar.php');
 
 <?php
 session_start();
+// se si clicca su tasto aggiungi istanza
 if(isset($_POST['Submit2'])){
-	//include("get_foglio_mappale.php");
+	//salva nelle variabili i dati inseriti dall'utente
 
     $ruolo = $_POST['ruolo'];
     $motivo = $_POST['motivo'];
@@ -81,16 +77,13 @@ echo $prezzo;
 echo '<br><br><a href="./dashboard.php#about" class="btn btn-light btn-xl"> Torna alla Dashboard </a>';
 
 
-//print_r($list_mappali);
-
-// check if name exist
-/*$query = "SELECT nome, mail from jlx_user where usr_login ='".$username."';";
-$result = pg_query($conn_lizmap, $query);*/
+// query per inserire nuova istanza nel DB
 $query = "INSERT into istanze.istanze (doc_id, id_utente, ruolo, motivo) 
             values((select doc_id from utenti.utenti where id=$1), (select id from utenti.utenti where id=$1), $2, $3) ;";
 $result = pg_prepare($conn_isernia, "myquery0", $query);
 $result = pg_execute($conn_isernia, "myquery0", array($user_idn, $ruolo, $motivo));
 
+// query per selezionare id istanza appena aggiunta
 $query = "SELECT max(id) as ids from istanze.istanze where id_utente=$1;";
 $result = pg_prepare($conn_isernia, "myquery1", $query);
 $result = pg_execute($conn_isernia, "myquery1", array($user_idn));
@@ -98,6 +91,7 @@ while($r = pg_fetch_assoc($result)) {
 	$id_istanza=$r['ids'];
 }
 
+// query per selezionare foglio e mappali dei terreni selezionati e insert nella tabella con i dettagli dell'istanza
 $query1 = "SELECT data, foglio, mappale from istanze.istanze_temp where id_utente=$1 and data > now() - interval '60 minutes' ";
     $result1 = pg_prepare($conn_isernia, "myquery2", $query1);
     $result1 = pg_execute($conn_isernia, "myquery2", array($user_idn));
@@ -108,6 +102,7 @@ $query1 = "SELECT data, foglio, mappale from istanze.istanze_temp where id_utent
         $result = pg_execute($conn_isernia, "myquery3", array($id_istanza, $r["foglio"], $r["mappale"]));
     }
 
+// query per selezionare il prezzo dei diritti istruttori in funzione del numero di terreni selezionati
 $queryprezzo = "SELECT prezzo from istanze.listino where id=$1";
 $resultprezzo = pg_prepare($conn_isernia, "myquery6", $queryprezzo);
 $resultprezzo = pg_execute($conn_isernia, "myquery6", array($rows_num));
@@ -115,10 +110,12 @@ while($r = pg_fetch_assoc($resultprezzo)) {
     $prezzo = $r['prezzo'];
 }
 
+// query per eliminare dettagli dei terreni selezionati
 $query0 = "DELETE from istanze.istanze_temp where id_utente=$1";
 $result0 = pg_prepare($conn_isernia, "myquery5", $query0);
 $result0 = pg_execute($conn_isernia, "myquery5", array($user_idn));
 
+// query per recuperare i dati dell'utente
 $query = "SELECT * FROM utenti.utenti where id=$1";
 $result = pg_prepare($conn_isernia, "myquery7", $query);
 $result = pg_execute($conn_isernia, "myquery7", array($user_idn));
@@ -128,7 +125,9 @@ while($r = pg_fetch_assoc($result)) {
         $user_email=$r["usr_email"];
 }
 
+//richiama file con indirizzi mail
 require('mail_address.php');
+//mail all'utente
 $testo = "
 
 Egr. " . $fullname. ",\n 
@@ -167,12 +166,14 @@ Servizio basato su GisHosting di Gter srl\n
 	mail ("$user_email", "$oggetto", "$testo","$headers");
 	
 } else {
+    //se non viene aggiunta l'istanza vengono rimossi dettagli dei terreni selezionati più di un'ora fa
     $query0 = "DELETE from istanze.istanze_temp where data < now() - interval '60 minutes' ";
     $result0 = pg_prepare($conn_isernia, "myquery4", $query0);
     $result0 = pg_execute($conn_isernia, "myquery4", array());
 ?>
 <!--form id="defaultForm" method="post" class="form-horizontal"-->
 <?php
+//query per popolare il menù di selezione dei fogli parte 1
 $query_foglio = 'SELECT DISTINCT "Fg" from particelle';
 $result = $conn_catasto->prepare($query_foglio);
 //$result = $result->bindValue(":Fg", $foglio);
@@ -181,16 +182,20 @@ $result->execute();
 <select class="form-control form-control-sm" style="display: inline; width: auto;" name="foglio" id="foglio">
 <option value="">Selezionare un foglio...</option>
 <?php
+//query per popolare il menù di selezione dei fogli parte 2
 while ($row = $result->fetch()) {
     $num_fogli=$row['Fg'];
 	echo "<option value='$num_fogli'>$num_fogli</option>";
 }
 ?>
 </select>
+<!-- Menù per selezione del mappale in funzione del foglio selezionato richiama -->
 <select class="form-control form-control-sm" style="display: inline; width: auto;" name="mappale" id="mappale"></select>
+<!-- pulsante per aggiungere terreno selezionato richiama funzione showmappale() -->
 <input id="fgmp" type="button" name="fgmp" value="+" onclick="showmappale()"/>
 <div id="num_map"><small id="num_mapHelp" class="form-text text-muted">E' possibile selezionare un massimo di 20 mappali</small></div>
 <br>
+<!-- Tabella che si popola dinamicamente quando l'utente aggiunge un mappale richiama griglia_istanze.php per i dati -->
 <div>
     <h2> <i class="fas fa-file-alt" style="color:white;"></i> Dettagli Istanza CDU di <?php echo $usr_login; ?></h2>
 	<!--div id="toolbar2">
@@ -228,7 +233,7 @@ while ($row = $result->fetch()) {
 <div id="maxrow">
 </div>
 <hr class="light">
-<!--form id='login' action='./dashboard.php#about' method='post' accept-charset='UTF-8'-->
+<!--form per inserire info necessarie all'aggiunta dell'istanza-->
 <form id='istanza' action='form_istanza_cdu.php?u=<?php echo $user_id; ?>&user=<?php echo $usr_login; ?>' method='post' accept-charset='UTF-8'>
 <input type='hidden' name='submitted' id='submitted' value='1'/>
 
@@ -284,12 +289,12 @@ while ($row = $result->fetch()) {
 </div>
 </div>
 </section>
-
+<!--richiama contatti e librerie JS-->
 <?php
 require('footer.php');
 require('req_bottom.php');
 ?>
-
+<!-- script per attivare boostrap validator su dati inseriti nel form -->
 <script type="text/javascript">
 $(document).ready(function() {
 // Generate a simple captcha
@@ -303,6 +308,7 @@ $('#istanza').validator();
     }
 </script> -->
 
+<!-- script per popolare il menù mappale in funzione del foglio selezionato richiama get_foglio.php -->
 <script>
 /* var selected_option_value=$("#foglio option:selected").val();
 console.log(selected_option_value) */
@@ -341,14 +347,7 @@ $(document).ready(function($) {
 
 </script>
 
-<!--script>
-/* var selected_option_value=$("#foglio option:selected").val();
-console.log(selected_option_value) */
-$(document).ready(function(){
-      // everything here will be executed once index.html has finished loading, so at the start when the user is yet to do anything.
-      $("#fgmp").click(showmappale()); //this translates to: "when the element with id='select1' changes its value execute load_new_content() function"
-});
-</script-->
+<!-- script con funziona showmappale che salva foglio e mappale selezionati e richima get_foglio_mappale.php -->
 <script>
 	function showmappale(){
 		var mappale_value=$("#mappale option:selected").val(); //get the value of the current selected option.
@@ -370,6 +369,8 @@ $(document).ready(function(){
 	} 
 
 </script>
+
+<!-- script per diabilitare i menù e il tasto più se sono già stati selezionati 20 terreni e attivare il bottone di aggiungi istanza se ne è stato selezionato almeno 1-->
 <script>
     //$('#ist').on('load-success.bs.table', function (data){
         $('#ist').bootstrapTable({
@@ -405,13 +406,16 @@ $(document).ready(function(){
                 
 </script> -->
 
+<!-- script con funzioni richiamate dalla tabella -->
 <script>
-
+// funzione per rimuovere un terreno selezionato richiama remove_temp.php
 function nameFormatterEdit(value, row) {
 	//var test_id= row.id;
 	return' <a type="button" class="btn btn-info" href="remove_temp.php?idu='+row.id_utente+'&f='+row.foglio+'&m='+row.mappale+'&user=<?php echo $usr_login; ?>"><i class="fas fa-trash-alt"></i></a>';
 }
 </script>
+
+<!-- script per far comparire area di testo in caso si selezioni l'opzione altro come motivo della richiesta -->
 <script>
     $(".motivo1").change(function () {
         //check if its checked. If checked move inside and check for others value

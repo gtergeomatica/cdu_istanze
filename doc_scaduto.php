@@ -4,15 +4,18 @@ session_start();
 echo $_POST['user']."<br>"; */
 //echo $_SESSION['user'] ."<br>";
 
+// questo file viene richiamato quando l'admin clicca il pulsante di notifica del doc scaduto dalla tabella utenti
+//Richiama connessione al DB
 include("root_connection.php");
 
+// Salva in una variabli l'id utente preso dalla url
 $id_user=$_GET['idu'];
 $cliente = 'Comune di Isernia';
 
 if(!$conn_isernia) {
     die('Connessione fallita !<br />');
 } else {
-
+		//query su db per recuperare dati dell'utente con doc scaduto
 		$query = "SELECT * FROM utenti.utenti where id = $1;";
 		$result = pg_prepare($conn_isernia, "myquery3", $query);
 		$result = pg_execute($conn_isernia, "myquery3", array($id_user));
@@ -23,8 +26,9 @@ if(!$conn_isernia) {
 				$doc=$r["doc_id"];
 				$docdata=$r["doc_exp"];
 		}
-
+		//richiama file con indirizzi mail
 		require('mail_address.php');
+//invia mail all'utente segnalando il problema del doc scaduto
 $testo = "
 
 Egr. " . $fullname. ",\n 

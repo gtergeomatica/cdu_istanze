@@ -24,18 +24,20 @@ session_start();
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto my-2 my-lg-0">
                         <li class="nav-item"><a class="nav-link js-scroll-trigger" href="./index.php#about">Come funziona</a></li>
+                        <!-- Mostra i due pulsanti solo nella navbar della homepage-->
                         <?php if(basename($_SERVER['PHP_SELF']) == 'index.php') {?>
                             <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#account">Crea account</a></li>
                             <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#moduli">Moduli</a></li>
                         <?php } ?>
                         <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#contact">Contatti</a></li>
                         <li class="nav-item"><a class="nav-link" href="https://cdu-istanze-manuale.readthedocs.io/it/latest/index.html" target="_blank"><i class="fas fa-info-circle"></i> Guida</a></li>
+                        <!-- Mostra i 3 pulsanti solo se l'utente è già loggato altrimenti mostra tasto per andare al login-->
                         <?php if ($_SESSION['user'] != ''){ ?>
                             <li class="nav-item"><a class="nav-link js-scroll-trigger" href="./dashboard.php#about">Dashboard</a></li>
                             <li class="nav-item"><a class="nav-link js-scroll-trigger" href="./logout.php">Esci</a></li>
                             <li class="nav-item"><a class="nav-link js-scroll-trigger"><?php echo $_SESSION['user'];?></a></li>
                         <?php }else { ?>
-                            <li class="nav-item"><a class="nav-link js-scroll-trigger" href="./dashboard.php">Accedi</a></li>
+                            <li class="nav-item"><a class="nav-link js-scroll-trigger" href="./dashboard.php#about">Accedi</a></li>
                         <?php } ?>
                     </ul>
                 </div>

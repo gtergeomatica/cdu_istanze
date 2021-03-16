@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-
+//questo file è quello che viene indicato nella mail che arriva all'utente quando clicca su hai dimenticato pwd
 $user_admin="comuneisernia";
 //$gruppo = 'comuneisernia3_group';
 $cliente = 'Comune di Isernia';
 
-//require('navbar.php');
+//Richiama connessioni al DB
 include("root_connection.php");
 ?>
 
@@ -60,9 +60,7 @@ if(isset($_POST['submitpwd'])){
 
 
 $check_user=0;
-// check if name exist
-/*$query = "SELECT nome, mail from jlx_user where usr_login ='".$username."';";
-$result = pg_query($conn_lizmap, $query);*/
+// verifica se esiste l'utente
 $query = "SELECT usr_login, usr_email from utenti.utenti where usr_login =$1;";
 $result = pg_prepare($conn_isernia, "myquery0", $query);
 $result = pg_execute($conn_isernia, "myquery0", array($username));
@@ -79,7 +77,7 @@ if ($check_user==1){
 	echo '<br><a href="./dashboard.php" class="btn btn-light btn-xl"> Vai a Richiesta CDU </a>';
 
 
-	// creo l'utente lizmap
+	// aggiorna la pwd secondo quanto indicato nel form
 	$query_pwd = "UPDATE utenti.utenti SET usr_password = $1 where usr_login = $2;";
 	$result = pg_prepare($conn_isernia, "myquery1", $query_pwd);
 	$result = pg_execute($conn_isernia, "myquery1", array($password2, $username));
@@ -92,10 +90,7 @@ if ($check_user==1){
 	
 } else {
 ?>
-<!--form id="defaultForm" method="post" class="form-horizontal"-->
-
-
-
+<!--form per cambio pwd-->
 
 <form id='newPwd' action='cambia_password.php#about' method='post' accept-charset='UTF-8'>
 <input type='hidden' name='submitted' id='submitted' value='1'/>
@@ -147,10 +142,10 @@ require('footer.php');
 require('req_bottom.php');
 ?>
 
-
+<!-- Script per attivare il boostrap validator sui dati inseriti nel form -->
 <script type="text/javascript">
 $(document).ready(function() {
-// Generate a simple captcha
+// Creato un custom validator per verificare che pwd sia diversa da username
 
 $('#newPwd').validator({
 custom: {

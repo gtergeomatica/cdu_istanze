@@ -17,7 +17,8 @@
 
 	<link rel="icon" href="favicon.ico"/>
 
-    <title>GisHosting dashboard</title>
+    <title>Sistema Istanza Online dashboard</title>
+<!-- Richiama Stili e CSS-->
 <?php
 require('req.php');
 ?>
@@ -26,6 +27,7 @@ require('req.php');
 </head>
 
 <body id="page-top">
+<!-- Richiama la navbar -->
 <div id="navbar1">
 <?php
 require('navbar.php');
@@ -65,8 +67,12 @@ require('navbar.php');
 //session_start();
 /* echo $_SESSION['user'];
 echo $_SESSION['pwd']; */
+
+//Se tasto Invia è cliccato
 if(isset($_POST['Submit']) || $_SESSION['user'] != ''){
+    // Richiama connessione al DB
 	include("root_connection.php");
+    // check su inserimento dati nel form
     if ($_SESSION['user'] == ''){
 
         if(empty($_POST['username']))
@@ -82,21 +88,15 @@ if(isset($_POST['Submit']) || $_SESSION['user'] != ''){
         }
      
     
-	//$dbname = pg_escape_string($_POST['dbname']);
-    
-
+	//salva user e pwd in una variabile e poi nella variabile $_SESSION necessarie per check su login
         $username = pg_escape_string($_POST['username']);
         $password = pg_escape_string($_POST['password']);
         $_SESSION['user']=$username;
         $_SESSION['pwd']=$password;
     }
-    /* echo "<br>" .$password; */
 
-
-	//$conn = @pg_connect('host=localhost port=5432 dbname='.$dbname.' user='.$username.' password='.$password.'');
 	$check=0;
-	//if(!$conn) {
-		// non c'è postGis MA ESISTE UN UTENTE
+    // query su DB verifica se utente è attivo, se esiste già e se la pwd è corretta
     $query = "SELECT * FROM utenti.utenti where usr_login=$1";
     $result = pg_prepare($conn_isernia, "myquery0", $query);
     $result = pg_execute($conn_isernia, "myquery0", array($_SESSION['user']));
@@ -115,7 +115,7 @@ if(isset($_POST['Submit']) || $_SESSION['user'] != ''){
             die('<h1>Caro <i>'.$username.'</i>,<br> password errata.</h1> <hr class="light"><a href="dashboard.php" class=\'btn btn-light btn-xl\'>Riprova</a></div></div></div></section>');
         }
     }
-
+    // se utente è admin richiama dati_admin altrimneti dati_utente oppure segnala che l'utente non esiste
     if ($check==1 && $_SESSION['admin']!='t'){
         include("dati_utente.php");
     }elseif ($check==1 && $_SESSION['admin']=='t'){
@@ -132,6 +132,7 @@ if(isset($_POST['Submit']) || $_SESSION['user'] != ''){
 pg_close($conn_isernia);
 
 ?>
+<!-- Ricarica la navbar una volta fatto il login per poter vedere i bottoni corretti-->
 <script>
     $('#navbar1').load('navbar.php');
 </script>
@@ -139,7 +140,7 @@ pg_close($conn_isernia);
 <?php
 } else {
 ?>
-
+<!-- Form del login che rimanda a dashboard-->
 <form id='login' action='dashboard.php#about' method='post' accept-charset='UTF-8'>
 <input type='hidden' name='submitted' id='submitted' value='1'/>
 <div class="form-group">
@@ -163,6 +164,7 @@ pg_close($conn_isernia);
 </div>
 </form>
 
+<!-- Modal per il cambio password richiama il file nuova_pwd.php"-->
 <div class="modal fade" id="cambiaPwd" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -173,6 +175,7 @@ pg_close($conn_isernia);
         </button>
       </div>
       <div class="modal-body">
+      <!-- Form che rimanda a nuova_pwd per cambiare pwd-->
 	  <form action="nuova_pwd.php" method="post" enctype="multipart/form-data">
 	  <div class="form-group">
   		Inserisci il tuo username:<br><br>
@@ -184,7 +187,6 @@ pg_close($conn_isernia);
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
-        <!--button type="button" class="btn btn-primary">Save changes</button-->
       </div>
     </div>
   </div>
@@ -204,6 +206,7 @@ pg_close($conn_isernia);
 require('footer.php');
 require('req_bottom.php');
 ?>
+<!-- script per attivare il validatore sulla compilazione dei form-->
 <script type="text/javascript">
 $(document).ready(function() {
 // Generate a simple captcha
@@ -211,7 +214,9 @@ $(document).ready(function() {
 $('#login').validator({});
 });
 </script>
-<!--script>
+<!-- primo tentativo per cambiare background alle righe in funzione di una condizione,
+non funziona manda in loop la pagina, gestito con metodo di boostrap table-->
+<!--script> 
 $('#usr').bootstrapTable({
     onLoadSuccess: function(data){
     $('#usr').bootstrapTable('getData').forEach(function(r, index){

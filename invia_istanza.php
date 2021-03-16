@@ -1,7 +1,9 @@
 <?php
 session_start();
+// questo file viene richiamato quando l'utente clicca il bottone invia istanza sulla tabella istanze
 include("root_connection.php");
 
+// salva nelle variabili id e username presi dalla url
 $id_istanza=$_GET['idi'];
 $id_utente=$_GET['idu'];
 
@@ -10,9 +12,7 @@ if(!$conn_isernia) {
     die('Connessione fallita !<br />');
 } else {
 
-	/* $query = "UPDATE istanze.istanze SET inviato = true where id = $1;";
-	$result2 = pg_prepare($conn_isernia, "myquery2", $query);
-	$result2 = pg_execute($conn_isernia, "myquery2", array($id_istanza)); */
+	//query per recuperare dati utente
 
 	$query_user = "SELECT * from utenti.utenti where id=$1";
 	$result_usr = pg_prepare($conn_isernia, "myquery0", $query_user);
@@ -31,6 +31,7 @@ if(!$conn_isernia) {
 		$telefono=$r["phonenumber"];
 	}
 
+	// crea file txt con numero di foglio e mappali dei terreni relativi all'istanza inviata
 	$dest_dir = "/var/www/html/isernia_upload/mappali_cdu/";
 	$dest_name = date("Ymd_his") ."_istanza_" .$id_istanza.".txt";
 	$dest_file = $dest_dir. $dest_name;
@@ -46,10 +47,12 @@ if(!$conn_isernia) {
 	}	
 	fclose($fp);
 
+	// query per aggiornare info su istanza
 	$query = "UPDATE istanze.istanze SET file_txt = $1, inviato = true, data_invio = now() where id = $2;";
 	$result2 = pg_prepare($conn_isernia, "myquery2", $query);
 	$result2 = pg_execute($conn_isernia, "myquery2", array($dest_file, $id_istanza));
 
+	//query per selezionare informazioni sull'istanza
 	$query_istanza = "SELECT * from istanze.istanze where id=$1";
 	$result_ist = pg_prepare($conn_isernia, "myquery3", $query_istanza);
 	$result_ist = pg_execute($conn_isernia, "myquery3", array($id_istanza));
@@ -63,7 +66,7 @@ if(!$conn_isernia) {
 		// INVIO MAIL
 	require('mail_address.php');
 
-
+	//mail per informare il comune che è stata inviata un'istanza
     $oggetto = "Nuova istanza CDU";
 
     $testo = "
@@ -147,6 +150,7 @@ $body .= $encoded_content; // Attaching the encoded file with email
 
 	mail ($loro_recapito, $oggetto, $body, $headers);*/
     
+	// mail all'utente
     $testo2 = "
 
 Egr. " . $nome . " " .$cognome. ",\n 

@@ -1,8 +1,6 @@
 <?php
 //session_start();
-/* echo $_SESSION['user'] ."<br>";
-echo $_POST['user']."<br>"; */
-//echo $_SESSION['user'] ."<br>";
+//Questo file viene richiamato dal form nel modal che si apre quando l'utente clicca su hai dimenticato la pwd
 $cliente = 'Comune di Isernia';
 
 include("root_connection.php");
@@ -47,12 +45,12 @@ include("root_connection.php");
 if(!$conn_isernia) {
     die('Connessione fallita !<br />');
 } else {
-
+	//check se tasto invia del modal è stato cliccato
 	if ( isset( $_POST['submitpwd'] ) ) {
-
+		//recupera username dal form del modal
 		$username = pg_escape_string($_POST['myUser']);
 		$checkuser=0;
-
+		//query che recupera dati utenti per invio mail
 		$query = "SELECT * FROM utenti.utenti where usr_login = $1";
 		$result = pg_prepare($conn_isernia, "myquery3", $query);
 		$result = pg_execute($conn_isernia, "myquery3", array($username));
@@ -62,7 +60,7 @@ if(!$conn_isernia) {
 				$user_email=$r["usr_email"];
 				$checkuser=1;
 		}
-
+// se username è corretto invia mail all'utente con link per cambiare pwd
 if ($checkuser==1){	
 		require('mail_address.php');
 $testo = "
@@ -101,6 +99,7 @@ Servizio basato su GisHosting di Gter srl\n
 		echo "E' appena stata inviata una mail all'indirizzo <b>xxxxx@" . $hidden_mail[1] . "</b> con il link per procedere al cambiamento della password.<br>";
 		echo '<br><a href="./dashboard.php" class="btn btn-light btn-xl"> Torna alla dasboard </a>';
 }else{
+	//altrimenti dà errore
 	die('<h1>L\'utente <i>'.$username.'</i> non esiste.</h1> <hr class="light"><a href="dashboard.php" class=\'btn btn-light btn-xl\'>Riprova</a></div></div></div></section>');
 }
 
@@ -112,7 +111,7 @@ Servizio basato su GisHosting di Gter srl\n
 </div>
 </div>
 </section>
-
+<!-- Richiama librerie JS e contatti-->
 <?php
 require('footer.php');
 require('req_bottom.php');

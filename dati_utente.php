@@ -4,6 +4,7 @@
 <div>
 	<h2>Dati utente</h2>
 <?php
+  //query sul DB per recuperare dati utente e stamparli nella dasboard
   //session_start();
 	$query = "SELECT * FROM utenti.utenti where  usr_login=$1";
 	$result = pg_prepare($conn_isernia, "myquery0", $query);
@@ -20,6 +21,7 @@
 			echo "<br><b>Codice Fiscale</b>: ".$r["cf"];
 			echo "<br><b>Documento identità</b>: ".$r["doc_id"];
       echo "<br><b>Data Scadenza Documento identità</b>: ".$r["doc_exp"];
+      //check su scadenza del documento
       if($r["doc_exp"] < date("Y-m-d")){
         echo "<br><br><b style='color: yellow;'>ATTENZIONE il Documento è SCADUTO!<br> Se non modifichi il documento non potrai richiedere il CDU</b><br>";
       }
@@ -29,32 +31,10 @@
 	//echo $usr_id;
 ?>
 
-<!--div style="overflow-x:auto;">
-    <table style="background-color:white;" id="log" class="table-hover" data-toggle="table" data-filter-control="true" 
-  data-show-search-clear-button="true" data-page-size="25" 
-  data-url="griglia_utente.php?u=<?php echo $r["id"]; ?>" 
-	data-show-export="false" data-search="true" data-click-to-select="true" data-pagination="true" 
-  data-sidePagination="true" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-toolbar="#toolbar2">
-<thead>
-
- <tr>
-			      <th data-field="usr_login" data-sortable="false" data-visible="true">User</th>
-			      <th data-field="firstname" data-sortable="false" data-formatter="nameFormatterSend" data-visible="true">Nome</th>
-            <th data-field="lastname" data-sortable="false" data-filter-control="select" data-visible="true">Cognome</th>
-            <th data-field="cf" data-sortable="false" data-visible="true">Codice Fiscale</th>
-            <th data-field="doc_id" data-sortable="false" data-visible="true">Documento identità</th>
-            <th data-field="indirizzo" data-sortable="false" data-visible="true">Indirizzo</th>
-            <th data-field="usr_email" data-sortable="false" data-visible="true">E-mail</th>
-            <th data-field="phonenumber" data-sortable="false" data-visible="true">Telefono</th>
-            <th data-field="id" data-sortable="false" data-formatter="nameFormatterEdit" data-visible="true">Modifica</th>
-        </tr>
-</thead>
-
-</table>
-
-</div-->	
+<!-- link a form per cambiare i dati personali tranne username e pwd richiama modifica_dati.php -->
 <br><br><a class="btn btn-light btn-sm" href="modifica_dati.php?u=<?php echo $r["id"]; ?>&user=<?php echo $r["usr_login"]; ?>">Modifica i tuoi dati</a>
 <hr class="light">
+<!-- link a form per aggiungere istanza richiama form_istanza_cdu.php -->
 <div class="mytip" id="mytip">
 	<a id="rcdu" class="btn btn-light btn-xl" href="form_istanza_cdu.php?u=<?php echo $r["id"]; ?>&user=<?php echo $r["usr_login"]; ?>">Richiedi CDU</a>
   <span id="spantip"></span>
@@ -63,6 +43,7 @@
 
 
 </div>
+<!-- tabella istanze aggiunte dall'utente griglia_richieste.php per i dati -->
 <div>
     <h2> <i class="fas fa-copy" style="color:white;"></i> Istanze CDU di <?php echo $r["usr_login"]; ?></h2>
 	<!--div id="toolbar2">
@@ -79,14 +60,14 @@
 	data-show-export="false" data-search="true" data-click-to-select="true" data-pagination="true" 
   data-sidePagination="true" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-toolbar="#toolbar2" data-locale="it-IT" data-row-style="rowStyle">
 <thead>
-
+<!--data-field="colonna DB" data-formatter="nome funzione" -->
  <tr>
             <!--th data-field="state" data-checkbox="true"></th-->
 			<th data-field="id" data-sortable="false" data-formatter="nameFormatterRemove" data-visible="true">Rimuovi</th>
 			<th data-field="id_istanza" data-sortable="false" data-formatter="nameFormatterSend" data-visible="true">Invia</th>
             <th data-field="data_istanza" data-sortable="true" data-filter-control="input" data-visible="true">Data Istanza</th>
             <th data-field="terreni" data-sortable="true" data-filter-control="input" data-visible="true">Terreni</th>
-            <th data-field="file_s" data-sortable="false" data-formatter="nameFormatterFile1" data-visible="true">Segreteria</th>
+            <th data-field="file_s" data-sortable="false" data-formatter="nameFormatterFile1" data-visible="true">Diritti Istruttori</th>
             <th data-field="file_bi" data-sortable="false" data-formatter="nameFormatterFile2" data-visible="true">Bollo Istanza</th>
             <th data-field="n_bolli" data-sortable="false" data-filter-control="input" data-visible="true">N. Bolli</th>
             <th data-field="file_bc" data-sortable="false" data-formatter="nameFormatterFile3" data-visible="true">Bollo CDU</th>
@@ -100,7 +81,9 @@
 
 
 </div>
+<!-- Script con tutte le funzioni richiamate dalla tabella istanze -->
 <script>
+// funzione sul pulsante invia istanza richiama file invia_istanza.php
 function nameFormatterSend(value, row) {
 	//var test_id= row.id;
   if (row.file_s == null || row.file_bi == null){
@@ -114,6 +97,7 @@ function nameFormatterSend(value, row) {
   }
 }
 
+// funzione sul pulsante rimuovi istanza richiama file remove_ist.php
 function nameFormatterRemove(value, row) {
 	//var test_id= row.id;
 	//return' <button type="button" class="btn btn-info" data-target="remove_ist.php?idu='+row.id_istanza+'"><i class="fas fa-trash-alt"></i></button>';
@@ -124,6 +108,7 @@ function nameFormatterRemove(value, row) {
   }
 }
 
+// funzione per visualizzare/caricare autocertificazione diritti istruttori apre modal che richiama upload.php
 function nameFormatterFile1(value, row) {
 	//var test_id= row.id;
 	//return' <a type="button" class="btn btn-info" href="remove_ist.php?idi='+row.id_istanza+'"><i class="fas fa-file-upload"></i></a>'
@@ -190,6 +175,7 @@ function nameFormatterFile1(value, row) {
 }
 }
 
+// funzione per visualizzare/caricare autocertificazione bollo istanza apre modal che richiama upload_bi.php
 function nameFormatterFile2(value, row) {
 	//var test_id= row.id;
   if (row.file_bi == null){
@@ -255,6 +241,7 @@ function nameFormatterFile2(value, row) {
 }
 }
 
+// funzione per visualizzare/caricare autocertificazione bolli cdu apre modal che richiama upload_bc.php
 function nameFormatterFile3(value, row) {
 	if (row.file_s != null && row.file_bi != null && row.n_bolli != null){
       if (row.file_bc == null){
@@ -323,6 +310,7 @@ function nameFormatterFile3(value, row) {
   }
 }
 
+// funzione per visualizzare/scaricare file cdu richiama download_cdu.php
 function nameFormatterFile4(value, row) {
   if(row.terminato == 't' && row.file_cdu != null){
     return' <span><a href="../isernia_upload/cdu/'+ row.file_cdu.split("/").pop() +'" target="_blank">Vedi file</a></span><br><a class="btn btn-primary" href="./download_cdu.php?f='+ row.file_cdu.split("/").pop() +'"><i class="fas fa-file-download"></i></a>';
@@ -331,6 +319,7 @@ function nameFormatterFile4(value, row) {
   }
 }
 
+// funzione per evidenziare le istanze a seconda che sia terminata o inviata (viene richiamata nella tabel con data-row-style="rowStyle")
 function rowStyle(row, index) {
   //console.log(row.doc_exp)
     if (row.inviato == 't' && row.terminato != 't') {
@@ -353,6 +342,7 @@ function rowStyle(row, index) {
     }
 }
 </script>
+<!-- Script per disattivare il bottone richiedi cdu se documento è scaduto -->
 <script>
   var data_exp = "<?php echo $data_exp; ?>";
   //console.log(data_exp);

@@ -1,7 +1,8 @@
 <?php
 session_start();
+// questo file viene richiamato quando l'admin clicca il bottone invia cdu sulla tabella istanze
 include("root_connection.php");
-
+// salva nelle variabili id e username presi dalla url
 $id_istanza=$_GET['idi'];
 $id_utente=$_GET['idu'];
 
@@ -10,9 +11,7 @@ if(!$conn_isernia) {
     die('Connessione fallita !<br />');
 } else {
 
-	/* $query = "UPDATE istanze.istanze SET inviato = true where id = $1;";
-	$result2 = pg_prepare($conn_isernia, "myquery2", $query);
-	$result2 = pg_execute($conn_isernia, "myquery2", array($id_istanza)); */
+	//query per recuperare dati utente
 
 	$query_user = "SELECT * from utenti.utenti where usr_login=$1";
 	$result_usr = pg_prepare($conn_isernia, "myquery0", $query_user);
@@ -31,6 +30,7 @@ if(!$conn_isernia) {
 		$telefono=$r["phonenumber"];
 	}
 
+	// query per aggiornare tabella istanze mettendo istanza terminata = true
 	$query = "UPDATE istanze.istanze SET terminato = true where id = $1;";
 	$result2 = pg_prepare($conn_isernia, "myquery2", $query);
 	$result2 = pg_execute($conn_isernia, "myquery2", array($id_istanza));
@@ -47,7 +47,7 @@ if(!$conn_isernia) {
 		// INVIO MAIL
 	require('mail_address.php');
 
-
+	//mail a comune
     $oggetto = "CDU inviato";
 
     $testo = "
@@ -85,6 +85,7 @@ Se avete ricevuto questo messaggio per errore, vi preghiamo di distruggerlo e di
 	"Content-Transfer-Encoding: base64" . "\r\n";
 	mail ($loro_recapito, $oggetto, $testo, $headers);
     
+	// mail a utente per avvisarlo che il cdu è disponibile per il download
     $testo2 = "
 
 Egr. " . $nome . " " .$cognome. ",\n 

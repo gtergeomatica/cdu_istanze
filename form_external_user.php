@@ -22,7 +22,7 @@ include("root_connection.php");
 	<link rel="icon" href="favicon.ico"/>
 
     <title>Iscrizione utenti esterni del <?php echo $cliente; ?></title>
-
+	<!-- Richiama Stili e CSS-->
     <?php
     
     require('req.php');
@@ -48,18 +48,6 @@ include("root_connection.php");
                 </div>
             </div>
 </header>
-<!--header class="masthead">
-        <div class="header-content">
-            <div class="header-content-inner">
-                <h1>Iscrizione utenti esterni del <!--?php echo $cliente; ?></h1>
-				<!--h3>Admin: <--?php echo $user_admin;?> </h3-->
-				<!--hr> 
-				
-             	<a href="#about" class="btn btn-default btn-xl page-scroll"> Completa il form </a>
-            </div>
-        </div>
-</header-->
-
 
 <section class="page-section bg-primary" id="about">
 <div class="container">
@@ -73,6 +61,7 @@ include("root_connection.php");
 
 <?php
 session_start();
+// check se pulsante invia è cliccato salva in una variabile i dati dell'utente
 if(isset($_POST['Submit'])){
 
 
@@ -89,18 +78,6 @@ if(isset($_POST['Submit'])){
 
 	$mail = pg_escape_string($_POST['mail']);
 
-	/* for($i = 0; $i < count($_POST["gruppi"]); $i++) {
-		echo $_POST["gruppi"][$i].'<br>';
-	} */
-    
-
-    
-	//$gruppi = pg_escape_string($_POST['gruppi[]']);
-	
-	//echo '<h1>'.$username.'</h1>';
-	//echo '<h1>'.$gruppo.'</h1>';
-	//exit;
-
 	$name = pg_escape_string($_POST['name']);
 
 	$surname = pg_escape_string($_POST['surname']);
@@ -110,6 +87,7 @@ if(isset($_POST['Submit'])){
 	$docid = pg_escape_string($_POST['docid']);
 
 	$docdate = pg_escape_string($_POST['docdate']);
+	//check su scadenza del documento
 	if($docdate < date("Y-m-d")){
 		die('<h1>Il documento di identità inserito è scaduto. Non è possibile creare l\'account.</h1> <hr class="light"><a href="index.php" class=\'btn btn-light btn-xl\'>Torna alla Home</a></div></div></div></section>');
 	}
@@ -124,16 +102,8 @@ if(isset($_POST['Submit'])){
 
 	$affil = pg_escape_string($_POST['affil']);
 
-	//$address = pg_escape_string($_POST['address']);
-
-	//$note = pg_escape_string($_POST['note']);
-
-
-
 $check_user=1;
-// check if name exist
-/*$query = "SELECT nome, mail from jlx_user where usr_login ='".$username."';";
-$result = pg_query($conn_lizmap, $query);*/
+// query sul DB, verifica se username esiste già, se esiste ma è nasconsto permette comunque la creazione altrimenti dà errore
 $query = "SELECT usr_login, usr_email, nascosto from utenti.utenti where usr_login =$1;";
 $result = pg_prepare($conn_isernia, "myquery0", $query);
 $result = pg_execute($conn_isernia, "myquery0", array($username));
@@ -142,6 +112,7 @@ while($r = pg_fetch_assoc($result)) {
 		$check_user=-1;
 		$mail_old=$r['usr_email'];
 	}else{
+		// se user esiste già ma è nascosto modifica lo username di quello nascosto
 		$query_usrname = "UPDATE utenti.utenti SET usr_login = concat(usr_login, '_hide', to_char(now(), 'YYYYMMDDHH24MI')) where usr_login=$1";
 		$result_usr = pg_prepare($conn_isernia, "myquery3", $query_usrname);
 		$result_usr = pg_execute($conn_isernia, "myquery3", array($username));
@@ -156,22 +127,7 @@ if ($check_user==1){
 	echo '<br><a href="./dashboard.php" class="btn btn-light btn-xl"> Vai a Richiesta CDU </a>';
 
 
-	//$result = pg_query($conn2, $query);
-
-	//pg_close($conn2);
-
-
-	// creo l'utente lizmap
-	/* $query_lizmap = "INSERT INTO jlx_user(
-				usr_login, usr_password, usr_email, firstname, lastname, organization, 
-				phonenumber, street,  comment)
-		VALUES ('$username','$password2', '$mail', '$name', '$surname', '$affil', 
-				'$tel', '$address', '$note');";
-
-	//echo $query_lizmap;
-	$result = pg_query($conn_lizmap, $query_lizmap); */
-
-	// creo l'utente lizmap
+	// creo l'utente 
 	$query_user = "INSERT INTO utenti.utenti(
 				usr_login, usr_password, usr_email, firstname, lastname,  
 				cf, doc_id, street, postcode, city, phonenumber, organization, doc_exp)
@@ -194,7 +150,9 @@ if ($check_user==1){
 
 	//*******************************************************//
 	// INVIO MAIL
+	// Richiama file con indirizzi mail
 	require('mail_address.php');
+	// Mail ad admin
     $oggetto = "Nuovo utente per istanza CDU registrato";
 
     $testo = "
@@ -235,7 +193,7 @@ Se avete ricevuto questo messaggio per errore, vi preghiamo di distruggerlo e di
 
 	mail ("$mail_admin", "$oggetto", "$testo", "$headers");
 
-
+// Mail a noi
 	$testo2 = "
 
 INFO DI SERVIZIO!\n" . $name . " " .$surname. " è stato appena registrato su sistema di istanza CDU online con i seguenti dettagli:\n
@@ -266,7 +224,8 @@ www.linkedin.com/company/gter-srl-innovazione-in-geomatica-gnss-e-gis\n\n
 	"Content-Transfer-Encoding: base64" . "\r\n";
 
 	mail ("assistenzagis@gter.it", "$oggetto2", "$testo2","$headers2");
-    
+
+// Mail ad utente appena registrato
     $testo3 = "
 
 Egr. " . $name . " " .$surname. ",\n 
@@ -309,37 +268,10 @@ Servizio basato su GisHosting di Gter srl\n
 	
 } else {
 ?>
-<!--form id="defaultForm" method="post" class="form-horizontal"-->
-
-
-
+<!-- Form di iscrizione -->
 
 <form id='login' action='form_external_user.php#about' method='post' accept-charset='UTF-8'>
 <input type='hidden' name='submitted' id='submitted' value='1'/>
-
-<div class="form-group">
-    <!--h3>L'utente creato sarà automaticamente inserito nel Gruppo di <!--?php echo $cliente; ?></h3-->
-    <!--select multiple class="form-control" id="gruppi" name="gruppi"-->
-	<!--ul-->
-<!--?php 
-$query="SELECT g.id_aclgrp, g.name FROM jacl2_group g
-JOIN jacl2_user_group ug ON ug.id_aclgrp=g.id_aclgrp
-where ug.login='".$user_admin."';";
-				
-$result = pg_query($conn_lizmap, $query);
-$i=0;
-while($r = pg_fetch_assoc($result)) {
-?-->	
-	<!--br><input name="gruppi[]" type="checkbox" value="<!--?php echo $r['id_aclgrp'];?>" required><label--><!--?php echo $r['id_aclgrp'];?></label><!--/li-->
-	<!--option--><!--?php echo $r['id_aclgrp'];?></option-->
-<!--?php
-	$i=$i+1;   
-}
-?-->
-<!--/ul-->
-<!--/select-->
-</div>
-<?php //echo $query;?>
 
 <div class="form-group">
 <label for='username' >UserName*:</label>
@@ -464,16 +396,16 @@ Il D.lgs. n. 196 del 30 giugno 2003 ("Codice in materia di protezione dei dati p
 </div>
 </div>
 </section>
-
+<!-- Richiama librerie JS e contatti-->
 <?php
 require('footer.php');
 require('req_bottom.php');
 ?>
 
-
+<!-- Script per attivare il boostrap validator sui dati inseriti nel form -->
 <script type="text/javascript">
 $(document).ready(function() {
-// Generate a simple captcha
+// Creato un custom validator per verificare che pwd sia diversa da username
 
 $('#login').validator({
 custom: {
@@ -487,9 +419,11 @@ custom: {
 });
 });
 </script>
+<!-- Script per evitare che inseriscano date precedenti a quella attuale-->
 <script type="text/javascript">
 	datePickerId.min = new Date().toISOString().split("T")[0];
 </script>
+<!-- Script per abilitare il tasto invia solo se consenso checcato -->
 <script> 
 	$('#consenso').click(function () {
 		//check if checkbox is checked

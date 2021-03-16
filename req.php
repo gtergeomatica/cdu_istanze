@@ -7,7 +7,7 @@ $subtitle2=str_replace("'","\'",str_replace(' ','_',$subtitle));
 
 
 
-<!-- Favicon-->
+<!-- File CSS da mettere in locale-->
 <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
         <!-- Font Awesome icons (free version)-->
         <script src="https://use.fontawesome.com/releases/v5.15.1/js/all.js" crossorigin="anonymous"></script>
@@ -45,7 +45,7 @@ $subtitle2=str_replace("'","\'",str_replace(' ','_',$subtitle));
     <!--link rel="stylesheet" href="./bootstrap/dist/css/bootstrap.min.css" type="text/css"-->
 
 
-
+    <!-- Bootstrap Table CSS -->
 	<link rel="stylesheet" href="./bootstrap-table/dist/bootstrap-table.min.css" >
 	<!--link rel="stylesheet" href="./bootstrap-table/dist/extensions/export/bootstrap-table-export.css" -->
 	<link rel="stylesheet" href="./bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.css" >
@@ -72,6 +72,7 @@ $subtitle2=str_replace("'","\'",str_replace(' ','_',$subtitle));
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+<!-- Stili da sovrascrivere ad altri CSS -->
 <style>
 body{
     font-family: Arial, Helvetica, sans-serif;
@@ -163,7 +164,8 @@ setTimeout(function() {
     $('#myModal').modal();
 }, 10000);
 </script> -->
-<!-- jQuery  da mettere in locale-->
+
+<!-- jQuery -->
 <script src="./jquery-3.5.1.min.js"></script>
 <!--script src="./jquery/dist/jquery.min.js"></script-->
 

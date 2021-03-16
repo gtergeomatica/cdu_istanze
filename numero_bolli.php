@@ -1,12 +1,15 @@
 <?php
 session_start();
-/* echo $_SESSION['user'] ."<br>";
-echo $_POST['user']."<br>"; */
+//questo file viene richiamato quando l'admin invia il numero di bolli dal modal
+
+// salva in $_SESSION lo username passato tramite il value dell'input hidden con name userNb nel modal serve per check su login
 $_SESSION['user'] = pg_escape_string($_POST['userNb']);
 //echo $_SESSION['user'] ."<br>";
 
+//richiama file connessioni al DB
 include("root_connection.php");
 
+//salva id istanza preso da url in una var 
 $id_istanza=$_GET['idi'];
 
 if(!$conn_isernia) {
@@ -14,7 +17,7 @@ if(!$conn_isernia) {
 } else {
 
 	$check_bolli = 0;
-
+	// query per verificare se era già stato inserito il numero bolli
 	$query = "SELECT n_bolli from istanze.istanze where id = $1;";
 	$result1 = pg_prepare($conn_isernia, "myquery1", $query);
 	$result1 = pg_execute($conn_isernia, "myquery1", array($id_istanza));
@@ -24,15 +27,15 @@ if(!$conn_isernia) {
 			$check_bolli = 1;
 		}
 	}
-
+	//check se tasto invia nel modal è stato cliccato
 	if ( isset( $_POST['submitnum'] ) ) {
-
+		//recupera numero da form nel modal
 		$numero = pg_escape_string($_POST['numeroBolli']);
-
+		//query per scrivere n bolli nel DB
 		$query = "UPDATE istanze.istanze SET n_bolli = $1 where id = $2;";
 		$result2 = pg_prepare($conn_isernia, "myquery2", $query);
 		$result2 = pg_execute($conn_isernia, "myquery2", array($numero, $id_istanza));
-
+		//query per recuperare dati utente per invio mail
 		$query = "SELECT firstname, lastname, usr_email, data_invio
 			FROM utenti.utenti u
 			left join istanze.istanze i
@@ -48,8 +51,9 @@ if(!$conn_isernia) {
 				$user_email=$r["usr_email"];
 				$data=$r["data_invio"];
 		}
-
+		//richiama file con indirizzi mail
 		require('mail_address.php');
+// se prima volta che inserisce n bolli manda mail a utente
 if ($check_bolli == 0){
 $testo = "
 
@@ -85,7 +89,7 @@ Servizio basato su GisHosting di Gter srl\n
 
 		header ("Location: dashboard.php#about");
 	}else{
-
+//altrimenti manda mail con errata corrige
 $testo2 = "
 
 Egr. " . $fullname. ",\n 

@@ -14,13 +14,14 @@ $cliente = 'Comune di Isernia';
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Sistema Istanze CDU del Comune di Isernia</title>
-        <!-- Favicon-->
+        <title>Sistema Istanze CDU del <?php echo $cliente; ?></title>
+        <!-- Richiama stili e file css-->
         <?php
         require('req.php');
         ?>
     </head>
     <body id="page-top">
+    <!-- Richiama la navbar-->
     <div id="navbar1">
 <?php
 require('navbar.php');
@@ -177,7 +178,7 @@ require('navbar.php');
                 <a style="margin-left:20px;" class="btn btn-light btn-xl" href="./download.php">Marca da Bollo</a>
             </div>
         </section>
-
+<!-- Richiama fotter della pagina con contatti e librerie javascript-->
 <?php
 require('footer.php');
 require('req_bottom.php');

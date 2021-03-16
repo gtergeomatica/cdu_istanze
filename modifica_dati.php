@@ -5,10 +5,11 @@ session_start();
 $user_admin="comuneisernia";
 //$gruppo = 'comuneisernia3_group';
 $cliente = 'Comune di Isernia';
+//salva nelle varibili id e username prese da url
 $idu = $_GET['u'];
 $_SESSION['user']=$_GET['user'];
 
-//require('navbar.php');
+//richiama connessione al DB
 include("root_connection.php");
 ?>
 
@@ -23,8 +24,8 @@ include("root_connection.php");
 
 	<link rel="icon" href="favicon.ico"/>
 
-    <title>Iscrizione utenti esterni del <?php echo $cliente; ?></title>
-
+    <title>Modifica dati utenti esterni del <?php echo $cliente; ?></title>
+	<!-- Richiama Stili e CSS-->
     <?php
     
     require('req.php');
@@ -36,6 +37,7 @@ include("root_connection.php");
 </head>
 
 <body id="page-top">
+<!-- Richiama la navbar-->
 <div id="navbar1">
 <?php
 require('navbar.php');
@@ -55,18 +57,6 @@ require('navbar.php');
                 </div>
             </div>
 </header-->
-<!--header class="masthead">
-        <div class="header-content">
-            <div class="header-content-inner">
-                <h1>Iscrizione utenti esterni del <!--?php echo $cliente; ?></h1>
-				<!--h3>Admin: <--?php echo $user_admin;?> </h3-->
-				<!--hr> 
-				
-             	<a href="#about" class="btn btn-default btn-xl page-scroll"> Completa il form </a>
-            </div>
-        </div>
-</header-->
-
 
 <section class="page-section bg-primary" id="about">
 <div class="container">
@@ -79,11 +69,10 @@ require('navbar.php');
 
 
 <?php
-
+//check se bottone invia è stato cliccato
 if(isset($_POST['Submit'])){
 
-    //echo $password2;
-    //exit;
+    //recupera dati inseriti nel form
 
 	$mail = pg_escape_string($_POST['mail']);
 	$name = pg_escape_string($_POST['name']);
@@ -107,22 +96,8 @@ $result = pg_query($conn_lizmap, $query);*/
 	
 	echo '<br><a href="./dashboard.php#about" class="btn btn-light btn-xl"> Torna alla dashboard </a>';
 
-	//$result = pg_query($conn2, $query);
 
-	//pg_close($conn2);
-
-
-	// creo l'utente lizmap
-	/* $query_lizmap = "INSERT INTO jlx_user(
-				usr_login, usr_password, usr_email, firstname, lastname, organization, 
-				phonenumber, street,  comment)
-		VALUES ('$username','$password2', '$mail', '$name', '$surname', '$affil', 
-				'$tel', '$address', '$note');";
-
-	//echo $query_lizmap;
-	$result = pg_query($conn_lizmap, $query_lizmap); */
-
-	// creo l'utente lizmap
+	// query per aggiornare i dati utente
 	$query_user = "UPDATE utenti.utenti SET
 		usr_email = $1, firstname = $2, lastname = $3, cf = $4, doc_id = $5, street = $6, postcode = $7, city = $8, phonenumber = $9, organization = $10, doc_exp = $11
 		where id = $12;";
@@ -135,6 +110,7 @@ $result = pg_query($conn_lizmap, $query);*/
 } else {
 ?>
 <?php
+//query per recuperare i dati utente che vengono scritti nel form
 $query = "SELECT * from utenti.utenti where id=$1;";
 	$result = pg_prepare($conn_isernia, "myquery1", $query);
 	$result = pg_execute($conn_isernia, "myquery1", array($idu));
@@ -154,33 +130,9 @@ $query = "SELECT * from utenti.utenti where id=$1;";
 ?>
 
 
-
+<!-- form per modifica dei dati come value viene passato il valore corrispondente nel DB-->
 <form id='login' action='modifica_dati.php?u=<?php echo $idu; ?>#about' method='post' accept-charset='UTF-8'>
 <input type='hidden' name='submitted' id='submitted' value='1'/>
-
-<div class="form-group">
-    <!--h3>L'utente creato sarà automaticamente inserito nel Gruppo di <!--?php echo $cliente; ?></h3-->
-    <!--select multiple class="form-control" id="gruppi" name="gruppi"-->
-	<!--ul-->
-<!--?php 
-$query="SELECT g.id_aclgrp, g.name FROM jacl2_group g
-JOIN jacl2_user_group ug ON ug.id_aclgrp=g.id_aclgrp
-where ug.login='".$user_admin."';";
-				
-$result = pg_query($conn_lizmap, $query);
-$i=0;
-while($r = pg_fetch_assoc($result)) {
-?-->	
-	<!--br><input name="gruppi[]" type="checkbox" value="<!--?php echo $r['id_aclgrp'];?>" required><label--><!--?php echo $r['id_aclgrp'];?></label><!--/li-->
-	<!--option--><!--?php echo $r['id_aclgrp'];?></option-->
-<!--?php
-	$i=$i+1;   
-}
-?-->
-<!--/ul-->
-<!--/select-->
-</div>
-<?php //echo $query;?>
 
 <div class="form-group">
 <label>E-mail</label>
@@ -286,12 +238,12 @@ Il D.lgs. n. 196 del 30 giugno 2003 ("Codice in materia di protezione dei dati p
 </div>
 </div>
 </section>
-
+<!-- Richiama librerie JS e contatti-->
 <?php
 require('footer.php');
 require('req_bottom.php');
 ?>
-
+<!-- Script per attivare il boostrap validator sui dati inseriti nel form -->
 <script type="text/javascript">
 	$(document).ready(function() {
 	// Generate a simple captcha
@@ -299,9 +251,11 @@ require('req_bottom.php');
 	$('#login').validator();
 	});
 </script>
+<!-- Script per evitare che inseriscano date precedenti a quella attuale-->
 <script type="text/javascript">
 	datePickerId.min = new Date().toISOString().split("T")[0];
 </script>
+<!-- Script per abilitare il tasto invia solo se consenso checcato -->
 <script> 
 	$('#consenso').click(function () {
 		//check if checkbox is checked

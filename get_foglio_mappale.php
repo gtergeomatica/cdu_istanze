@@ -1,6 +1,6 @@
 <?php
 include("root_connection.php");
-// get the q parameter from URL
+// salva nelle variabili l'id utente, il foglio e il mappale selezionati in form_istanza_cdu.php
 $u = pg_escape_string($_POST['u']);
 $un = (int)$u;
 $m = pg_escape_string($_POST['m']);
@@ -8,7 +8,7 @@ $f = pg_escape_string($_POST['f']);
 
 //$list_mappali=array();
 //$list_fogli=array();
-// Output "no suggestion" if no hint was found or output correct values
+// se il mappale è selezionato elimina i terreni selezionati più di un'ora fa e aggiunge quelli nuovi
 if ($m !== ""){
 
     $query0 = "DELETE from istanze.istanze_temp where id_utente=$1 and data < now() - interval '60 minutes' ";

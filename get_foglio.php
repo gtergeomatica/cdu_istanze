@@ -1,6 +1,6 @@
 <?php
 
-//require('navbar.php');
+//query sub geopackage del catasto per popolare il menù mappale in form_istanza_cdu.php
 include("root_connection.php");
 
 $selectvalue=$_GET['svalue'];
