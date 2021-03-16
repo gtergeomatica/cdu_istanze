@@ -7,15 +7,16 @@ $subtitle2=str_replace("'","\'",str_replace(' ','_',$subtitle));
 
 
 
-<!-- File CSS da mettere in locale-->
+<!-- File CSS e fontawesome -->
 <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
         <!-- Font Awesome icons (free version)-->
-        <script src="https://use.fontawesome.com/releases/v5.15.1/js/all.js" crossorigin="anonymous"></script>
+        <script src="fontawesome_free_5_15_2_web/js/all.js" crossorigin="anonymous"></script>
         <!-- Google fonts-->
         <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans:400,700" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic" rel="stylesheet" type="text/css" />
         <!-- Third party plugin CSS-->
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css" rel="stylesheet" />
+        <!--link href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css" rel="stylesheet" /-->
+        <link href="css/magnific-popup.min.css" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
 
@@ -166,7 +167,7 @@ setTimeout(function() {
 </script> -->
 
 <!-- jQuery -->
-<script src="./jquery-3.5.1.min.js"></script>
+<script src="jquery/jquery-3.5.1.min.js"></script>
 <!--script src="./jquery/dist/jquery.min.js"></script-->
 
 
