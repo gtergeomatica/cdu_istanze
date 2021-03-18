@@ -37,7 +37,7 @@ Di seguito i dettagli del suo documento: \n
     N° documento: ".$doc." \n
     Data scadenza: ".$docdata."\n
 
-La invitiamo a modificare quanto prima i dati relativi al suo documento di identità collegandosi alla sua dashboard (https://gishosting.gter.it/isernia/dashboard.php).\n
+La invitiamo a modificare quanto prima i dati relativi al suo documento di identità collegandosi alla sua dashboard (https://cduisernia.gter.it/isernia/dashboard.php).\n
 Le ricordiamo che finchè non modificherà i dati relativi al documento di identità non le sarà possibile inviare una nuova istanza di CDU al Comune.
     
 Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di comunicarlo immediatamente all'amministratore del sistema rispondendo a questa mail.\n

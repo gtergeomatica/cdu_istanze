@@ -157,7 +157,7 @@ Egr. " . $nome . " " .$cognome. ",\n
 questa mail e' stata generata automaticamente in quanto ha appena inviato un'istanza di CDU.\n
 
     
-Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di comunicarlo immediatamente all'amministratore del sistema rispondendo a questa mail. Se invece ha effettivamente inviato un'istanza di CDU, riceverà una nuova mail non appena il documento sarà disponibile sulla sua dashboard al seguente link https://gishosting.gter.it/isernia/dashboard.php \n
+Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di comunicarlo immediatamente all'amministratore del sistema rispondendo a questa mail. Se invece ha effettivamente inviato un'istanza di CDU, riceverà una nuova mail non appena il documento sarà disponibile sulla sua dashboard al seguente link https://cduisernia.gter.it/isernia/dashboard.php \n
 In caso di problemi o richieste non esiti a contattare l'amministratore del sistema al seguente indirizzo DL_Cartografia@astergenova.it.\n \n
             
 Cordiali saluti, \n

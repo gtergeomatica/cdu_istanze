@@ -68,7 +68,7 @@ $testo = "
 Egr. " . $fullname. ",\n 
 questa mail e' stata generata automaticamente in quanto ha richiesto di cambiare password per l'utente " . $username . " registrato sul Sistema di Istanze Online del " . $cliente . ".\n
 
-Può cambiare la sua password a questo link https://gishosting.gter.it/isernia/cambia_password.php \n
+Può cambiare la sua password a questo link https://cduisernia.gter.it/isernia/cambia_password.php \n
     
 Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di comunicarlo immediatamente all'amministratore del sistema rispondendo a questa mail.\n
 In caso di problemi o richieste non esiti a contattare l'amministratore del sistema al seguente indirizzo segreteriagenerale@comune.isernia.it.\n \n

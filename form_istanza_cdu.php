@@ -140,7 +140,7 @@ I Diritti Istruttori sono da versare su Conto Corrente Postale n. 14459861 intes
 La marca da bollo da 16,00 euro può essere assolta tramite Modello F23 o acquistata presso un rivenditore.\n
 
 Una volta effettuati i pagamenti, dovrà caricare sulla sua dashboard, in corrispondenza dell'istanza presentata, i moduli di autocertificazione di avvenuto pagamento compilati.
-Può scaricare i moduli di autocertificazione a questo link: https://gishosting.gter.it/isernia/#moduli \n
+Può scaricare i moduli di autocertificazione a questo link: https://cduisernia.gter.it/isernia/#moduli \n
 Una volta caricati i moduli potrà inviare l'istanza al Comune che provvederà a compilare il CDU richiesto.
     
 Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di comunicarlo immediatamente all'amministratore del sistema rispondendo a questa mail.\n
@@ -214,7 +214,7 @@ while ($row = $result->fetch()) {
 <thead>
 
  <tr>
-            <th data-field="state" data-checkbox="true"></th>
+            <!--th data-field="state" data-checkbox="true"></th-->
             <th data-field="id" data-sortable="true" data-formatter="nameFormatterEdit" data-visible="true" >Rimuovi</th>
 			<th data-field="data" data-sortable="true" data-filter-control="input" data-visible="true">Data</th>
             <th data-field="foglio" data-sortable="true" data-filter-control="input" data-visible="true">Foglio</th>

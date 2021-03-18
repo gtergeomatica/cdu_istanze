@@ -62,7 +62,7 @@ questa mail è stata generata automaticamente in quanto il Comune di Isernia ha 
 Per poter scaricare il CDU è necessario che venga caricata sulla sua dashboard l'autocertificazione di avvenuto pagamento di n° " . $numero . " bolli
 da 16,00 euro da assolvere tramite Modello F23 o acquisto presso un rivenditore.\n
 
-Può scaricare il modulo di autocertificazione a questo link: https://gishosting.gter.it/isernia/#moduli \n
+Può scaricare il modulo di autocertificazione a questo link: https://cduisernia.gter.it/isernia/#moduli \n
 Una volta caricato il modulo potrà scaricare il CDU.
     
 Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di comunicarlo immediatamente all'amministratore del sistema rispondendo a questa mail.\n
@@ -97,7 +97,7 @@ questa mail è stata generata automaticamente in quanto il Comune di Isernia ha 
 Contrariamente a quanto indicato nella mail precedente (ovvero ". $numero_old ." bolli), per ottenere il suo CDU è necessario che venga caricata sulla sua dashboard l'autocertificazione di avvenuto pagamento di n° " . $numero . " bolli da 16,00 euro da assolvere tramite Modello F23 o acquisto presso un rivenditore.\n
 Questa informazione è stata aggiornata anche sulla sua dashboard.
 
-Si ricorda che può scaricare il modulo di autocertificazione a questo link: https://gishosting.gter.it/isernia/#moduli \n
+Si ricorda che può scaricare il modulo di autocertificazione a questo link: https://cduisernia.gter.it/isernia/#moduli \n
 Una volta caricato il modulo potrà scaricare il CDU.
 
 Ci scusiamo per il disagio.

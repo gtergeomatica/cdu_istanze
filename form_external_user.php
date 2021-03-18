@@ -238,7 +238,7 @@ questa mail e' stata generata automaticamente in quanto si è appena registrato/
     Mail: ". $mail . " \n
     Indirizzo: ". $street . " " . $cap . " " . $city . " \n \n
     
-Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di comunicarlo immediatamente all'amministratore del sistema rispondendo a questa mail. Se invece si è effettivamente registrato/a le ricordiamo che il suo utente è già attivo e può quindi iniziare a consultare i dati online all'indirizzo https://gishosting.gter.it/isernia/dashboard.php \n
+Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di comunicarlo immediatamente all'amministratore del sistema rispondendo a questa mail. Se invece si è effettivamente registrato/a le ricordiamo che il suo utente è già attivo e può quindi iniziare a consultare i dati online all'indirizzo https://cduisernia.gter.it/isernia/dashboard.php \n
 In caso di problemi o richieste non esiti a contattare l'amministratore del sistema al seguente indirizzo DL_Cartografia@astergenova.it.\n \n
             
 Cordiali saluti, \n
