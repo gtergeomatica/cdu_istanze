@@ -33,7 +33,7 @@ if(!$conn_catasto) {
 
 	<link rel="icon" href="favicon.ico"/>
 
-    <title>Istanza CDU del <?php echo $cliente; ?></title>
+    <title>Istanze del <?php echo $cliente; ?></title>
 
     <?php
     //ruchiama stili e CSS
@@ -65,6 +65,7 @@ session_start();
 if(isset($_POST['Submit2'])){
 	//salva nelle variabili i dati inseriti dall'utente
 
+    $tipo = $_POST['tipo'];
     $ruolo = $_POST['ruolo'];
     $motivo = $_POST['motivo'];
 
@@ -78,17 +79,28 @@ echo '<br><br><a href="./dashboard.php#about" class="btn btn-light btn-xl"> Torn
 
 
 // query per inserire nuova istanza nel DB
-$query = "INSERT into istanze.istanze (doc_id, id_utente, ruolo, motivo) 
-            values((select doc_id from utenti.utenti where id=$1), (select id from utenti.utenti where id=$1), $2, $3) ;";
+$query = "INSERT into istanze.istanze (doc_id, id_utente, ruolo, motivo, tipo) 
+            values((select doc_id from utenti.utenti where id=$1), (select id from utenti.utenti where id=$1), $2, $3, $4) ;";
 $result = pg_prepare($conn_isernia, "myquery0", $query);
-$result = pg_execute($conn_isernia, "myquery0", array($user_idn, $ruolo, $motivo));
+$result = pg_execute($conn_isernia, "myquery0", array($user_idn, $ruolo, $motivo, $tipo));
 
 // query per selezionare id istanza appena aggiunta
-$query = "SELECT max(id) as ids from istanze.istanze where id_utente=$1;";
+/* $query = "SELECT max(id) as ids from istanze.istanze where id_utente=$1;";
 $result = pg_prepare($conn_isernia, "myquery1", $query);
 $result = pg_execute($conn_isernia, "myquery1", array($user_idn));
 while($r = pg_fetch_assoc($result)) {
 	$id_istanza=$r['ids'];
+} */
+$query = "SELECT id as ids, tipo from istanze.istanze i where id_utente = $1 and id= (select max(id) from  istanze.istanze)";
+$result = pg_prepare($conn_isernia, "myquery1", $query);
+$result = pg_execute($conn_isernia, "myquery1", array($user_idn));
+while($r = pg_fetch_assoc($result)) {
+	$id_istanza=$r['ids'];
+    if ($r['tipo'] == 1){
+        $query = "UPDATE istanze.istanze SET n_bolli = 1 where id = $1;";
+        $result2 = pg_prepare($conn_isernia, "myquery8", $query);
+        $result2 = pg_execute($conn_isernia, "myquery8", array($id_istanza));
+    }
 }
 
 // query per selezionare foglio e mappali dei terreni selezionati e insert nella tabella con i dettagli dell'istanza
@@ -127,6 +139,7 @@ while($r = pg_fetch_assoc($result)) {
 
 //richiama file con indirizzi mail
 require('mail_address.php');
+if ($tipo == 1){
 //mail all'utente
 $testo = "
 
@@ -134,17 +147,21 @@ Egr. " . $fullname. ",\n
 questa mail e' stata generata automaticamente in quanto ha appena aggiunto un'istanza di CDU dal sistema online del Comune di Isernia.\n
 In particolare, il CDU è stato richiesto per n° " . $rows_num . " mappali. Di seguito sono riportati i dettagli di pagamento:\n
     - Diritti istruttori da versare: " . $prezzo ." euro \n
-    - Marca da bollo da 16,00 euro \n
+    - 1 Marca da bollo da 16,00 euro per l'Istanza \n
+    - 1 Marca da bollo da 16,00 euro per il CDU \n
 
 I Diritti Istruttori sono da versare su Conto Corrente Postale n. 14459861 intestato a COMUNE DI ISERNIA Servizio Tesoreria con CAUSALE: Capitolo n. 377 - Diritti di Istruttoria. \n
-La marca da bollo da 16,00 euro può essere assolta tramite Modello F23 o acquistata presso un rivenditore.\n
+Le marche da bollo da 16,00 euro possono essere assolte tramite Modello F23 o acquistate presso un rivenditore.\n
 
-Una volta effettuati i pagamenti, dovrà caricare sulla sua dashboard, in corrispondenza dell'istanza presentata, i moduli di autocertificazione di avvenuto pagamento compilati.
-Può scaricare i moduli di autocertificazione a questo link: https://cduisernia.gter.it/isernia/#moduli \n
-Una volta caricati i moduli potrà inviare l'istanza al Comune che provvederà a compilare il CDU richiesto.
+Una volta effettuati i pagamenti, dovrà caricare sulla sua dashboard, in corrispondenza dell'istanza presentata, i seguenti documenti:\n
+    - la scansione del bollettino pagato e i riferimenti del versamento per i diritti istruttori\n
+    - la scansione della marca da bollo e il numero identificativo di 14 cifre per l'istanza\n
+    - la scansione della marca da bollo e il numero identificativo di 14 cifre per il CDU\n
+
+Una volta caricati i dati relativi al pagamento potrà inviare l'istanza al Comune che provvederà a compilare il CDU richiesto.
     
 Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di comunicarlo immediatamente all'amministratore del sistema rispondendo a questa mail.\n
-In caso di problemi o richieste non esiti a contattare l'amministratore del sistema al seguente indirizzo segreteriagenerale@comune.isernia.it.\n \n
+In caso di problemi o richieste non esiti a contattare l'amministratore del sistema al seguente indirizzo cdu@comune.isernia.it.\n \n
             
 Cordiali saluti, \n
 L'amministratore del sistema.
@@ -152,13 +169,42 @@ L'amministratore del sistema.
 -- 
 Comune di Isernia
 Piazza Marconi, 3 - 86170 Isernia (IS)
-E-mail: segreteriagenerale@comune.isernia.it
+E-mail: cdu@comune.isernia.it
 
 Servizio basato su GisHosting di Gter srl\n
 
 ";
+$oggetto ="Aggiunta istanza di CDU online del Comune di Isernia";
+}else{
+$testo = "
 
-	$oggetto ="Aggiunta istanza di CDU online del Comune di Isernia";
+Egr. " . $fullname. ",\n 
+questa mail e' stata generata automaticamente in quanto ha appena aggiunto un'istanza di Visura dal sistema online del Comune di Isernia.\n
+In particolare, la visura è stata richiesta per n° " . $rows_num . " mappali. Di seguito sono riportati i dettagli di pagamento:\n
+    - Diritti istruttori da versare: " . $prezzo ." euro \n
+
+I Diritti Istruttori sono da versare su Conto Corrente Postale n. 14459861 intestato a COMUNE DI ISERNIA Servizio Tesoreria con CAUSALE: Capitolo n. 377 - Diritti di Istruttoria. \n
+
+Una volta effettuati i pagamenti, dovrà caricare sulla sua dashboard, in corrispondenza dell'istanza presentata, la scansione del bollettino pagato e i riferimenti del versamento.
+Una volta caricati i dati relativi al pagamento potrà inviare l'istanza al Comune che provvederà a compilare la visura richiesta.
+    
+Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di comunicarlo immediatamente all'amministratore del sistema rispondendo a questa mail.\n
+In caso di problemi o richieste non esiti a contattare l'amministratore del sistema al seguente indirizzo cdu@comune.isernia.it.\n \n
+            
+Cordiali saluti, \n
+L'amministratore del sistema.
+        
+-- 
+Comune di Isernia
+Piazza Marconi, 3 - 86170 Isernia (IS)
+E-mail: cdu@comune.isernia.it
+
+Servizio basato su GisHosting di Gter srl\n
+
+";
+$oggetto ="Aggiunta istanza di Visura online del Comune di Isernia";
+}
+
     $headers = $nostro_recapito .
     "Reply-To: " .$loro_recapito. "\r\n" .
     "Content-Type: text/plain; charset=utf-8" . "\r\n";
@@ -236,14 +282,26 @@ while ($row = $result->fetch()) {
 <!--form per inserire info necessarie all'aggiunta dell'istanza-->
 <form id='istanza' action='form_istanza_cdu.php?u=<?php echo $user_id; ?>&user=<?php echo $usr_login; ?>' method='post' accept-charset='UTF-8'>
 <input type='hidden' name='submitted' id='submitted' value='1'/>
-
 <div class="form-group">
-    <label>Il presente CDU è richiesto in qualità di*</label>
+    <label>Si richiede il documento di:*</label><br>
+    <div class="form-check form-check-inline">
+    <input class="form-check-input tipo1" type="radio" name="tipo" id="CDU" value=1 required>
+    <label class="form-check-label" for="CDU">Certificato di Destinazione Urbanistica</label>
+    </div>
+    <div class="form-check form-check-inline">
+    <input class="form-check-input tipo1" type="radio" name="tipo" id="visura" value=2>
+    <label class="form-check-label" for="visura">Visura</label>
+    </div>
+    <div class="help-block with-errors"></div>
+
+</div>
+<div class="form-group">
+    <label>Il presente documento è richiesto in qualità di*</label>
     <input type="text" class="form-control" data-error="Il campo è obbligatorio, non può essere lasciato vuoto" name="ruolo" required>
     <div class="help-block with-errors"></div>
 </div>
 <div class="form-group">
-    <label>Il presente CDU è richiesto per uso:*</label><br>
+    <label>Il presente documento è richiesto per uso:*</label><br>
     <div class="form-check form-check-inline">
     <input class="form-check-input motivo1" type="radio" name="motivo" id="inlineRadio1" value="Atto notarile" required>
     <label class="form-check-label" for="inlineRadio1">Stipula atto notarile</label>

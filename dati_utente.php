@@ -36,7 +36,7 @@
 <hr class="light">
 <!-- link a form per aggiungere istanza richiama form_istanza_cdu.php -->
 <div class="mytip" id="mytip">
-	<a id="rcdu" class="btn btn-light btn-xl" href="form_istanza_cdu.php?u=<?php echo $r["id"]; ?>&user=<?php echo $r["usr_login"]; ?>">Richiedi CDU</a>
+	<a id="rcdu" class="btn btn-light btn-xl" href="form_istanza_cdu.php?u=<?php echo $r["id"]; ?>&user=<?php echo $r["usr_login"]; ?>">Richiedi CDU/Visura</a>
   <span id="spantip"></span>
 </div>
 <hr class="light">
@@ -45,7 +45,7 @@
 </div>
 <!-- tabella istanze aggiunte dall'utente griglia_richieste.php per i dati -->
 <div>
-    <h2> <i class="fas fa-copy" style="color:white;"></i> Istanze CDU di <?php echo $r["usr_login"]; ?></h2>
+    <h2> <i class="fas fa-copy" style="color:white;"></i> Istanze di <?php echo $r["usr_login"]; ?></h2>
 	<!--div id="toolbar2">
             <select class="form-control">
                 <option value="">Esporta i dati visualizzati</option>
@@ -65,13 +65,15 @@
             <!--th data-field="state" data-checkbox="true"></th-->
 			<th data-field="id" data-sortable="false" data-formatter="nameFormatterRemove" data-visible="true">Rimuovi</th>
 			<th data-field="id_istanza" data-sortable="false" data-formatter="nameFormatterSend" data-visible="true">Invia</th>
+            <th data-field="tipo" data-sortable="true" data-filter-control="select" data-visible="true">Tipo Istanza</th>
             <th data-field="data_istanza" data-sortable="true" data-filter-control="input" data-visible="true">Data Istanza</th>
             <th data-field="terreni" data-sortable="true" data-filter-control="input" data-visible="true">Terreni</th>
             <th data-field="file_s" data-sortable="false" data-formatter="nameFormatterFile1" data-visible="true">Diritti Istruttori</th>
             <th data-field="file_bi" data-sortable="false" data-formatter="nameFormatterFile2" data-visible="true">Bollo Istanza</th>
-            <th data-field="n_bolli" data-sortable="false" data-filter-control="input" data-visible="true">N. Bolli</th>
+            <th data-field="n_bolli" data-sortable="false" data-filter-control="input" data-visible="true">N. Bolli CDU</th>
             <th data-field="file_bc" data-sortable="false" data-formatter="nameFormatterFile3" data-visible="true">Bollo CDU</th>
-            <th data-field="file_cdu" data-sortable="false" data-formatter="nameFormatterFile4" data-visible="true">File CDU</th>
+            <th data-field="file_bc_integr" data-sortable="false" data-formatter="nameFormatterFile5" data-visible="true">Altri bolli CDU</th>
+            <th data-field="file_cdu" data-sortable="false" data-formatter="nameFormatterFile4" data-visible="true">CDU/Visura</th>
         </tr>
 </thead>
 
@@ -85,14 +87,21 @@
 <script>
 // funzione sul pulsante invia istanza richiama file invia_istanza.php
 function nameFormatterSend(value, row) {
-	//var test_id= row.id;
-  if (row.file_s == null || row.file_bi == null){
-    return' <a id="myLink" type="button" class="btn btn-info" style="background-color: lightgrey; border-color: lightgrey;"><i class="fas fa-play-circle"></i></a>';
-  }else{
-    if (row.inviato != 't'){
-	    return' <a id="myLink" type="button" class="btn btn-info" href="invia_istanza.php?idi='+row.id_istanza+'&idu=<?php echo $usr_id; ?>"><i class="fas fa-play-circle"></i></a>';
+	if (row.tipo == 'Visura'){
+    if (row.file_s != null){
+      return' <a id="myLink" type="button" class="btn btn-info" href="invia_istanza.php?idi='+row.id_istanza+'&idu=<?php echo $usr_id; ?>"><i class="fas fa-play-circle"></i></a>';
     }else{
       return' <a id="myLink" type="button" class="btn btn-info" style="background-color: lightgrey; border-color: lightgrey;"><i class="fas fa-play-circle"></i></a>';
+    }
+  }else{
+    if (row.file_s == null || row.file_bi == null || row.file_bc == null){
+      return' <a id="myLink" type="button" class="btn btn-info" style="background-color: lightgrey; border-color: lightgrey;"><i class="fas fa-play-circle"></i></a>';
+    }else{
+      if (row.inviato != 't'){
+        return' <a id="myLink" type="button" class="btn btn-info" href="invia_istanza.php?idi='+row.id_istanza+'&idu=<?php echo $usr_id; ?>"><i class="fas fa-play-circle"></i></a>';
+      }else{
+        return' <a id="myLink" type="button" class="btn btn-info" style="background-color: lightgrey; border-color: lightgrey;"><i class="fas fa-play-circle"></i></a>';
+      }
     }
   }
 }
@@ -128,8 +137,10 @@ function nameFormatterFile1(value, row) {
 	  <div class="form-group">\
   		Seleziona la ricevuta di pagamento:<br><br>\
       <input type="hidden" name="user" id="user'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
-  		<input type="file" name="fileToUpload" id="fileToUpload'+row.id_istanza+'"><br><br>\
-  		<input type="submit" value="Carica file" name="submitfile">\
+  		<input type="file" name="fileToUpload" id="fileToUpload'+row.id_istanza+'" required><br><br>\
+      <label>Estremi versamento</label>\
+      <input type="text" name="estremi_s" id="estremi_s'+row.id_istanza+'" required><br><br>\
+  		<input type="submit" value="Invia" name="submitfile">\
 		  </div>\
 		</form>\
       </div>\
@@ -157,8 +168,10 @@ function nameFormatterFile1(value, row) {
       <div class="form-group">\
         Seleziona la ricevuta di pagamento:<br><br>\
         <input type="hidden" name="user" id="user'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
-        <input type="file" name="fileToUpload" id="fileToUpload'+row.id_istanza+'"><br><br>\
-        <input type="submit" value="Carica file" name="submitfile">\
+        <input type="file" name="fileToUpload" id="fileToUpload'+row.id_istanza+'" required><br><br>\
+        <label>Estremi versamento</label>\
+        <input type="text" name="estremi_s" id="estremi_s'+row.id_istanza+'" required><br><br>\
+  		  <input type="submit" value="Invia" name="submitfile">\
         </div>\
       </form>\
         </div>\
@@ -177,38 +190,11 @@ function nameFormatterFile1(value, row) {
 
 // funzione per visualizzare/caricare autocertificazione bollo istanza apre modal che richiama upload_bi.php
 function nameFormatterFile2(value, row) {
-	//var test_id= row.id;
-  if (row.file_bi == null){
-	return' <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBi'+row.id_istanza+'" title="Carica pagamento Bollo per l\'Istanza"><i class="fas fa-file-upload"></i></button>\
-    <div class="modal fade" id="myModalBi'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
-  <div class="modal-dialog modal-dialog-centered" role="document">\
-    <div class="modal-content">\
-      <div class="modal-header">\
-        <h5 class="modal-title" id="exampleModalLabelBi'+row.id_istanza+'">Bollo Istanza</h5>\
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
-          <span aria-hidden="true">&times;</span>\
-        </button>\
-      </div>\
-      <div class="modal-body">\
-	  <form action="upload_bi.php?idi='+row.id_istanza+'" method="post" enctype="multipart/form-data">\
-	  <div class="form-group">\
-  		Seleziona la ricevuta di pagamento:<br><br>\
-      <input type="hidden" name="userBi" id="userBi'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
-  		<input type="file" name="fileToUploadBi" id="fileToUploadBi'+row.id_istanza+'"><br><br>\
-  		<input type="submit" value="Carica file" name="submitfile">\
-		  </div>\
-		</form>\
-      </div>\
-      <div class="modal-footer">\
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>\
-        <!--button type="button" class="btn btn-primary">Save changes</button-->\
-      </div>\
-    </div>\
-  </div>\
-</div>' ;
-} else{
-  if (row.inviato != 't'){
-    return' <span><a href="../isernia_upload/bollo_istanza/'+ row.file_bi.split("/").pop() +'" target="_blank">Vedi file</a></span><br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBi'+row.id_istanza+'" title="Modifica file pagamento Bollo per l\'Istanza"><i class="fas fa-file-upload"></i></button>\
+	if (row.tipo == 'Visura'){
+    return' <span> - </span>';
+  }else{
+    if (row.file_bi == null){
+    return' <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBi'+row.id_istanza+'" title="Carica pagamento Bollo per l\'Istanza"><i class="fas fa-file-upload"></i></button>\
       <div class="modal fade" id="myModalBi'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
     <div class="modal-dialog modal-dialog-centered" role="document">\
       <div class="modal-content">\
@@ -223,8 +209,10 @@ function nameFormatterFile2(value, row) {
       <div class="form-group">\
         Seleziona la ricevuta di pagamento:<br><br>\
         <input type="hidden" name="userBi" id="userBi'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
-        <input type="file" name="fileToUploadBi" id="fileToUploadBi'+row.id_istanza+'"><br><br>\
-        <input type="submit" value="Carica file" name="submitfile">\
+        <input type="file" name="fileToUploadBi" id="fileToUploadBi'+row.id_istanza+'" required><br><br>\
+        <label>Identificativo bollo (14 cifre)</label>\
+        <input type="text" name="estremi_bi" id="estremi_bi'+row.id_istanza+'" minlength="14" maxlength="14" required><br><br>\
+        <input type="submit" value="Invia" name="submitfile">\
         </div>\
       </form>\
         </div>\
@@ -235,16 +223,50 @@ function nameFormatterFile2(value, row) {
       </div>\
     </div>\
   </div>' ;
-  }else{
-    return' <span><a href="../isernia_upload/bollo_istanza/'+ row.file_bi.split("/").pop() +'" target="_blank">Vedi file</a></span>';
+  } else{
+    if (row.inviato != 't'){
+      return' <span><a href="../isernia_upload/bollo_istanza/'+ row.file_bi.split("/").pop() +'" target="_blank">Vedi file</a></span><br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBi'+row.id_istanza+'" title="Modifica file pagamento Bollo per l\'Istanza"><i class="fas fa-file-upload"></i></button>\
+        <div class="modal fade" id="myModalBi'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
+      <div class="modal-dialog modal-dialog-centered" role="document">\
+        <div class="modal-content">\
+          <div class="modal-header">\
+            <h5 class="modal-title" id="exampleModalLabelBi'+row.id_istanza+'">Bollo Istanza</h5>\
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
+              <span aria-hidden="true">&times;</span>\
+            </button>\
+          </div>\
+          <div class="modal-body">\
+        <form action="upload_bi.php?idi='+row.id_istanza+'" method="post" enctype="multipart/form-data">\
+        <div class="form-group">\
+          Seleziona la ricevuta di pagamento:<br><br>\
+          <input type="hidden" name="userBi" id="userBi'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
+          <input type="file" name="fileToUploadBi" id="fileToUploadBi'+row.id_istanza+'" required><br><br>\
+          <label>Identificativo bollo (14 cifre)</label>\
+          <input type="text" name="estremi_bi" id="estremi_bi'+row.id_istanza+'" minlength="14" maxlength="14" required><br><br>\
+          <input type="submit" value="Invia" name="submitfile">\
+          </div>\
+        </form>\
+          </div>\
+          <div class="modal-footer">\
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>\
+            <!--button type="button" class="btn btn-primary">Save changes</button-->\
+          </div>\
+        </div>\
+      </div>\
+    </div>' ;
+    }else{
+      return' <span><a href="../isernia_upload/bollo_istanza/'+ row.file_bi.split("/").pop() +'" target="_blank">Vedi file</a></span>';
+    }
   }
 }
 }
 
 // funzione per visualizzare/caricare autocertificazione bolli cdu apre modal che richiama upload_bc.php
 function nameFormatterFile3(value, row) {
-	if (row.file_s != null && row.file_bi != null && row.n_bolli != null){
-      if (row.file_bc == null){
+	if (row.tipo == 'Visura'){
+    return' <span> - </span>';
+  }else{
+    if (row.file_bc == null){
       return' <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBc'+row.id_istanza+'" title="Carica pagamento Bollo per CDU"><i class="fas fa-file-upload"></i></button>\
         <div class="modal fade" id="myModalBc'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
       <div class="modal-dialog modal-dialog-centered" role="document">\
@@ -260,8 +282,10 @@ function nameFormatterFile3(value, row) {
         <div class="form-group">\
           Seleziona la ricevuta di pagamento:<br><br>\
           <input type="hidden" name="userBc" id="userBc'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
-          <input type="file" name="fileToUploadBc" id="fileToUploadBc'+row.id_istanza+'"><br><br>\
-          <input type="submit" value="Carica file" name="submitfile">\
+          <input type="file" name="fileToUploadBc" id="fileToUploadBc'+row.id_istanza+'" required><br><br>\
+          <label>Identificativo bollo (14 cifre)</label>\
+          <input type="text" name="estremi_bc" id="estremi_bc'+row.id_istanza+'" minlength="14" maxlength="14" required><br><br>\
+          <input type="submit" value="Invia" name="submitfile">\
           </div>\
         </form>\
           </div>\
@@ -273,7 +297,7 @@ function nameFormatterFile3(value, row) {
       </div>\
     </div>' ;
     } else{
-      if (row.terminato != 't' && row.file_cdu == null){
+      if (row.inviato != 't'){
         return' <span><a href="../isernia_upload/bollo_cdu/'+ row.file_bc.split("/").pop() +'" target="_blank">Vedi file</a></span><br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBc'+row.id_istanza+'" title="Modifica file pagamento Bollo per CDU"><i class="fas fa-file-upload"></i></button>\
           <div class="modal fade" id="myModalBc'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
         <div class="modal-dialog modal-dialog-centered" role="document">\
@@ -289,8 +313,10 @@ function nameFormatterFile3(value, row) {
           <div class="form-group">\
             Seleziona la ricevuta di pagamento:<br><br>\
             <input type="hidden" name="userBc" id="userBc'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
-            <input type="file" name="fileToUploadBc" id="fileToUploadBc'+row.id_istanza+'"><br><br>\
-            <input type="submit" value="Carica file" name="submitfile">\
+            <input type="file" name="fileToUploadBc" id="fileToUploadBc'+row.id_istanza+'" required><br><br>\
+            <label>Identificativo bollo (14 cifre)</label>\
+            <input type="text" name="estremi_bc" id="estremi_bc'+row.id_istanza+'" minlength="14" maxlength="14" required><br><br>\
+            <input type="submit" value="Invia" name="submitfile">\
             </div>\
           </form>\
             </div>\
@@ -302,18 +328,97 @@ function nameFormatterFile3(value, row) {
         </div>\
       </div>' ;
       }else{
-        return' <span><a href="../isernia_upload/bollo_cdu/'+ row.file_bc.split("/").pop() +'" target="_blank">Vedi file</a></span>';
+          return' <span><a href="../isernia_upload/bollo_cdu/'+ row.file_bc.split("/").pop() +'" target="_blank">Vedi file</a></span>';
       }
     }
+  }
+}
+
+// funzione per visualizzare/caricare autocertificazione bolli cdu integrativi apre modal che richiama upload_bci.php
+function nameFormatterFile5(value, row) {
+	if (row.tipo == 'Visura'){
+    return' <span> - </span>';
   }else{
-    return' <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBc'+row.id_istanza+'" title="Carica pagamento Bollo per CDU" disabled><i class="fas fa-file-upload"></i></button>';
+    if(row.n_bolli != 1 && row.inviato == 't'){
+      if (row.file_bc_integr == null){
+        return' <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBci'+row.id_istanza+'" title="Carica pagamento Bollo per CDU"><i class="fas fa-file-upload"></i></button>\
+          <div class="modal fade" id="myModalBci'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
+        <div class="modal-dialog modal-dialog-centered" role="document">\
+          <div class="modal-content">\
+            <div class="modal-header">\
+              <h5 class="modal-title" id="exampleModalLabelBci'+row.id_istanza+'">Bollo CDU</h5>\
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
+                <span aria-hidden="true">&times;</span>\
+              </button>\
+            </div>\
+            <div class="modal-body">\
+          <form action="upload_bci.php?idi='+row.id_istanza+'" method="post" enctype="multipart/form-data">\
+          <div class="form-group">\
+            Seleziona la ricevuta di pagamento:<br><br>\
+            <input type="hidden" name="userBci" id="userBci'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
+            <input type="file" name="fileToUploadBci" id="fileToUploadBci'+row.id_istanza+'" required><br><br>\
+            <label>Identificativo bollo</label>\
+            <input type="text" name="estremi_bci" id="estremi_bci'+row.id_istanza+'" required><br><br>\
+            <input type="submit" value="Invia" name="submitfile">\
+            </div>\
+          </form>\
+            </div>\
+            <div class="modal-footer">\
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>\
+              <!--button type="button" class="btn btn-primary">Save changes</button-->\
+            </div>\
+          </div>\
+        </div>\
+      </div>' ;
+      } else{
+        if (row.terminato != 't'){
+          return' <span><a href="../isernia_upload/bollo_cdu/'+ row.file_bc_integr.split("/").pop() +'" target="_blank">Vedi file</a></span><br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBci'+row.id_istanza+'" title="Modifica file pagamento Bollo per CDU"><i class="fas fa-file-upload"></i></button>\
+            <div class="modal fade" id="myModalBci'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
+          <div class="modal-dialog modal-dialog-centered" role="document">\
+            <div class="modal-content">\
+              <div class="modal-header">\
+                <h5 class="modal-title" id="exampleModalLabelBci'+row.id_istanza+'">Bollo CDU</h5>\
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
+                  <span aria-hidden="true">&times;</span>\
+                </button>\
+              </div>\
+              <div class="modal-body">\
+            <form action="upload_bci.php?idi='+row.id_istanza+'" method="post" enctype="multipart/form-data">\
+            <div class="form-group">\
+              Seleziona la ricevuta di pagamento:<br><br>\
+              <input type="hidden" name="userBci" id="userBci'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
+              <input type="file" name="fileToUploadBci" id="fileToUploadBci'+row.id_istanza+'" required><br><br>\
+              <label>Identificativo bollo</label>\
+              <input type="text" name="estremi_bci" id="estremi_bci'+row.id_istanza+'" required><br><br>\
+              <input type="submit" value="Invia" name="submitfile">\
+              </div>\
+            </form>\
+              </div>\
+              <div class="modal-footer">\
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>\
+                <!--button type="button" class="btn btn-primary">Save changes</button-->\
+              </div>\
+            </div>\
+          </div>\
+        </div>' ;
+        }else{
+            return' <span><a href="../isernia_upload/bollo_cdu/'+ row.file_bc_integr.split("/").pop() +'" target="_blank">Vedi file</a></span>';
+        }
+      }
+  }else{
+    return' <span> - </span>';
+  }
   }
 }
 
 // funzione per visualizzare/scaricare file cdu richiama download_cdu.php
 function nameFormatterFile4(value, row) {
   if(row.terminato == 't' && row.file_cdu != null){
-    return' <span><a href="../isernia_upload/cdu/'+ row.file_cdu.split("/").pop() +'" target="_blank">Vedi file</a></span><br><a class="btn btn-primary" href="./download_cdu.php?f='+ row.file_cdu.split("/").pop() +'"><i class="fas fa-file-download"></i></a>';
+    if (row.tipo == 'Visura'){
+      return' <span><a href="../isernia_upload/cdu/'+ row.file_cdu.split("/").pop() +'" target="_blank">Vedi visura</a></span><br><a class="btn btn-primary" href="./download_cdu.php?f='+ row.file_cdu.split("/").pop() +'"><i class="fas fa-file-download"></i></a>';
+    }else{
+      return' <span><a href="../isernia_upload/cdu/'+ row.file_cdu.split("/").pop() +'" target="_blank">Vedi CDU</a></span><br><a class="btn btn-primary" href="./download_cdu.php?f='+ row.file_cdu.split("/").pop() +'"><i class="fas fa-file-download"></i></a>';
+    }
   }else{
     return' <span> - </span>';
   }

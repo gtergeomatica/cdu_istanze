@@ -171,13 +171,13 @@ require('navbar.php');
             </div>
         </div-->
         <!-- Scarica autocertificazioni -->
-        <section class="page-section bg-dark text-white" id="moduli">
+        <!--section class="page-section bg-dark text-white" id="moduli">
             <div class="container text-center">
                 <h2 class="mb-4">Scarica i moduli per le autocertificazioni di pagamento</h2>
                 <a style="margin-right:20px;" class="btn btn-light btn-xl" href="./download2.php">Diritti Istruttori</a>
                 <a style="margin-left:20px;" class="btn btn-light btn-xl" href="./download.php">Marca da Bollo</a>
             </div>
-        </section>
+        </section-->
 <!-- Richiama fotter della pagina con contatti e librerie javascript-->
 <?php
 require('footer.php');

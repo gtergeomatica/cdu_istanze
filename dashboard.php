@@ -39,11 +39,11 @@ require('navbar.php');
             <div class="container h-100">
                 <div class="row h-100 align-items-center justify-content-center text-center">
                     <div class="col-lg-10 align-self-end">
-                        <h1 class="text-uppercase text-white font-weight-bold">Istanze CDU - Dashboard utente</h1>
+                        <h1 class="text-uppercase text-white font-weight-bold">Istanze CDU/Visura - Dashboard utente</h1>
                         <hr class="divider my-4" />
                     </div>
                     <div class="col-lg-8 align-self-baseline">
-                        <p class="text-white-75 font-weight-light mb-5">Accedi alla tua dashboard e in pochi e semplici passi potrai ottenere il tuo CDU.<br> Scopri come richiedere il tuo CDU consultando <a  href="https://cdu-istanze-manuale.readthedocs.io/it/latest/index.html" target="_blank">il manuale del Sistema di Istanze Online!</a></p>
+                        <p class="text-white-75 font-weight-light mb-5">Accedi alla tua dashboard e in pochi e semplici passi potrai ottenere il tuo CDU o la tua Visura.<br> Scopri come richiedere il tuo CDU/Visura consultando <a  href="https://cdu-istanze-manuale.readthedocs.io/it/latest/index.html" target="_blank">il manuale del Sistema di Istanze Online!</a></p>
                         <a class="btn btn-primary btn-xl js-scroll-trigger" href="#about">Inserisci i tuoi dati</a>
                     </div>
                 </div>
@@ -112,6 +112,8 @@ if(isset($_POST['Submit']) || $_SESSION['user'] != ''){
             die('<h1>Caro <i>'.$username.'</i>,<br> Il tuo account non è più attivo, creane uno nuovo.</h1> <hr class="light"><a href="form_external_user.php" class=\'btn btn-light btn-xl\'>Crea Account</a></div></div></div></section>');
         }
         else{
+            $_SESSION['user'] = '';
+            $_SESSION['pwd'] = '';
             die('<h1>Caro <i>'.$username.'</i>,<br> password errata.</h1> <hr class="light"><a href="dashboard.php" class=\'btn btn-light btn-xl\'>Riprova</a></div></div></div></section>');
         }
     }

@@ -3,7 +3,7 @@ session_start();
 //questo file viene richiamato dal modal quando l'utente clicca sul bottone per caricare i diritti istruttori
 // salva in $_SESSION lo username passato tramite il value dell'input hidden con name user nel modal serve per check su login
 $_SESSION['user'] = pg_escape_string($_POST['user']);
-//echo $_SESSION['user'] ."<br>";
+$estremi_s = pg_escape_string($_POST['estremi_s']);
 
 include("root_connection.php");
 //recupera id istanza da url
@@ -38,15 +38,15 @@ if(!$conn_isernia) {
 					}
 					//se non è stato caricato prima inserisce i dati
 					if ($istanza == ''){
-						$query = "INSERT into istanze.pagamento_segreteria (id_istanza_s, file_s)  values($1, $2);";
+						$query = "INSERT into istanze.pagamento_segreteria (id_istanza_s, file_s, estremi_s)  values($1, $2, $3);";
 						$result1 = pg_prepare($conn_isernia, "myquery1", $query);
-						$result1 = pg_execute($conn_isernia, "myquery1", array($id_istanza, $dest_file));
+						$result1 = pg_execute($conn_isernia, "myquery1", array($id_istanza, $dest_file, $estremi_s));
 					}
 					else{
 						//altrimenti li aggiorna
-						$query = "UPDATE istanze.pagamento_segreteria SET file_s = $1 where id_istanza_s = $2;";
+						$query = "UPDATE istanze.pagamento_segreteria SET file_s = $1, estremi_s = $2  where id_istanza_s = $3;";
 						$result2 = pg_prepare($conn_isernia, "myquery2", $query);
-						$result2 = pg_execute($conn_isernia, "myquery2", array($dest_file, $id_istanza));
+						$result2 = pg_execute($conn_isernia, "myquery2", array($dest_file, $estremi_s, $id_istanza));
 					}
 					//redirect alla dashboard
 					header ("Location: dashboard.php#about");

@@ -61,17 +61,22 @@ if(!$conn_isernia) {
 		$data_invio = explode(" ", $r["data_invio"]);
 		$ruolo=$r["ruolo"];
 		$motivo=$r["motivo"];
+		if ($r["tipo"] == 1){
+			$tipo = 'CDU';
+		}else{
+			$tipo = 'Visura';
+		}
 	}
 
 		// INVIO MAIL
 	require('mail_address.php');
 
 	//mail per informare il comune che è stata inviata un'istanza
-    $oggetto = "Nuova istanza CDU";
+    $oggetto = "Nuova istanza ".$tipo;
 
     $testo = "
 
-Questa mail è stata generata automaticamente in quanto in data " . $data_invio[0] . " alle ore " . $data_invio[1] . " è stata inviata un'istanza di CDU da:\n
+Questa mail è stata generata automaticamente in quanto in data " . $data_invio[0] . " alle ore " . $data_invio[1] . " è stata inviata un'istanza di ".$tipo." da:\n
     Nome: ". $nome . " \n
     Cognome: ". $cognome . " \n
     Codice Fiscale: ". $cf . " \n
@@ -154,11 +159,11 @@ $body .= $encoded_content; // Attaching the encoded file with email
     $testo2 = "
 
 Egr. " . $nome . " " .$cognome. ",\n 
-questa mail e' stata generata automaticamente in quanto ha appena inviato un'istanza di CDU.\n
+questa mail e' stata generata automaticamente in quanto ha appena inviato un'istanza di ".$tipo.".\n
 
     
-Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di comunicarlo immediatamente all'amministratore del sistema rispondendo a questa mail. Se invece ha effettivamente inviato un'istanza di CDU, riceverà una nuova mail non appena il documento sarà disponibile sulla sua dashboard al seguente link https://cduisernia.gter.it/isernia/dashboard.php \n
-In caso di problemi o richieste non esiti a contattare l'amministratore del sistema al seguente indirizzo DL_Cartografia@astergenova.it.\n \n
+Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di comunicarlo immediatamente all'amministratore del sistema rispondendo a questa mail. Se invece ha effettivamente inviato un'istanza di ".$tipo.", riceverà una nuova mail non appena il documento sarà disponibile sulla sua dashboard al seguente link https://cduisernia.gter.it/isernia/dashboard.php \n
+In caso di problemi o richieste non esiti a contattare l'amministratore del sistema al seguente indirizzo cdu@comune.isernia.it.\n \n
             
 Cordiali saluti, \n
 L'amministratore del sistema.
@@ -166,13 +171,13 @@ L'amministratore del sistema.
 -- 
 Comune di Isernia
 Piazza Marconi, 3 - 86170 Isernia (IS)
-E-mail: segreteriagenerale@comune.isernia.it
+E-mail: cdu@comune.isernia.it
 
 Servizio basato su GisHosting di Gter srl\n
 
 ";
 
-	$oggetto2 ="Nuova Istanza CDU";
+	$oggetto2 ="Nuova Istanza ".$tipo;
     $headers2 = $nostro_recapito .
     "Reply-To: " .$loro_recapito. "\r\n" .
     "Cc: " .$mail_admin. "\r\n" .

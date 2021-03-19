@@ -57,8 +57,10 @@ $cliente = 'Comune di Isernia';
             <!--th data-field="state" data-checkbox="true"></th-->
 			<!--th data-field="id" data-sortable="false" data-formatter="nameFormatterRemove" data-visible="true">Rimuovi</th-->
 			<th data-field="id_istanza" data-sortable="false" data-formatter="nameFormatterSend" data-visible="true">Invia</th>
-            <th data-field="usr_login" data-sortable="true" data-filter-control="input" data-visible="true">Utente</th>
+            <th data-field="usr_login" data-sortable="true" data-filter-control="input" data-visible="false">Username</th>
+            <th data-field="nome" data-sortable="true" data-filter-control="input" data-visible="true">Utente</th>
             <th data-field="usr_email" data-sortable="true" data-filter-control="input" data-visible="true">E-mail</th>
+            <th data-field="tipo" data-sortable="true" data-filter-control="select" data-visible="true">Tipo Istanza</th>
             <th data-field="data_invio" data-sortable="true" data-filter-control="input" data-visible="true">Data Istanza</th>
             <!--th data-field="terreni" data-sortable="true" data-filter-control="select" data-visible="true">Terreni</th-->
             <th data-field="file_txt" data-sortable="false" data-formatter="nameFormatterFile0" data-visible="true">File Terreni</th>
@@ -66,7 +68,8 @@ $cliente = 'Comune di Isernia';
             <th data-field="file_bi" data-sortable="false" data-formatter="nameFormatterFile2" data-visible="true">Bollo Istanza</th>
             <th data-field="n_bolli" data-sortable="false" data-formatter="nameFormatterFile5" data-visible="true">N. Bolli</th>
             <th data-field="file_bc" data-sortable="false" data-formatter="nameFormatterFile3" data-visible="true">Bollo CDU</th>
-            <th data-field="file_cdu" data-sortable="false" data-formatter="nameFormatterFile4" data-visible="true">File CDU</th>
+            <th data-field="file_bc_integr" data-sortable="false" data-formatter="nameFormatterFile8" data-visible="true">Altri bolli CDU</th>
+            <th data-field="file_cdu" data-sortable="false" data-formatter="nameFormatterFile4" data-visible="true">Documento</th>
         </tr>
 </thead>
 
@@ -124,17 +127,27 @@ $cliente = 'Comune di Isernia';
 <script>
 // funzione sul pulsante invia cdu richiama file invia_cdu.php
 function nameFormatterSend(value, row) {
-	//var test_id= row.id;
-  if (row.file_cdu != null && row.terminato != 't'){
-    if (row.n_bolli != null && row.file_bc != null){
+	if (row.tipo == 'Visura'){
+    if (row.file_cdu != null && row.terminato != 't'){
       return' <a id="myLink" type="button" class="btn btn-info" href="invia_cdu.php?idi='+row.id_istanza+'&idu='+row.usr_login+'"><i class="fas fa-play-circle"></i></a>';
-    }else if(row.n_bolli == null && row.file_bc == null){
-      return' <a id="myLink" type="button" class="btn btn-info" href="invia_cdu.php?idi='+row.id_istanza+'&idu='+row.usr_login+'"><i class="fas fa-play-circle"></i></a>';
+    }else{
+      return' <a id="myLink" type="button" class="btn btn-info" style="background-color: lightgrey; border-color: lightgrey;"><i class="fas fa-play-circle"></i></a>';
     }
   }else{
-    return' <a id="myLink" type="button" class="btn btn-info" style="background-color: lightgrey; border-color: lightgrey;"><i class="fas fa-play-circle"></i></a>';
+    if (row.file_cdu != null && row.terminato != 't'){
+      if (row.n_bolli == 1){
+        return' <a id="myLink" type="button" class="btn btn-info" href="invia_cdu.php?idi='+row.id_istanza+'&idu='+row.usr_login+'"><i class="fas fa-play-circle"></i></a>';
+      }else{
+        if (row.file_bc_integr != null){
+          return' <a id="myLink" type="button" class="btn btn-info" href="invia_cdu.php?idi='+row.id_istanza+'&idu='+row.usr_login+'"><i class="fas fa-play-circle"></i></a>';
+        }else{
+          return' <a id="myLink" type="button" class="btn btn-info" style="background-color: lightgrey; border-color: lightgrey;"><i class="fas fa-play-circle"></i></a>';
+        }
+      }
+    }else{
+      return' <a id="myLink" type="button" class="btn btn-info" style="background-color: lightgrey; border-color: lightgrey;"><i class="fas fa-play-circle"></i></a>';
+    }
   }
-
 }
 
 // funzione sul pulsante rimuovi utente richiama file remove_user.php
@@ -223,21 +236,114 @@ function nameFormatterFile0(value, row) {
 }
 
 // funzione per visualizzare autocertificazione pagamento diritti istruttori
+/* function nameFormatterFile1(value, row) {
+  return' <span><a href="../isernia_upload/segreteria/'+ row.file_s.split("/").pop() +'" target="_blank">Vedi file</a>\
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalEstremiS'+row.id_istanza+'" title="Inserisci numero bolli per CDU"><i class="fas fa-edit"></i></button>\
+  <input readonly="readonly" name="estremi_s" id="estremi_s'+row.id_istanza+'" value="'+row.estremi_s+'"><br>\
+  <button class="btn" onclick="copyestremi_s(\'estremi_s' + row.id_istanza + '\')"><i class="fas fa-clone"></i></button>\
+  </span><script>\
+  function copyestremi_s(rowid){\
+  console.log(rowid);\
+  var copyText = document.getElementById(rowid);\
+  console.log(copyText);\
+  copyText.select();\
+  document.execCommand("copy");\
+  alert("Estremi: " + copyText.value);\
+  }</scr'+'ipt>';
+} */
 function nameFormatterFile1(value, row) {
-  return' <span><a href="../isernia_upload/segreteria/'+ row.file_s.split("/").pop() +'" target="_blank">Vedi file</a></span>';
+  return' <span><a href="../isernia_upload/segreteria/'+ row.file_s.split("/").pop() +'" target="_blank">Vedi file</a>\
+  <button type="button" class="btn" data-toggle="modal" data-target="#estremiS'+row.id_istanza+'" title="Copia estremi pagamento"><i class="fas fa-clone"></i></button>\
+        <div class="modal fade" id="estremiS'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
+      <div class="modal-dialog modal-dialog-centered" role="document">\
+        <div class="modal-content">\
+          <div class="modal-header">\
+            <h5 class="modal-title" >Estremi pagamento diritti Istruttori</h5>\
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
+              <span aria-hidden="true">&times;</span>\
+            </button>\
+          </div>\
+          <div class="modal-body">\
+          <input readonly="readonly" name="estremi_s" id="estremi_s'+row.id_istanza+'" value="'+row.estremi_s+'"><br><br>\
+          <button class="btn btn-primary" onclick="copyestremi(\'estremi_s' + row.id_istanza + '\')" data-dismiss="modal">Copia estremi</button>\
+          </div>\
+          <div class="modal-footer">\
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>\
+            <!--button type="button" class="btn btn-primary">Save changes</button-->\
+          </div>\
+        </div>\
+      </div>\
+    </div>\
+  </span>';
 }
 
 // funzione per visualizzare autocertificazione pagamento bollo istanza
 function nameFormatterFile2(value, row) {
-  return' <span><a href="../isernia_upload/bollo_istanza/'+ row.file_bi.split("/").pop() +'" target="_blank">Vedi file</a></span>';
+  if (row.tipo == 'Visura'){
+    return' <span> - </span>';
+  }else{
+    return' <span><a href="../isernia_upload/bollo_istanza/'+ row.file_bi.split("/").pop() +'" target="_blank">Vedi file</a>\
+    <button type="button" class="btn" data-toggle="modal" data-target="#estremiBi'+row.id_istanza+'" title="Copia identificativo bollo istanza"><i class="fas fa-clone"></i></button>\
+          <div class="modal fade" id="estremiBi'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
+        <div class="modal-dialog modal-dialog-centered" role="document">\
+          <div class="modal-content">\
+            <div class="modal-header">\
+              <h5 class="modal-title" >Numero Identificativo Bollo Istanza</h5>\
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
+                <span aria-hidden="true">&times;</span>\
+              </button>\
+            </div>\
+            <div class="modal-body">\
+            <input readonly="readonly" name="estremi_bi" id="estremi_bi'+row.id_istanza+'" value="'+row.estremi_bi+'"><br><br>\
+            <button class="btn btn-primary" onclick="copyestremi(\'estremi_bi' + row.id_istanza + '\')" data-dismiss="modal">Copia identificativo</button>\
+            </div>\
+            <div class="modal-footer">\
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>\
+              <!--button type="button" class="btn btn-primary">Save changes</button-->\
+            </div>\
+          </div>\
+        </div>\
+      </div>\
+    </span>';
+  }
 }
 
 // funzione per visualizzare autocertificazione pagamento bollo cdu
 function nameFormatterFile3(value, row) {
-  if (row.file_bc != null){
-    return' <span><a href="../isernia_upload/bollo_cdu/'+ row.file_bc.split("/").pop() +'" target="_blank">Vedi file</a></span>';
+  if (row.tipo == 'Visura'){
+    return' <span> - </span>';
   }else{
-    return' <span>'+ row.file_bc +'</span>';
+    if (row.n_bolli == 1){
+      return' <span><a href="../isernia_upload/bollo_cdu/'+ row.file_bc.split("/").pop() +'" target="_blank">Vedi file</a>\
+      <button type="button" class="btn" data-toggle="modal" data-target="#estremiBc'+row.id_istanza+'" title="Copia identificativo bollo CDU"><i class="fas fa-clone"></i></button>\
+          <div class="modal fade" id="estremiBc'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
+        <div class="modal-dialog modal-dialog-centered" role="document">\
+          <div class="modal-content">\
+            <div class="modal-header">\
+              <h5 class="modal-title" >Numero Identificativo Bollo CDU</h5>\
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
+                <span aria-hidden="true">&times;</span>\
+              </button>\
+            </div>\
+            <div class="modal-body">\
+            <input readonly="readonly" name="estremi_bc" id="estremi_bc'+row.id_istanza+'" value="'+row.estremi_bc+'"><br><br>\
+            <button class="btn btn-primary" onclick="copyestremi(\'estremi_bc' + row.id_istanza + '\')" data-dismiss="modal">Copia identificativo</button>\
+            </div>\
+            <div class="modal-footer">\
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>\
+              <!--button type="button" class="btn btn-primary">Save changes</button-->\
+            </div>\
+          </div>\
+        </div>\
+      </div>\
+      </span>';
+    }else{
+      if (row.file_bc != null){
+        return' <span><a href="../isernia_upload/bollo_cdu/'+ row.file_bc.split("/").pop() +'" target="_blank">Vedi file</a></span>';
+      }else{
+        return' <span> - </span>';
+      }
+    }
   }
 }
 
@@ -306,7 +412,8 @@ function nameFormatterFile5(value, row) {
     }
 }
 
-// funzione per caricare file del CDU apre modal che richiama file upload_cdu.php
+// funzione per caricare file del CDU apre modal che richiama file upload_cdu.php 
+//******GESTIRE IN BASE A COLONNA TIPO, SE è VISURA VEDI VISURA ALTRIMENTI VEDI CDU COME PER DATI UTENTE**********
 function nameFormatterFile4(value, row) {
     if (row.file_cdu == null){
       return' <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalCdu'+row.id_istanza+'" title="Carica file CDU"><i class="fas fa-file-upload"></i></button>\
@@ -416,6 +523,17 @@ function rowStyle2(row, index) {
 }
 
 </script>
+<script>
+  function copyestremi(rowid){
+    console.log(rowid);
+    var copyText = document.getElementById(rowid);
+    console.log(copyText);
+    copyText.select();
+    document.execCommand("copy");
+    //alert("Estremi: " + copyText.value);
+  }
+</script>
+
 
 <?php
 }

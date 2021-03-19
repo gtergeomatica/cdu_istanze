@@ -39,7 +39,7 @@ include("root_connection.php");
             <div class="container h-100">
                 <div class="row h-100 align-items-center justify-content-center text-center">
                     <div class="col-lg-10 align-self-end">
-						<h1 class="text-uppercase text-white font-weight-bold">Iscrizione al sistema Istanze CDU del <?php echo $cliente; ?></h1>
+						<h1 class="text-uppercase text-white font-weight-bold">Iscrizione al sistema Istanze del <?php echo $cliente; ?></h1>
                         <hr class="divider my-4" />
 					</div>
                     <div class="col-lg-8 align-self-baseline">
@@ -124,7 +124,7 @@ if ($check_user==1){
 
 	echo "L'utente " . $name . " " .$surname. " con username <b>" . $username . "</b> è stato creato. <br>Eseguire il Login per richiedere il CDU.<br>";
 	
-	echo '<br><a href="./dashboard.php" class="btn btn-light btn-xl"> Vai a Richiesta CDU </a>';
+	echo '<br><a href="./dashboard.php" class="btn btn-light btn-xl"> Vai a Richiesta CDU/Visura </a>';
 
 
 	// creo l'utente 
@@ -239,7 +239,7 @@ questa mail e' stata generata automaticamente in quanto si è appena registrato/
     Indirizzo: ". $street . " " . $cap . " " . $city . " \n \n
     
 Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di comunicarlo immediatamente all'amministratore del sistema rispondendo a questa mail. Se invece si è effettivamente registrato/a le ricordiamo che il suo utente è già attivo e può quindi iniziare a consultare i dati online all'indirizzo https://cduisernia.gter.it/isernia/dashboard.php \n
-In caso di problemi o richieste non esiti a contattare l'amministratore del sistema al seguente indirizzo DL_Cartografia@astergenova.it.\n \n
+In caso di problemi o richieste non esiti a contattare l'amministratore del sistema al seguente indirizzo cdu@comune.isernia.it.\n \n
             
 Cordiali saluti, \n
 L'amministratore del sistema.
@@ -247,7 +247,7 @@ L'amministratore del sistema.
 -- 
 Comune di Isernia
 Piazza Marconi, 3 - 86170 Isernia (IS)
-E-mail: segreteriagenerale@comune.isernia.it
+E-mail: cdu@comune.isernia.it
 
 Servizio basato su GisHosting di Gter srl\n
 

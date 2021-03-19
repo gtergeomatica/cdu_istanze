@@ -27,7 +27,7 @@ session_start();
                         <!-- Mostra i due pulsanti solo nella navbar della homepage-->
                         <?php if(basename($_SERVER['PHP_SELF']) == 'index.php') {?>
                             <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#account">Crea account</a></li>
-                            <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#moduli">Moduli</a></li>
+                            <!--li class="nav-item"><a class="nav-link js-scroll-trigger" href="#moduli">Moduli</a></li-->
                         <?php } ?>
                         <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#contact">Contatti</a></li>
                         <li class="nav-item"><a class="nav-link" href="https://cdu-istanze-manuale.readthedocs.io/it/latest/index.html" target="_blank"><i class="fas fa-info-circle"></i> Guida</a></li>

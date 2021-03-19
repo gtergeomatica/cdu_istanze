@@ -11,7 +11,7 @@ if(!$conn_isernia) {
 
 	// Query per polare la tabella istanze nella dashboard utente
 
-	$query_istanza = "SELECT id_istanza, string_agg(concat('F',foglio,' M',mappale), ', ') as terreni, data_istanza, inviato, n_bolli, file_s, file_bi, file_bc, file_cdu, terminato
+	$query_istanza = "SELECT id_istanza, string_agg(concat('F',foglio,' M',mappale), ', ') as terreni, data_istanza, inviato, n_bolli, file_s, file_bi, file_bc, file_bc_integr, file_cdu, terminato, dt.descr as tipo
 		FROM istanze.dettagli_istanze d
 		left join istanze.istanze i
 		on d.id_istanza = i.id
@@ -21,8 +21,10 @@ if(!$conn_isernia) {
 		on d.id_istanza = pbi.id_istanza_bi
 		left join istanze.pagamento_bollo_cdu pbc 
 		on d.id_istanza = pbc.id_istanza_bc
+		left join istanze.deco_tipo dt
+		on dt.cod = i.tipo
 		where i.id_utente = $1
-		group by d.id_istanza, i.data_istanza, i.inviato, i.n_bolli, ps.file_s, pbi.file_bi, pbc.file_bc, i.file_cdu, i.terminato
+		group by d.id_istanza, i.data_istanza, i.inviato, i.n_bolli, ps.file_s, pbi.file_bi, pbc.file_bc, pbc.file_bc_integr, i.file_cdu, i.terminato, dt.descr
 		order by i.data_istanza desc;";
 	//echo $query."<br>";
 	$result = pg_prepare($conn_isernia, "myquery0", $query_istanza);
