@@ -216,6 +216,45 @@ $(document).ready(function() {
 $('#login').validator({});
 });
 </script>
+</script>
+<script type="text/javascript">
+//$(document).ready(function() {
+// Creato un custom validator per verificare n bolli
+function checkVal(rowid){
+//$('#myModalBci'+rowid).on('loaded', function() {
+    $('#formBCI'+rowid).validator({
+    custom: {
+        customcheck: function($bolli) {
+            var matchValue = $('#estremi_bci').val() // foo
+            var listValue = matchValue.split(",")
+            if (listValue.length == 1){
+                if ($bolli.data("customcheck") != 1){
+                    return "I numeri identificativi devono essere separati da virgola"
+                }else if(listValue[0].length > 14){
+                    return "Il numero identificativo deve essere di 14 cifre"
+                }else if (listValue[0].length < 14){
+                    return "Il numero identificativo deve essere di 14 cifre"
+                }
+            }else{
+            if(listValue.length != $bolli.data("customcheck")){
+                return "Il numero di identificativi inseriti non corrisponde al numero di bolli dovuti"
+            }else{
+                if(listValue.some(item => (item.length != 14))){
+                    return "I numeri identificativi devono essere di 14 cifre"
+                }
+                /* listValue.forEach(function(item) {
+                if (item.length != 14){
+                    return "I numeri identificativi devono essere di 14 cifre"
+                } 
+            });*/
+            }
+        }
+        }
+    }
+    //});
+});
+}
+</script>
 <!-- primo tentativo per cambiare background alle righe in funzione di una condizione,
 non funziona manda in loop la pagina, gestito con metodo di boostrap table-->
 <!--script> 

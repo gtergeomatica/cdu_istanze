@@ -59,14 +59,14 @@ $testo = "
 
 Egr. " . $fullname. ",\n 
 questa mail è stata generata automaticamente in quanto il Comune di Isernia ha elaborato la sua istanza di CDU inviata in data " . $data . ".\n
-Per poter scaricare il CDU è necessario che venga caricata sulla sua dashboard l'autocertificazione di avvenuto pagamento di n° " . $numero . " bolli
+Dal momento che il suo CDU superà il numero di 4 pagine, per poter scaricare il CDU è necessario che vengano caricati sulla sua dashboard i dettagli del pagamento di altri n° " . $numero . " bolli
 da 16,00 euro da assolvere tramite Modello F23 o acquisto presso un rivenditore.\n
 
-Può scaricare il modulo di autocertificazione a questo link: https://cduisernia.gter.it/isernia/#moduli \n
-Una volta caricato il modulo potrà scaricare il CDU.
+Una volta effettuato il pagamento, dovrà caricare sulla sua dashboard, in corrispondenza dell'istanza presentata, la scansione delle marche da bollo e i relativi numeri identificativi di 14 cifre.\n
+Una volta caricati i dati relativi al pagamento, il Comune provvederà a verificarli e quindi a inviarle il suo CDU che potrà scaricare dalla sua dashboard.
     
 Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di comunicarlo immediatamente all'amministratore del sistema rispondendo a questa mail.\n
-In caso di problemi o richieste non esiti a contattare l'amministratore del sistema al seguente indirizzo segreteriagenerale@comune.isernia.it.\n \n
+In caso di problemi o richieste non esiti a contattare l'amministratore del sistema al seguente indirizzo cdu@comune.isernia.it.\n \n
             
 Cordiali saluti, \n
 L'amministratore del sistema.
@@ -74,13 +74,13 @@ L'amministratore del sistema.
 -- 
 Comune di Isernia
 Piazza Marconi, 3 - 86170 Isernia (IS)
-E-mail: segreteriagenerale@comune.isernia.it
+E-mail: cdu@comune.isernia.it
 
 Servizio basato su GisHosting di Gter srl\n
 
 ";
 
-	$oggetto ="Assolvimento Bolli per CDU del Comune di Isernia";
+	$oggetto ="Assolvimento Bolli integrativi per CDU del Comune di Isernia";
     $headers = $nostro_recapito .
     "Reply-To: " .$loro_recapito. "\r\n" .
 	"Content-Type: text/plain; charset=utf-8" . "\r\n";
@@ -97,13 +97,13 @@ questa mail è stata generata automaticamente in quanto il Comune di Isernia ha 
 Contrariamente a quanto indicato nella mail precedente (ovvero ". $numero_old ." bolli), per ottenere il suo CDU è necessario che venga caricata sulla sua dashboard l'autocertificazione di avvenuto pagamento di n° " . $numero . " bolli da 16,00 euro da assolvere tramite Modello F23 o acquisto presso un rivenditore.\n
 Questa informazione è stata aggiornata anche sulla sua dashboard.
 
-Si ricorda che può scaricare il modulo di autocertificazione a questo link: https://cduisernia.gter.it/isernia/#moduli \n
-Una volta caricato il modulo potrà scaricare il CDU.
+Una volta effettuato il pagamento, dovrà caricare sulla sua dashboard, in corrispondenza dell'istanza presentata, la scansione delle marche da bollo e i relativi numeri identificativi di 14 cifre (compresi quelli precedenti già caricati).\n
+Una volta caricati i dati relativi al pagamento, il Comune provvederà a verificarli e quindi a inviarle il suo CDU che potrà scaricare dalla sua dashboard.
 
 Ci scusiamo per il disagio.
 	
 Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di comunicarlo immediatamente all'amministratore del sistema rispondendo a questa mail.\n
-In caso di problemi o richieste non esiti a contattare l'amministratore del sistema al seguente indirizzo segreteriagenerale@comune.isernia.it.\n \n
+In caso di problemi o richieste non esiti a contattare l'amministratore del sistema al seguente indirizzo cdu@comune.isernia.it.\n \n
 			
 Cordiali saluti, \n
 L'amministratore del sistema.
@@ -111,13 +111,13 @@ L'amministratore del sistema.
 -- 
 Comune di Isernia
 Piazza Marconi, 3 - 86170 Isernia (IS)
-E-mail: segreteriagenerale@comune.isernia.it
+E-mail: cdu@comune.isernia.it
 
 Servizio basato su GisHosting di Gter srl\n
 
 ";
 
-	$oggetto2 ="Errata Corrige - Assolvimento Bolli per CDU del Comune di Isernia";
+	$oggetto2 ="Errata Corrige - Assolvimento Bolli integrativi per CDU del Comune di Isernia";
 	$headers2 = $nostro_recapito .
 	"Reply-To: " .$loro_recapito. "\r\n" .
 	"Content-Type: text/plain; charset=utf-8" . "\r\n";

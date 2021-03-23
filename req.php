@@ -112,7 +112,7 @@ table th, .table td {
 }
 .has-error input,
 .has-error textarea {
-    color: yellow;
+    /*color: yellow;*/
     background-color: yellow;
 }
 .mytip {

@@ -64,7 +64,7 @@ $cliente = 'Comune di Isernia';
             <th data-field="data_invio" data-sortable="true" data-filter-control="input" data-visible="true">Data Istanza</th>
             <!--th data-field="terreni" data-sortable="true" data-filter-control="select" data-visible="true">Terreni</th-->
             <th data-field="file_txt" data-sortable="false" data-formatter="nameFormatterFile0" data-visible="true">File Terreni</th>
-            <th data-field="file_s" data-sortable="false" data-formatter="nameFormatterFile1" data-visible="true">Segreteria</th>
+            <th data-field="file_s" data-sortable="false" data-formatter="nameFormatterFile1" data-visible="true">Diritti Istruttori</th>
             <th data-field="file_bi" data-sortable="false" data-formatter="nameFormatterFile2" data-visible="true">Bollo Istanza</th>
             <th data-field="n_bolli" data-sortable="false" data-formatter="nameFormatterFile5" data-visible="true">N. Bolli</th>
             <th data-field="file_bc" data-sortable="false" data-formatter="nameFormatterFile3" data-visible="true">Bollo CDU</th>
@@ -183,7 +183,7 @@ function nameFormatterFile6(value, row) {
         <div class="form-group">\
           Vuoi davvero rimuovere l\'utente <b>'+row.usr_login+'</b> da amministratore?<br><br>\
           <input type="hidden" name="userAd" id="userAd'+row.id+'" value="<?php echo $_SESSION['user']; ?>">\
-          <!--input type="text" name="numeroBolli" id="numeroBolli'+row.id_istanza+'"><br><br-->\
+          <!--input type="text" name="numeroBolli" id="numeroBolli'+row.id_istanza+'" required><br><br-->\
           <input type="submit" value="Si" name="submitadmin">\
           </div>\
         </form>\
@@ -211,7 +211,7 @@ function nameFormatterFile6(value, row) {
         <div class="form-group">\
           Vuoi davvero rendere l\'utente <b>'+row.usr_login+'</b> amministratore?<br><br>\
           <input type="hidden" name="userAd" id="userAd'+row.id+'" value="<?php echo $_SESSION['user']; ?>">\
-          <!--input type="text" name="numeroBolli" id="numeroBolli'+row.id_istanza+'"><br><br-->\
+          <!--input type="text" name="numeroBolli" id="numeroBolli'+row.id_istanza+'" required><br><br-->\
           <input type="submit" value="Si" name="submitadmin">\
           </div>\
         </form>\
@@ -313,7 +313,8 @@ function nameFormatterFile3(value, row) {
   if (row.tipo == 'Visura'){
     return' <span> - </span>';
   }else{
-    if (row.n_bolli == 1){
+    //if (row.n_bolli == 1){
+    if (row.file_bc != null){
       return' <span><a href="../isernia_upload/bollo_cdu/'+ row.file_bc.split("/").pop() +'" target="_blank">Vedi file</a>\
       <button type="button" class="btn" data-toggle="modal" data-target="#estremiBc'+row.id_istanza+'" title="Copia identificativo bollo CDU"><i class="fas fa-clone"></i></button>\
           <div class="modal fade" id="estremiBc'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
@@ -338,18 +339,23 @@ function nameFormatterFile3(value, row) {
       </div>\
       </span>';
     }else{
+        return' <span> - </span>';
+    }
+/*     }else{
       if (row.file_bc != null){
         return' <span><a href="../isernia_upload/bollo_cdu/'+ row.file_bc.split("/").pop() +'" target="_blank">Vedi file</a></span>';
       }else{
         return' <span> - </span>';
       }
-    }
+    } */
   }
 }
 
 // funzione per visualizzare/aggiungere numero di bolli apre modal che richiama file numero_bolli.php
 function nameFormatterFile5(value, row) {
-    if (row.n_bolli == null){
+    if (row.n_bolli == null && row.tipo == 'Visura'){
+      return' <span> - </span>';
+    }else if (row.n_bolli == null && row.tipo != 'Visura'){
       return' <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalNb'+row.id_istanza+'" title="Inserisci numero bolli per CDU"><i class="fas fa-edit"></i></button>\
         <div class="modal fade" id="myModalNb'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
       <div class="modal-dialog modal-dialog-centered" role="document">\
@@ -365,7 +371,7 @@ function nameFormatterFile5(value, row) {
         <div class="form-group">\
           Indica numero Bolli da pagare per CDU:<br><br>\
           <input type="hidden" name="userNb" id="userNb'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
-          <input type="text" name="numeroBolli" id="numeroBolli'+row.id_istanza+'"><br><br>\
+          <input type="text" name="numeroBolli" id="numeroBolli'+row.id_istanza+'" required><br><br>\
           <input type="submit" value="Invia" name="submitnum">\
           </div>\
         </form>\
@@ -394,7 +400,7 @@ function nameFormatterFile5(value, row) {
           <div class="form-group">\
           Indica numero Bolli da pagare per CDU:<br><br>\
             <input type="hidden" name="userNb" id="userNb'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
-            <input type="text" name="numeroBolli" id="numeroBolli'+row.id_istanza+'"><br><br>\
+            <input type="text" name="numeroBolli" id="numeroBolli'+row.id_istanza+'" required><br><br>\
             <input type="submit" value="Invia" name="submitnum">\
             </div>\
           </form>\
@@ -412,8 +418,50 @@ function nameFormatterFile5(value, row) {
     }
 }
 
-// funzione per caricare file del CDU apre modal che richiama file upload_cdu.php 
-//******GESTIRE IN BASE A COLONNA TIPO, SE è VISURA VEDI VISURA ALTRIMENTI VEDI CDU COME PER DATI UTENTE**********
+// funzione per visualizzare autocertificazione pagamento bollo cdu integrativi
+function nameFormatterFile8(value, row) {
+  if (row.tipo == 'Visura'){
+    return' <span> - </span>';
+  }else{
+    if (row.n_bolli != null){
+      if (row.file_bc_integr != null){
+        return' <span><a href="../isernia_upload/bollo_cdu/'+ row.file_bc_integr.split("/").pop() +'" target="_blank">Vedi file</a>\
+        <button type="button" class="btn" data-toggle="modal" data-target="#estremiBci'+row.id_istanza+'" title="Copia identificativo bollo CDU"><i class="fas fa-clone"></i></button>\
+            <div class="modal fade" id="estremiBci'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
+          <div class="modal-dialog modal-dialog-centered" role="document">\
+            <div class="modal-content">\
+              <div class="modal-header">\
+                <h5 class="modal-title" >Numero Identificativo Bollo CDU</h5>\
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
+                  <span aria-hidden="true">&times;</span>\
+                </button>\
+              </div>\
+              <div class="modal-body">\
+              <input readonly="readonly" name="estremi_bc_integr" id="estremi_bc_integr'+row.id_istanza+'" value="'+row.estremi_bc_integr+'"><br><br>\
+              <button class="btn btn-primary" onclick="copyestremi(\'estremi_bc_integr' + row.id_istanza + '\')" data-dismiss="modal">Copia identificativo</button>\
+              </div>\
+              <div class="modal-footer">\
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>\
+                <!--button type="button" class="btn btn-primary">Save changes</button-->\
+              </div>\
+            </div>\
+          </div>\
+        </div>\
+        </span>';
+      }else{
+        return' <span> In attesa </span>';
+      }
+    }else{
+/*       if (row.file_bc != null){
+        return' <span><a href="../isernia_upload/bollo_cdu/'+ row.file_bc.split("/").pop() +'" target="_blank">Vedi file</a></span>';
+      }else{ */
+        return' <span> - </span>';
+      //}
+    }
+  }
+}
+
+// funzione per caricare file del CDU apre modal che richiama file upload_cdu.php
 function nameFormatterFile4(value, row) {
     if (row.file_cdu == null){
       return' <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalCdu'+row.id_istanza+'" title="Carica file CDU"><i class="fas fa-file-upload"></i></button>\
@@ -445,35 +493,69 @@ function nameFormatterFile4(value, row) {
     </div>' ;
     } else{
       if (row.terminato != 't'){
-        return' <span><a href="../isernia_upload/cdu/'+ row.file_cdu.split("/").pop() +'" target="_blank">Vedi file</a></span><br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalCdu'+row.id_istanza+'" title="Modifica file CDU"><i class="fas fa-file-upload"></i></button>\
-          <div class="modal fade" id="myModalCdu'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
-        <div class="modal-dialog modal-dialog-centered" role="document">\
-          <div class="modal-content">\
-            <div class="modal-header">\
-              <h5 class="modal-title" id="exampleModalLabelCdu'+row.id_istanza+'">File CDU</h5>\
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
-                <span aria-hidden="true">&times;</span>\
-              </button>\
+        if (row.tipo == 'Visura'){
+          return' <span><a href="../isernia_upload/cdu/'+ row.file_cdu.split("/").pop() +'" target="_blank">Vedi Visura</a></span><br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalCdu'+row.id_istanza+'" title="Modifica file CDU"><i class="fas fa-file-upload"></i></button>\
+            <div class="modal fade" id="myModalCdu'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
+            <div class="modal-dialog modal-dialog-centered" role="document">\
+              <div class="modal-content">\
+                <div class="modal-header">\
+                  <h5 class="modal-title" id="exampleModalLabelCdu'+row.id_istanza+'">File CDU</h5>\
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
+                    <span aria-hidden="true">&times;</span>\
+                  </button>\
+                </div>\
+                <div class="modal-body">\
+              <form action="upload_cdu.php?idi='+row.id_istanza+'" method="post" enctype="multipart/form-data">\
+              <div class="form-group">\
+                Seleziona il file del CDU:<br><br>\
+                <input type="hidden" name="userCdu" id="userCdu'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
+                <input type="file" name="fileToUploadCdu" id="fileToUploadCdu'+row.id_istanza+'"><br><br>\
+                <input type="submit" value="Carica file" name="submitfile">\
+                </div>\
+              </form>\
+                </div>\
+                <div class="modal-footer">\
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>\
+                  <!--button type="button" class="btn btn-primary">Save changes</button-->\
+                </div>\
+              </div>\
             </div>\
-            <div class="modal-body">\
-          <form action="upload_cdu.php?idi='+row.id_istanza+'" method="post" enctype="multipart/form-data">\
-          <div class="form-group">\
-            Seleziona il file del CDU:<br><br>\
-            <input type="hidden" name="userCdu" id="userCdu'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
-            <input type="file" name="fileToUploadCdu" id="fileToUploadCdu'+row.id_istanza+'"><br><br>\
-            <input type="submit" value="Carica file" name="submitfile">\
+          </div>' ;
+        }else{
+          return' <span><a href="../isernia_upload/cdu/'+ row.file_cdu.split("/").pop() +'" target="_blank">Vedi CDU</a></span><br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalCdu'+row.id_istanza+'" title="Modifica file CDU"><i class="fas fa-file-upload"></i></button>\
+            <div class="modal fade" id="myModalCdu'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
+            <div class="modal-dialog modal-dialog-centered" role="document">\
+              <div class="modal-content">\
+                <div class="modal-header">\
+                  <h5 class="modal-title" id="exampleModalLabelCdu'+row.id_istanza+'">File CDU</h5>\
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
+                    <span aria-hidden="true">&times;</span>\
+                  </button>\
+                </div>\
+                <div class="modal-body">\
+              <form action="upload_cdu.php?idi='+row.id_istanza+'" method="post" enctype="multipart/form-data">\
+              <div class="form-group">\
+                Seleziona il file del CDU:<br><br>\
+                <input type="hidden" name="userCdu" id="userCdu'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
+                <input type="file" name="fileToUploadCdu" id="fileToUploadCdu'+row.id_istanza+'"><br><br>\
+                <input type="submit" value="Carica file" name="submitfile">\
+                </div>\
+              </form>\
+                </div>\
+                <div class="modal-footer">\
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>\
+                  <!--button type="button" class="btn btn-primary">Save changes</button-->\
+                </div>\
+              </div>\
             </div>\
-          </form>\
-            </div>\
-            <div class="modal-footer">\
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>\
-              <!--button type="button" class="btn btn-primary">Save changes</button-->\
-            </div>\
-          </div>\
-        </div>\
-      </div>' ;
+          </div>' ;
+        }
       }else{
-        return' <span><a href="../isernia_upload/cdu/'+ row.file_cdu.split("/").pop() +'" target="_blank">Vedi file</a></span>';
+        if (row.tipo == 'Visura'){
+          return' <span><a href="../isernia_upload/cdu/'+ row.file_cdu.split("/").pop() +'" target="_blank">Vedi Visura</a></span>';
+        }else{
+          return' <span><a href="../isernia_upload/cdu/'+ row.file_cdu.split("/").pop() +'" target="_blank">Vedi CDU</a></span>';
+        }
       }
     }
 }

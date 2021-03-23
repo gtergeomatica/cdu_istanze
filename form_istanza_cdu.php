@@ -96,11 +96,11 @@ $result = pg_prepare($conn_isernia, "myquery1", $query);
 $result = pg_execute($conn_isernia, "myquery1", array($user_idn));
 while($r = pg_fetch_assoc($result)) {
 	$id_istanza=$r['ids'];
-    if ($r['tipo'] == 1){
+    /* if ($r['tipo'] == 1){
         $query = "UPDATE istanze.istanze SET n_bolli = 1 where id = $1;";
         $result2 = pg_prepare($conn_isernia, "myquery8", $query);
         $result2 = pg_execute($conn_isernia, "myquery8", array($id_istanza));
-    }
+    } */
 }
 
 // query per selezionare foglio e mappali dei terreni selezionati e insert nella tabella con i dettagli dell'istanza
@@ -484,6 +484,7 @@ function nameFormatterEdit(value, row) {
         } else {
             //remove if unchecked
             $("#altrotxt").hide();
+            $("#altrotxt").prop( "required", false );
         }
     });
 </script>

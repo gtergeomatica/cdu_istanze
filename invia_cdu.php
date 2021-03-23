@@ -42,17 +42,25 @@ if(!$conn_isernia) {
 		//$rows[] = $r;
 		$data=$r["data_istanza"];
 		$file=$r["file_cdu"];
+		if ($r["tipo"] == 1){
+			$tipo = 'CDU';
+		}else{
+			$tipo = 'Visura';
+		}
 	}
 
 		// INVIO MAIL
 	require('mail_address.php');
 
 	//mail a comune
-    $oggetto = "CDU inviato";
-
+	if ($tipo == 'CDU'){
+    	$oggetto = "CDU inviato";
+	}else{
+		$oggetto = "Visura inviata";
+	}
     $testo = "
 
-Questa mail e' stata generata automaticamente in quanto e' appena stato inviato il file del CDU relativo all'istanza n. " . $id_istanza . " a:\n
+Questa mail e' stata generata automaticamente in quanto e' appena stato inviato il file di ".$tipo." relativo all'istanza n. " . $id_istanza . " a:\n
 	Nome: ". $nome . " \n
 	Cognome: ". $cognome . " \n
 	Codice Fiscale: ". $cf . " \n
@@ -89,11 +97,11 @@ Se avete ricevuto questo messaggio per errore, vi preghiamo di distruggerlo e di
     $testo2 = "
 
 Egr. " . $nome . " " .$cognome. ",\n 
-questa mail e' stata generata automaticamente in quanto e' appena stato reso disponibile dal Comune di Isernia il file del CDU per l'istanza aggiunta in data " . $data . ".\n
-Accedendo alla sua dashboard potrà scaricare il file del CDU.
+questa mail e' stata generata automaticamente in quanto e' appena stato reso disponibile dal Comune di Isernia il file di ".$tipo." per l'istanza aggiunta in data " . $data . ".\n
+Accedendo alla sua dashboard potrà scaricare il file di ".$tipo.".
     
-Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di comunicarlo immediatamente all'amministratore del sistema rispondendo a questa mail. Se invece ha effettivamente inviato un'istanza di CDU, riceverà una nuova mail non appena il documento sarà disponibile sulla sua dashboard al seguente link https://cduisernia.gter.it/isernia/dashboard.php \n
-In caso di problemi o richieste non esiti a contattare l'amministratore del sistema al seguente indirizzo DL_Cartografia@astergenova.it.\n \n
+Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di comunicarlo immediatamente all'amministratore del sistema rispondendo a questa mail.\n
+In caso di problemi o richieste non esiti a contattare l'amministratore del sistema al seguente indirizzo cdu@comune.isernia.it.\n \n
             
 Cordiali saluti, \n
 L'amministratore del sistema.
@@ -107,7 +115,7 @@ Servizio basato su GisHosting di Gter srl\n
 
 ";
 
-	$oggetto2 ="CDU disponibile per il download";
+	$oggetto2 = $tipo." disponibile per il download";
     $headers2 = $nostro_recapito .
     "Reply-To: " .$loro_recapito. "\r\n" .
     "Cc: " .$mail_admin. "\r\n" .

@@ -70,8 +70,8 @@
             <th data-field="terreni" data-sortable="true" data-filter-control="input" data-visible="true">Terreni</th>
             <th data-field="file_s" data-sortable="false" data-formatter="nameFormatterFile1" data-visible="true">Diritti Istruttori</th>
             <th data-field="file_bi" data-sortable="false" data-formatter="nameFormatterFile2" data-visible="true">Bollo Istanza</th>
-            <th data-field="n_bolli" data-sortable="false" data-filter-control="input" data-visible="true">N. Bolli CDU</th>
             <th data-field="file_bc" data-sortable="false" data-formatter="nameFormatterFile3" data-visible="true">Bollo CDU</th>
+            <th data-field="n_bolli" data-sortable="false" data-filter-control="input" data-visible="true">N. Altri Bolli CDU</th>
             <th data-field="file_bc_integr" data-sortable="false" data-formatter="nameFormatterFile5" data-visible="true">Altri bolli CDU</th>
             <th data-field="file_cdu" data-sortable="false" data-formatter="nameFormatterFile4" data-visible="true">CDU/Visura</th>
         </tr>
@@ -87,22 +87,22 @@
 <script>
 // funzione sul pulsante invia istanza richiama file invia_istanza.php
 function nameFormatterSend(value, row) {
-	if (row.tipo == 'Visura'){
-    if (row.file_s != null){
-      return' <a id="myLink" type="button" class="btn btn-info" href="invia_istanza.php?idi='+row.id_istanza+'&idu=<?php echo $usr_id; ?>"><i class="fas fa-play-circle"></i></a>';
-    }else{
-      return' <a id="myLink" type="button" class="btn btn-info" style="background-color: lightgrey; border-color: lightgrey;"><i class="fas fa-play-circle"></i></a>';
-    }
-  }else{
-    if (row.file_s == null || row.file_bi == null || row.file_bc == null){
-      return' <a id="myLink" type="button" class="btn btn-info" style="background-color: lightgrey; border-color: lightgrey;"><i class="fas fa-play-circle"></i></a>';
-    }else{
-      if (row.inviato != 't'){
+  if (row.inviato != 't'){
+    if (row.tipo == 'Visura'){
+      if (row.file_s != null){
         return' <a id="myLink" type="button" class="btn btn-info" href="invia_istanza.php?idi='+row.id_istanza+'&idu=<?php echo $usr_id; ?>"><i class="fas fa-play-circle"></i></a>';
       }else{
         return' <a id="myLink" type="button" class="btn btn-info" style="background-color: lightgrey; border-color: lightgrey;"><i class="fas fa-play-circle"></i></a>';
       }
+    }else{
+      if (row.file_s == null || row.file_bi == null || row.file_bc == null){
+        return' <a id="myLink" type="button" class="btn btn-info" style="background-color: lightgrey; border-color: lightgrey;"><i class="fas fa-play-circle"></i></a>';
+      }else{
+          return' <a id="myLink" type="button" class="btn btn-info" href="invia_istanza.php?idi='+row.id_istanza+'&idu=<?php echo $usr_id; ?>"><i class="fas fa-play-circle"></i></a>';
+      }
     }
+  }else{
+    return' <a id="myLink" type="button" class="btn btn-info" style="background-color: lightgrey; border-color: lightgrey;"><i class="fas fa-play-circle"></i></a>';
   }
 }
 
@@ -121,13 +121,13 @@ function nameFormatterRemove(value, row) {
 function nameFormatterFile1(value, row) {
 	//var test_id= row.id;
 	//return' <a type="button" class="btn btn-info" href="remove_ist.php?idi='+row.id_istanza+'"><i class="fas fa-file-upload"></i></a>'
-	if (row.file_s == null){
-	return' <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal'+row.id_istanza+'" title="Carica pagamento diritti segreteria"><i class="fas fa-file-upload"></i></button>\
+	if (row.file_s == null && row.estremi_s == null){
+	return' <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal'+row.id_istanza+'" title="Carica dettagli pagamento diritti segreteria"><i class="fas fa-file-upload"></i></button>\
     <div class="modal fade" id="myModal'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
   <div class="modal-dialog modal-dialog-centered" role="document">\
     <div class="modal-content">\
       <div class="modal-header">\
-        <h5 class="modal-title" id="exampleModalLabel'+row.id_istanza+'">Diritti di Segreteria</h5>\
+        <h5 class="modal-title" id="exampleModalLabel'+row.id_istanza+'">Dettagli Pagamento Diritti Istruttori</h5>\
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
           <span aria-hidden="true">&times;</span>\
         </button>\
@@ -145,7 +145,7 @@ function nameFormatterFile1(value, row) {
 		</form>\
       </div>\
       <div class="modal-footer">\
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>\
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>\
         <!--button type="button" class="btn btn-primary">Save changes</button-->\
       </div>\
     </div>\
@@ -153,24 +153,32 @@ function nameFormatterFile1(value, row) {
 </div>' ;
 } else{
   if (row.inviato != 't'){
-    return' <span><a href="../isernia_upload/segreteria/'+ row.file_s.split("/").pop() +'" target="_blank">Vedi file</a></span><br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal'+row.id_istanza+'" title="Modifica file pagamento diritti segreteria"><i class="fas fa-file-upload"></i></button>\
+    return ' <!--span><a href="../isernia_upload/segreteria/'+ row.file_s.split("/").pop() +'" target="_blank">Vedi file</a><a style="margin-left: 10px;" href="remove_s.php?idi='+row.id_istanza+'" title="Rimuovi file pagamento diritti segreteria"><i class="fas fa-trash"></i></a></span><br-->\
+    <button style="background-color: #3be23b; border-color: #3be23b;" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal'+row.id_istanza+'" title="Visualizza dettagli pagamento diritti segreteria"><i class="fas fa-info-circle"></i></button>\
       <div class="modal fade" id="myModal'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
     <div class="modal-dialog modal-dialog-centered" role="document">\
       <div class="modal-content">\
         <div class="modal-header">\
-          <h5 class="modal-title" id="exampleModalLabel'+row.id_istanza+'">Diritti di Segreteria</h5>\
+          <h5 class="modal-title" id="exampleModalLabel'+row.id_istanza+'">Dettagli Pagamento Diritti Istruttori</h5>\
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
             <span aria-hidden="true">&times;</span>\
           </button>\
         </div>\
         <div class="modal-body">\
-      <form action="upload.php?idi='+row.id_istanza+'" method="post" enctype="multipart/form-data">\
+      <!--form action="upload.php?idi='+row.id_istanza+'" method="post" enctype="multipart/form-data"-->\
       <div class="form-group">\
-        Seleziona la ricevuta di pagamento:<br><br>\
-        <input type="hidden" name="user" id="user'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
-        <input type="file" name="fileToUpload" id="fileToUpload'+row.id_istanza+'" required><br><br>\
+      <span>File selezionato: <a href="../isernia_upload/segreteria/'+ row.file_s.split("/").pop() +'" target="_blank">Vedi file</a></span><br><br>\
+      <label>Estremi versamento</label>\
+      <input type="text" name="estremi_s" id="estremi_s'+row.id_istanza+'" value="'+row.estremi_s+'" readonly><br><br><hr>\
+      <span>Per modificare i dettagli di pagamento è necessario rimuoverli.</span><br>\
+      <span>Rimuovere i dettagli del pagamento?<br><br>\
+      <a type="button" class="btn btn-info" href="remove_s.php?idi='+row.id_istanza+'" title="Rimuovi dettagli pagamento diritti segreteria"><i class="fas fa-trash"></i></a>\
+      <a type="button" class="btn btn-info" data-dismiss="modal" title="Torna alla pagina principale">Chiudi</a>\
+      </span>\
+        <!--input type="hidden" name="user" id="user'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
+        <input type="file" name="fileToUpload" id="fileToUpload'+row.id_istanza+'"><br><br>\
         <label>Estremi versamento</label>\
-        <input type="text" name="estremi_s" id="estremi_s'+row.id_istanza+'" required><br><br>\
+        <input type="text" name="estremi_s" id="estremi_s'+row.id_istanza+'" value="'+row.estremi_s+'" required><br><br>\
   		  <input type="submit" value="Invia" name="submitfile">\
         </div>\
       </form>\
@@ -178,7 +186,7 @@ function nameFormatterFile1(value, row) {
         <div class="modal-footer">\
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>\
           <!--button type="button" class="btn btn-primary">Save changes</button-->\
-        </div>\
+        </div-->\
       </div>\
     </div>\
   </div>' ;
@@ -194,12 +202,12 @@ function nameFormatterFile2(value, row) {
     return' <span> - </span>';
   }else{
     if (row.file_bi == null){
-    return' <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBi'+row.id_istanza+'" title="Carica pagamento Bollo per l\'Istanza"><i class="fas fa-file-upload"></i></button>\
+    return' <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBi'+row.id_istanza+'" title="Carica dettagli pagamento Bollo per l\'Istanza"><i class="fas fa-file-upload"></i></button>\
       <div class="modal fade" id="myModalBi'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
     <div class="modal-dialog modal-dialog-centered" role="document">\
       <div class="modal-content">\
         <div class="modal-header">\
-          <h5 class="modal-title" id="exampleModalLabelBi'+row.id_istanza+'">Bollo Istanza</h5>\
+          <h5 class="modal-title" id="exampleModalLabelBi'+row.id_istanza+'">Dettagli Pagamento Bollo Istanza</h5>\
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
             <span aria-hidden="true">&times;</span>\
           </button>\
@@ -217,7 +225,7 @@ function nameFormatterFile2(value, row) {
       </form>\
         </div>\
         <div class="modal-footer">\
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>\
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>\
           <!--button type="button" class="btn btn-primary">Save changes</button-->\
         </div>\
       </div>\
@@ -225,21 +233,29 @@ function nameFormatterFile2(value, row) {
   </div>' ;
   } else{
     if (row.inviato != 't'){
-      return' <span><a href="../isernia_upload/bollo_istanza/'+ row.file_bi.split("/").pop() +'" target="_blank">Vedi file</a></span><br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBi'+row.id_istanza+'" title="Modifica file pagamento Bollo per l\'Istanza"><i class="fas fa-file-upload"></i></button>\
+      return' <!--span><a href="../isernia_upload/bollo_istanza/'+ row.file_bi.split("/").pop() +'" target="_blank">Vedi file</a></span><br!-->\
+      <button style="background-color: #3be23b; border-color: #3be23b;" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBi'+row.id_istanza+'" title="Visualizza dettagli pagamento Bollo per l\'Istanza"><i class="fas fa-info-circle"></i></button>\
         <div class="modal fade" id="myModalBi'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
       <div class="modal-dialog modal-dialog-centered" role="document">\
         <div class="modal-content">\
           <div class="modal-header">\
-            <h5 class="modal-title" id="exampleModalLabelBi'+row.id_istanza+'">Bollo Istanza</h5>\
+            <h5 class="modal-title" id="exampleModalLabelBi'+row.id_istanza+'">Dettagli Pagamento Bollo Istanza</h5>\
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
               <span aria-hidden="true">&times;</span>\
             </button>\
           </div>\
           <div class="modal-body">\
-        <form action="upload_bi.php?idi='+row.id_istanza+'" method="post" enctype="multipart/form-data">\
+        <!--form action="upload_bi.php?idi='+row.id_istanza+'" method="post" enctype="multipart/form-data"-->\
         <div class="form-group">\
-          Seleziona la ricevuta di pagamento:<br><br>\
-          <input type="hidden" name="userBi" id="userBi'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
+          <span>File selezionato: <a href="../isernia_upload/bollo_istanza/'+ row.file_bi.split("/").pop() +'" target="_blank">Vedi file</a></span><br><br>\
+          <label>Numero Identificativo Bollo</label>\
+          <input type="text" name="estremi_bi" id="estremi_bi'+row.id_istanza+'" value="'+row.estremi_bi+'" readonly><br><br><hr>\
+          <span>Per modificare i dettagli di pagamento è necessario rimuoverli.</span><br>\
+          <span>Rimuovere i dettagli del pagamento?<br><br>\
+          <a type="button" class="btn btn-info" href="remove_bi.php?idi='+row.id_istanza+'" title="Rimuovi dettagli pagamento bollo istanza"><i class="fas fa-trash"></i></a>\
+          <a type="button" class="btn btn-info" data-dismiss="modal" title="Torna alla pagina principale">Chiudi</a>\
+          </span>\
+          <!--input type="hidden" name="userBi" id="userBi'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
           <input type="file" name="fileToUploadBi" id="fileToUploadBi'+row.id_istanza+'" required><br><br>\
           <label>Identificativo bollo (14 cifre)</label>\
           <input type="text" name="estremi_bi" id="estremi_bi'+row.id_istanza+'" minlength="14" maxlength="14" required><br><br>\
@@ -250,7 +266,7 @@ function nameFormatterFile2(value, row) {
           <div class="modal-footer">\
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>\
             <!--button type="button" class="btn btn-primary">Save changes</button-->\
-          </div>\
+          </div-->\
         </div>\
       </div>\
     </div>' ;
@@ -267,12 +283,12 @@ function nameFormatterFile3(value, row) {
     return' <span> - </span>';
   }else{
     if (row.file_bc == null){
-      return' <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBc'+row.id_istanza+'" title="Carica pagamento Bollo per CDU"><i class="fas fa-file-upload"></i></button>\
+      return' <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBc'+row.id_istanza+'" title="Carica dettagli pagamento Bollo per CDU"><i class="fas fa-file-upload"></i></button>\
         <div class="modal fade" id="myModalBc'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
       <div class="modal-dialog modal-dialog-centered" role="document">\
         <div class="modal-content">\
           <div class="modal-header">\
-            <h5 class="modal-title" id="exampleModalLabelBc'+row.id_istanza+'">Bollo CDU</h5>\
+            <h5 class="modal-title" id="exampleModalLabelBc'+row.id_istanza+'">Dettagli Pagamento Bollo CDU</h5>\
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
               <span aria-hidden="true">&times;</span>\
             </button>\
@@ -290,7 +306,7 @@ function nameFormatterFile3(value, row) {
         </form>\
           </div>\
           <div class="modal-footer">\
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>\
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>\
             <!--button type="button" class="btn btn-primary">Save changes</button-->\
           </div>\
         </div>\
@@ -298,21 +314,28 @@ function nameFormatterFile3(value, row) {
     </div>' ;
     } else{
       if (row.inviato != 't'){
-        return' <span><a href="../isernia_upload/bollo_cdu/'+ row.file_bc.split("/").pop() +'" target="_blank">Vedi file</a></span><br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBc'+row.id_istanza+'" title="Modifica file pagamento Bollo per CDU"><i class="fas fa-file-upload"></i></button>\
+        return' <!--span><a href="../isernia_upload/bollo_cdu/'+ row.file_bc.split("/").pop() +'" target="_blank">Vedi file</a></span><br-->\
+        <button style="background-color: #3be23b; border-color: #3be23b;" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBc'+row.id_istanza+'" title="Visualizza dettagli pagamento Bollo per CDU"><i class="fas fa-info-circle"></i></button>\
           <div class="modal fade" id="myModalBc'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
         <div class="modal-dialog modal-dialog-centered" role="document">\
           <div class="modal-content">\
             <div class="modal-header">\
-              <h5 class="modal-title" id="exampleModalLabelBc'+row.id_istanza+'">Bollo CDU</h5>\
+              <h5 class="modal-title" id="exampleModalLabelBc'+row.id_istanza+'">Dettagli Pagamento Bollo CDU</h5>\
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
                 <span aria-hidden="true">&times;</span>\
               </button>\
             </div>\
             <div class="modal-body">\
-          <form action="upload_bc.php?idi='+row.id_istanza+'" method="post" enctype="multipart/form-data">\
+          <!--form action="upload_bc.php?idi='+row.id_istanza+'" method="post" enctype="multipart/form-data"-->\
           <div class="form-group">\
-            Seleziona la ricevuta di pagamento:<br><br>\
-            <input type="hidden" name="userBc" id="userBc'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
+            <span>File selezionato: <a href="../isernia_upload/bollo_cdu/'+ row.file_bc.split("/").pop() +'" target="_blank">Vedi file</a></span><br><br>\
+            <input type="text" name="estremi_bc" id="estremi_bc'+row.id_istanza+'" value="'+row.estremi_bc+'" readonly><br><br><hr>\
+            <span>Per modificare i dettagli di pagamento è necessario rimuoverli.</span><br>\
+            <span>Rimuovere i dettagli del pagamento?<br><br>\
+            <a type="button" class="btn btn-info" href="remove_bc.php?idi='+row.id_istanza+'" title="Rimuovi dettagli pagamento bollo CDU"><i class="fas fa-trash"></i></a>\
+            <a type="button" class="btn btn-info" data-dismiss="modal" title="Torna alla pagina principale">Chiudi</a>\
+            </span>\
+            <!--input type="hidden" name="userBc" id="userBc'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
             <input type="file" name="fileToUploadBc" id="fileToUploadBc'+row.id_istanza+'" required><br><br>\
             <label>Identificativo bollo (14 cifre)</label>\
             <input type="text" name="estremi_bc" id="estremi_bc'+row.id_istanza+'" minlength="14" maxlength="14" required><br><br>\
@@ -323,7 +346,7 @@ function nameFormatterFile3(value, row) {
             <div class="modal-footer">\
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>\
               <!--button type="button" class="btn btn-primary">Save changes</button-->\
-            </div>\
+            </div-->\
           </div>\
         </div>\
       </div>' ;
@@ -339,63 +362,89 @@ function nameFormatterFile5(value, row) {
 	if (row.tipo == 'Visura'){
     return' <span> - </span>';
   }else{
-    if(row.n_bolli != 1 && row.inviato == 't'){
+    if(row.n_bolli != null && row.inviato == 't'){
       if (row.file_bc_integr == null){
-        return' <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBci'+row.id_istanza+'" title="Carica pagamento Bollo per CDU"><i class="fas fa-file-upload"></i></button>\
-          <div class="modal fade" id="myModalBci'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
-        <div class="modal-dialog modal-dialog-centered" role="document">\
-          <div class="modal-content">\
-            <div class="modal-header">\
-              <h5 class="modal-title" id="exampleModalLabelBci'+row.id_istanza+'">Bollo CDU</h5>\
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
-                <span aria-hidden="true">&times;</span>\
-              </button>\
-            </div>\
-            <div class="modal-body">\
-          <form action="upload_bci.php?idi='+row.id_istanza+'" method="post" enctype="multipart/form-data">\
-          <div class="form-group">\
-            Seleziona la ricevuta di pagamento:<br><br>\
-            <input type="hidden" name="userBci" id="userBci'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
-            <input type="file" name="fileToUploadBci" id="fileToUploadBci'+row.id_istanza+'" required><br><br>\
-            <label>Identificativo bollo</label>\
-            <input type="text" name="estremi_bci" id="estremi_bci'+row.id_istanza+'" required><br><br>\
-            <input type="submit" value="Invia" name="submitfile">\
-            </div>\
-          </form>\
-            </div>\
-            <div class="modal-footer">\
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>\
-              <!--button type="button" class="btn btn-primary">Save changes</button-->\
-            </div>\
-          </div>\
-        </div>\
-      </div>' ;
-      } else{
-        if (row.terminato != 't'){
-          return' <span><a href="../isernia_upload/bollo_cdu/'+ row.file_bc_integr.split("/").pop() +'" target="_blank">Vedi file</a></span><br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBci'+row.id_istanza+'" title="Modifica file pagamento Bollo per CDU"><i class="fas fa-file-upload"></i></button>\
-            <div class="modal fade" id="myModalBci'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
+        return' <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBci'+row.id_istanza+'" title="Carica file pagamento Bollo per CDU" onclick="checkVal('+row.id_istanza+')"><i class="fas fa-file-upload"></i></button>\
+            <div class="myclass modal fade" id="myModalBci'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
           <div class="modal-dialog modal-dialog-centered" role="document">\
             <div class="modal-content">\
               <div class="modal-header">\
-                <h5 class="modal-title" id="exampleModalLabelBci'+row.id_istanza+'">Bollo CDU</h5>\
+                <h5 class="modal-title" id="exampleModalLabelBci'+row.id_istanza+'">Dettagli pagamento Bolli integrativi CDU</h5>\
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
                   <span aria-hidden="true">&times;</span>\
                 </button>\
               </div>\
               <div class="modal-body">\
-            <form action="upload_bci.php?idi='+row.id_istanza+'" method="post" enctype="multipart/form-data">\
+            <!--form id="formBCI'+row.id_istanza+'" action="upload_bci.php?idi='+row.id_istanza+'&nb='+row.n_bolli+'" method="post" enctype="multipart/form-data"-->\
+            <form id="formBCI'+row.id_istanza+'" action="upload_bci.php?idi='+row.id_istanza+'&nb='+row.n_bolli+'" method="post" enctype="multipart/form-data">\
             <div class="form-group">\
               Seleziona la ricevuta di pagamento:<br><br>\
               <input type="hidden" name="userBci" id="userBci'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
-              <input type="file" name="fileToUploadBci" id="fileToUploadBci'+row.id_istanza+'" required><br><br>\
-              <label>Identificativo bollo</label>\
-              <input type="text" name="estremi_bci" id="estremi_bci'+row.id_istanza+'" required><br><br>\
+              <input type="file" class="form-control" name="fileToUploadBci" id="fileToUploadBci'+row.id_istanza+'" style="height: auto;"><br>\
+              <div class="help-block with-errors"></div>\
+              </div>\
+              <label>Identificativo bollo<br><small>(in caso di più bolli, gli identificativi di 14 cifre devono essere separati da virgola)<small></label>\
+              <div class="form-group">\
+              <input type="text" class="form-control" name="estremi_bci" id="estremi_bci" data-customcheck="'+row.n_bolli+'"data-validate="true" required><br>\
+              <div class="help-block with-errors"></div>\
+              </div>\
+              <div class="form-group">\
               <input type="submit" value="Invia" name="submitfile">\
               </div>\
             </form>\
               </div>\
               <div class="modal-footer">\
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>\
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>\
+                <!--button type="button" class="btn btn-primary">Save changes</button-->\
+              </div>\
+            </div>\
+          </div>\
+        </div>' ;
+      } else{
+        if (row.terminato != 't'){
+          /* if (row.errore == 1){
+            string = '<div class="mytip" id="mytip"><i class="fas fa-exclamation-triangle"></i><span class="tooltiptext">Gli estremi devono essere separati da virgola</span></div>'
+          }else if(row.errore == 2){
+            string = '<div class="mytip" id="mytip"><i class="fas fa-exclamation-triangle"></i><span class="tooltiptext">Il numero di identificativi inseriti non corrisponde al numero di bolli dovuti</span></div>'
+          }else if(row.errore == 3){
+            string = '<div class="mytip" id="mytip"><i class="fas fa-exclamation-triangle"></i><span class="tooltiptext">I numeri identificativi devono essere di 14 cifre</span></div>'
+          } 
+          return string+' <span><a href="../isernia_upload/bollo_cdu/'+ row.file_bc_integr.split("/").pop() +'" target="_blank">Vedi file</a></span><br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBci'+row.id_istanza+'" title="Modifica file pagamento Bollo per CDU" onclick="checkVal('+row.id_istanza+')"><i class="fas fa-file-upload"></i></button>\*/
+          return ' <!--span><a href="../isernia_upload/bollo_cdu/'+ row.file_bc_integr.split("/").pop() +'" target="_blank">Vedi file</a></span><br-->\
+          <button style="background-color: #3be23b; border-color: #3be23b;" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalBci'+row.id_istanza+'" title="Modifica dettagli pagamento Bolli integrativi per CDU" onclick="checkVal('+row.id_istanza+')"><i class="fas fa-edit"></i></button>\
+            <div class="myclass modal fade" id="myModalBci'+row.id_istanza+'" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
+          <div class="modal-dialog modal-dialog-centered" role="document">\
+            <div class="modal-content">\
+              <div class="modal-header">\
+                <h5 class="modal-title" id="exampleModalLabelBci'+row.id_istanza+'">Dettagli pagamento Bolli integrativi CDU</h5>\
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
+                  <span aria-hidden="true">&times;</span>\
+                </button>\
+              </div>\
+              <div class="modal-body">\
+            <!--form id="formBCI'+row.id_istanza+'" action="upload_bci.php?idi='+row.id_istanza+'&nb='+row.n_bolli+'" method="post" enctype="multipart/form-data"-->\
+            <span>File precedentemente caricato: <a href="../isernia_upload/bollo_cdu/'+ row.file_bc_integr.split("/").pop() +'" target="_blank">Vedi file</a></span><br><hr>\
+            <span>Vuoi modificare il file caricato?</span>\
+            <form id="formBCI'+row.id_istanza+'" action="upload_bci.php?idi='+row.id_istanza+'&nb='+row.n_bolli+'" method="post" enctype="multipart/form-data">\
+            <div class="form-group">\
+              Seleziona la nuova ricevuta di pagamento:<br><br>\
+              <input type="hidden" name="userBci" id="userBci'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
+              <input type="file" class="form-control" name="fileToUploadBci" id="fileToUploadBci'+row.id_istanza+'" style="height: auto;"><br>\
+              <div class="help-block with-errors"></div>\
+              </div>\
+              <span>Vuoi modificare i numeri identificativi dei bolli?</span>\
+              <label>Modifica Identificativi bolli<br><small>(in caso di più bolli, gli identificativi di 14 cifre devono essere separati da virgola)<small></label>\
+              <div class="form-group">\
+              <input type="text" class="form-control" name="estremi_bci" id="estremi_bci" data-customcheck="'+row.n_bolli+'"data-validate="true" value="'+row.estremi_bc_integr+'" required><br>\
+              <div class="help-block with-errors"></div>\
+              </div>\
+              <div class="form-group">\
+              <input type="submit" value="Invia" name="submitfile">\
+              </div>\
+            </form>\
+              </div>\
+              <div class="modal-footer">\
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>\
                 <!--button type="button" class="btn btn-primary">Save changes</button-->\
               </div>\
             </div>\
@@ -447,6 +496,7 @@ function rowStyle(row, index) {
     }
 }
 </script>
+
 <!-- Script per disattivare il bottone richiedi cdu se documento è scaduto -->
 <script>
   var data_exp = "<?php echo $data_exp; ?>";
