@@ -225,7 +225,7 @@ function checkVal(rowid){
     $('#formBCI'+rowid).validator({
     custom: {
         customcheck: function($bolli) {
-            var matchValue = $('#estremi_bci').val() // foo
+            var matchValue = $('#estremi_bci'+rowid).val() // foo
             var listValue = matchValue.split(",")
             if (listValue.length == 1){
                 if ($bolli.data("customcheck") != 1){

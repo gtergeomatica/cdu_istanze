@@ -66,8 +66,8 @@ $cliente = 'Comune di Isernia';
             <th data-field="file_txt" data-sortable="false" data-formatter="nameFormatterFile0" data-visible="true">File Terreni</th>
             <th data-field="file_s" data-sortable="false" data-formatter="nameFormatterFile1" data-visible="true">Diritti Istruttori</th>
             <th data-field="file_bi" data-sortable="false" data-formatter="nameFormatterFile2" data-visible="true">Bollo Istanza</th>
-            <th data-field="n_bolli" data-sortable="false" data-formatter="nameFormatterFile5" data-visible="true">N. Bolli</th>
             <th data-field="file_bc" data-sortable="false" data-formatter="nameFormatterFile3" data-visible="true">Bollo CDU</th>
+            <th data-field="n_bolli" data-sortable="false" data-formatter="nameFormatterFile5" data-visible="true">N. Bolli</th>
             <th data-field="file_bc_integr" data-sortable="false" data-formatter="nameFormatterFile8" data-visible="true">Altri bolli CDU</th>
             <th data-field="file_cdu" data-sortable="false" data-formatter="nameFormatterFile4" data-visible="true">Documento</th>
         </tr>

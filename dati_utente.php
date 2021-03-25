@@ -383,9 +383,9 @@ function nameFormatterFile5(value, row) {
               <input type="file" class="form-control" name="fileToUploadBci" id="fileToUploadBci'+row.id_istanza+'" style="height: auto;"><br>\
               <div class="help-block with-errors"></div>\
               </div>\
-              <label>Identificativo bollo<br><small>(in caso di più bolli, gli identificativi di 14 cifre devono essere separati da virgola)<small></label>\
+              <label>Identificativo bollo<br><small>(in caso di più bolli, gli identificativi di 14 cifre devono essere separati da virgola)</small></label>\
               <div class="form-group">\
-              <input type="text" class="form-control" name="estremi_bci" id="estremi_bci" data-customcheck="'+row.n_bolli+'"data-validate="true" required><br>\
+              <input type="text" class="form-control" name="estremi_bci" id="estremi_bci'+row.id_istanza+'" data-customcheck="'+row.n_bolli+'"data-validate="true" required><br>\
               <div class="help-block with-errors"></div>\
               </div>\
               <div class="form-group">\
@@ -433,9 +433,9 @@ function nameFormatterFile5(value, row) {
               <div class="help-block with-errors"></div>\
               </div>\
               <span>Vuoi modificare i numeri identificativi dei bolli?</span>\
-              <label>Modifica Identificativi bolli<br><small>(in caso di più bolli, gli identificativi di 14 cifre devono essere separati da virgola)<small></label>\
+              <label>Modifica Identificativi bolli<br><small>(in caso di più bolli, gli identificativi di 14 cifre devono essere separati da virgola)</small></label>\
               <div class="form-group">\
-              <input type="text" class="form-control" name="estremi_bci" id="estremi_bci" data-customcheck="'+row.n_bolli+'"data-validate="true" value="'+row.estremi_bc_integr+'" required><br>\
+              <input type="text" class="form-control" name="estremi_bci" id="estremi_bci'+row.id_istanza+'" data-customcheck="'+row.n_bolli+'"data-validate="true" value="'+row.estremi_bc_integr+'" required><br>\
               <div class="help-block with-errors"></div>\
               </div>\
               <div class="form-group">\
@@ -449,7 +449,17 @@ function nameFormatterFile5(value, row) {
               </div>\
             </div>\
           </div>\
-        </div>' ;
+        </div>\
+        <!--script>\
+            document.getElementById("estremi_bci'+row.id_istanza+'").addEventListener("input", function (e) {\
+            var target = e.target, position = target.selectionEnd, length = target.value.length;\
+            console.log(target);\
+            console.log(position);\
+            console.log(length);\
+            target.value = target.value.replace(/[^\\da-zA-Z]/g, "").replace(/(.{14})/g, "$1 ").trim();\
+            target.selectionEnd = position += ((target.value.charAt(position - 1) === " " && target.value.charAt(length - 1) === " " && length !== target.value.length) ? 1 : 0);\
+          });\
+        </scr'+'ipt-->' ;
         }else{
             return' <span><a href="../isernia_upload/bollo_cdu/'+ row.file_bc_integr.split("/").pop() +'" target="_blank">Vedi file</a></span>';
         }
@@ -496,6 +506,7 @@ function rowStyle(row, index) {
     }
 }
 </script>
+
 
 <!-- Script per disattivare il bottone richiedi cdu se documento è scaduto -->
 <script>
