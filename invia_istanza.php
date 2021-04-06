@@ -4,8 +4,8 @@ session_start();
 include("root_connection.php");
 
 // salva nelle variabili id e username presi dalla url
-$id_istanza=$_GET['idi'];
-$id_utente=$_GET['idu'];
+$id_istanza=pg_escape_string($_GET['idi']);
+$id_utente=pg_escape_string($_GET['idu']);
 
 
 if(!$conn_isernia) {

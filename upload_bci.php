@@ -58,11 +58,14 @@ if(!$conn_isernia) {
 		}
 	//check se è stato caricato il file
 	if ( isset( $_FILES['fileToUploadBci'] ) ) {
+		$original_file = pg_escape_string($_FILES["fileToUploadBci"]["name"]);
 		//check se file è in pdf
 		if ($_FILES['fileToUploadBci']['type'] == "application/pdf") {
-			$source_file = $_FILES['fileToUploadBci']['tmp_name'];
+			$source_file = pg_escape_string($_FILES['fileToUploadBci']['tmp_name']);
 			$dest_dir = "/var/www/html/isernia_upload/bollo_cdu/";
-			$dest_file = $dest_dir . basename($_FILES["fileToUploadBci"]["name"]);
+			//$dest_file = $dest_dir . basename($_FILES["fileToUploadBci"]["name"]);
+			$filename = hash('sha256', basename($original_file));
+			$dest_file = $dest_dir . $filename . '.pdf';
 			//echo $dest_file;
 			if ($file_bci != null){
 				unlink($file_bci);
@@ -76,7 +79,7 @@ if(!$conn_isernia) {
 				or die ("Error!!");
 				//$check_bollo = 0;
 				//check su eventuali errori
-				if($_FILES['fileToUploadBci']['error'] == 0) {
+				if($_FILES['fileToUploadBci']['error'] === 0) {
 					//query per verificare se il bollo era già stato caricato
 					/* $query = "SELECT * from istanze.pagamento_bollo_cdu where id_istanza_bc = $1;";
 					$result = pg_prepare($conn_isernia, "myquery0", $query);
@@ -133,7 +136,7 @@ Servizio basato su GisHosting di Gter srl\n
 $testo2 = "
 
 COMUNICAZIONE DI SERVIZIO \n
-questa mail e' stata generata automaticamente in quanto l'utente " . $_SESSION['user'] . " ha appena caricato una nuova copia dei bolli integrativi dovuti per l'istanza di CDU inviata in data ". $data .".
+questa mail e' stata generata automaticamente in quanto l'utente " . $fullname . " ha appena caricato una nuova copia dei bolli integrativi dovuti per l'istanza di CDU inviata in data ". $data .".
 Verificare il pagamento e quindi inviare il CDU.
 	
 Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di comunicarlo immediatamente all'amministratore del sistema rispondendo a questa mail.\n
@@ -159,8 +162,9 @@ Servizio basato su GisHosting di Gter srl\n
 					//redirect alla dashboard
 					header ("Location: dashboard.php#about");
 				}else{
-					print "Si è verificato un errore nel caricamento del file: ".$_FILES['fileToUploadBci']['name']."<br/>";
-					print "Codice Errore: ".$_FILES['fileToUploadBci']['error']."<br/>";
+					$error_file = pg_escape_string($_FILES['fileToUploadBci']['error']);
+					print "Si è verificato un errore nel caricamento del file: ".$original_file."<br/>";
+					print "Codice Errore: ".$error_file."<br/>";
 				}
 				
 			}
@@ -175,7 +179,7 @@ Servizio basato su GisHosting di Gter srl\n
 $testo3 = "
 
 COMUNICAZIONE DI SERVIZIO \n
-questa mail e' stata generata automaticamente in quanto l'utente " . $_SESSION['user'] . " ha appena inserito gli estremi corretti dei bolli integrativi dovuti per l'istanza di CDU inviata in data ". $data .".
+questa mail e' stata generata automaticamente in quanto l'utente " . $fullname . " ha appena inserito gli estremi corretti dei bolli integrativi dovuti per l'istanza di CDU inviata in data ". $data .".
 Verificare il pagamento e quindi inviare il CDU.
 	
 Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di comunicarlo immediatamente all'amministratore del sistema rispondendo a questa mail.\n
@@ -203,9 +207,8 @@ Servizio basato su GisHosting di Gter srl\n
 
 			}else if ( $_FILES['fileToUploadBci']['type'] != "application/pdf") {
 
-				print "Si è verificato un errore nel caricamento del file: ".$_FILES['fileToUploadBci']['name']."<br/>";
+				print "Si è verificato un errore nel caricamento del file: ".$original_file."<br/>";
 				print "Estensione del file non valida, il file deve essere in formato pdf !!"."<br/>";
-				print "Codice Errore: ".$_FILES['fileToUploadBci']['error']."<br/>";
 			}
 		}
 	}

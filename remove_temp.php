@@ -3,10 +3,10 @@ session_start();
 //questo file è richiamato quando l'utente clicca su bottone per rimuovere mappale da quelli selezionati in from_istanza_cdu
 include("root_connection.php");
 
-$user_id=$_GET['idu'];
-$user=$_GET['user'];
-$foglio=$_GET['f'];
-$mappale=$_GET['m'];
+$user_id=pg_escape_string($_GET['idu']);
+$user=pg_escape_string($_GET['user']);
+$foglio=pg_escape_string($_GET['f']);
+$mappale=pg_escape_string($_GET['m']);
 
 
 if(!$conn_isernia) {

@@ -4,9 +4,9 @@
 $user_admin="comuneisernia";
 $cliente = 'Comune di Isernia';
 //salva nelle variabile id e username prese da url e salva username nella var $_SESSION per check su login
-$user_id=$_GET['u'];
+$user_id=pg_escape_string($_GET['u']);
 $user_idn=(int)$user_id;
-$usr_login=$_GET['user'];
+$usr_login=pg_escape_string($_GET['user']);
 $_SESSION['user']=$usr_login;
 
 //creo array vuoti per numero mappali e fogli selezionati
@@ -65,9 +65,9 @@ session_start();
 if(isset($_POST['Submit2'])){
 	//salva nelle variabili i dati inseriti dall'utente
 
-    $tipo = $_POST['tipo'];
-    $ruolo = $_POST['ruolo'];
-    $motivo = $_POST['motivo'];
+    $tipo = pg_escape_string($_POST['tipo']);
+    $ruolo = pg_escape_string($_POST['ruolo']);
+    $motivo = pg_escape_string($_POST['motivo']);
 
     if ($motivo == 'Altro'){
 		$motivo = pg_escape_string($_POST['motivotxt']);

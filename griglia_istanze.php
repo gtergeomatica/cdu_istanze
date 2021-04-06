@@ -2,7 +2,7 @@
 session_start();
 include("root_connection.php");
 
-$user_id=$_GET['u'];
+$user_id=pg_escape_string($_GET['u']);
 $user_idn=(int)$user_id;
 
 if(!$conn_isernia) {

@@ -1,6 +1,6 @@
 <?php
 session_start();
-$file = $_GET['f'];
+$file = pg_escape_string($_GET['f']);
 $file_path = '/var/www/html/isernia_upload/cdu/'.$file;
 $filename = $file;
 if(!file_exists($file_path)){ // check se file esiste

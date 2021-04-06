@@ -7,18 +7,21 @@ $estremi_s = pg_escape_string($_POST['estremi_s']);
 
 include("root_connection.php");
 //recupera id istanza da url
-$id_istanza=$_GET['idi'];
+$id_istanza=pg_escape_string($_GET['idi']);
 
 if(!$conn_isernia) {
     die('Connessione fallita !<br />');
 } else {
 	//check se bottone invio nel modal è stato cliccato
 	if ( isset( $_FILES['fileToUpload'] ) ) {
+		$original_file = pg_escape_string($_FILES["fileToUpload"]["name"]);
 		//check se file è in pdf
 		if ($_FILES['fileToUpload']['type'] == "application/pdf") {
-			$source_file = $_FILES['fileToUpload']['tmp_name'];
+			$source_file = pg_escape_string($_FILES['fileToUpload']['tmp_name']);
 			$dest_dir = "/var/www/html/isernia_upload/segreteria/";
-			$dest_file = $dest_dir . basename($_FILES["fileToUpload"]["name"]);
+			//$dest_file = $dest_dir . basename($_FILES["fileToUpload"]["name"]);
+			$filename = hash('sha256', basename($original_file));
+			$dest_file = $dest_dir . $filename . '.pdf';
 
 			if (file_exists($dest_file)) {
 				print "The file name already exists!!";
@@ -28,7 +31,7 @@ if(!$conn_isernia) {
 				move_uploaded_file( $source_file, $dest_file )
 				or die ("Error!!");
 				//check su eventuali errori
-				if($_FILES['fileToUpload']['error'] == 0) {
+				if($_FILES['fileToUpload']['error'] === 0) {
 					//query per verificare se il file era già stato caricato
 					$query = "SELECT * from istanze.pagamento_segreteria where id_istanza_s = $1;";
 					$result = pg_prepare($conn_isernia, "myquery0", $query);
@@ -51,16 +54,16 @@ if(!$conn_isernia) {
 					//redirect alla dashboard
 					header ("Location: dashboard.php#about");
 				}else{
-					print "Si è verificato un errore nel caricamento del file: ".$_FILES['fileToUpload']['name']."<br/>";
-					print "Codice Errore: ".$_FILES['fileToUpload']['error']."<br/>";
+					$error_file = pg_escape_string($_FILES['fileToUpload']['error']);
+					print "Si è verificato un errore nel caricamento del file: ".$original_file."<br/>";
+					print "Codice Errore: ".$error_file."<br/>";
 				}
 			}
 		}
 		else {
 			if ( $_FILES['fileToUpload']['type'] != "application/pdf") {
-				print "Si è verificato un errore nel caricamento del file: ".$_FILES['fileToUpload']['name']."<br/>";
+				print "Si è verificato un errore nel caricamento del file: ".$original_file."<br/>";
 				print "Estensione del file non valida, il file deve essere in formato pdf!!"."<br/>";
-				print "Codice Errore: ".$_FILES['fileToUpload']['error']."<br/>";
 			}
 		}
 	}

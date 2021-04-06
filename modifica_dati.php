@@ -6,8 +6,8 @@ $user_admin="comuneisernia";
 //$gruppo = 'comuneisernia3_group';
 $cliente = 'Comune di Isernia';
 //salva nelle varibili id e username prese da url
-$idu = $_GET['u'];
-$_SESSION['user']=$_GET['user'];
+$idu = pg_escape_string($_GET['u']);
+$_SESSION['user']=pg_escape_string($_GET['user']);
 
 //richiama connessione al DB
 include("root_connection.php");

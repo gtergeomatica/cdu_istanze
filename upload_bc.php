@@ -8,18 +8,21 @@ $estremi_bc = pg_escape_string($_POST['estremi_bc']);
 include("root_connection.php");
 
 //recupera id istanza da url
-$id_istanza=$_GET['idi'];
+$id_istanza=pg_escape_string($_GET['idi']);
 
 if(!$conn_isernia) {
     die('Connessione fallita !<br />');
 } else {
 	//check se bottone invio nel modal è stato cliccato
 	if ( isset( $_FILES['fileToUploadBc'] ) ) {
+		$original_file = pg_escape_string($_FILES["fileToUploadBc"]["name"]);
 		//check se file è in pdf
 		if ($_FILES['fileToUploadBc']['type'] == "application/pdf") {
-			$source_file = $_FILES['fileToUploadBc']['tmp_name'];
+			$source_file = pg_escape_string($_FILES['fileToUploadBc']['tmp_name']);
 			$dest_dir = "/var/www/html/isernia_upload/bollo_cdu/";
-			$dest_file = $dest_dir . basename($_FILES["fileToUploadBc"]["name"]);
+			//$dest_file = $dest_dir . basename(pg_escape_string($_FILES["fileToUploadBc"]["name"]));
+			$filename = hash('sha256', basename($original_file));
+			$dest_file = $dest_dir . $filename . '.pdf';
 			//echo $dest_file;
 
 			if (file_exists($dest_file)) {
@@ -31,7 +34,7 @@ if(!$conn_isernia) {
 				or die ("Error!!");
 				//$check_bollo = 0;
 				//check su eventuali errori
-				if($_FILES['fileToUploadBc']['error'] == 0) {
+				if($_FILES['fileToUploadBc']['error'] === 0) {
 					//query per verificare se il bollo era già stato caricato
 					$query = "SELECT * from istanze.pagamento_bollo_cdu where id_istanza_bc = $1;";
 					$result = pg_prepare($conn_isernia, "myquery0", $query);
@@ -118,16 +121,16 @@ Servizio basato su GisHosting di Gter srl\n
 					//redirect alla dashboard
 					header ("Location: dashboard.php#about");
 				}else{
-					print "Si è verificato un errore nel caricamento del file: ".$_FILES['fileToUploadBc']['name']."<br/>";
-					print "Codice Errore: ".$_FILES['fileToUploadBc']['error']."<br/>";
+					$error_file = pg_escape_string($_FILES['fileToUploadBc']['error']);
+					print "Si è verificato un errore nel caricamento del file: ".$original_file."<br/>";
+					print "Codice Errore: ".$error_file."<br/>";
 				}
 				
 			}
 		}else {
 			if ( $_FILES['fileToUploadBc']['type'] != "application/pdf") {
-				print "Si è verificato un errore nel caricamento del file: ".$_FILES['fileToUploadBc']['name']."<br/>";
+				print "Si è verificato un errore nel caricamento del file: ".$original_file."<br/>";
 				print "Estensione del file non valida, il file deve essere in formato pdf !!"."<br/>";
-				print "Codice Errore: ".$_FILES['fileToUploadBc']['error']."<br/>";
 			}
 		}
 	}
