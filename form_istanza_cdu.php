@@ -156,9 +156,11 @@ Le marche da bollo da 16,00 euro possono essere assolte tramite Modello F23 o ac
 Una volta effettuati i pagamenti, dovrà caricare sulla sua dashboard, in corrispondenza dell'istanza presentata, i seguenti documenti:\n
     - la scansione del bollettino pagato e i riferimenti del versamento per i diritti istruttori\n
     - la scansione della marca da bollo e il numero identificativo di 14 cifre per l'istanza\n
-    - la scansione della marca da bollo e il numero identificativo di 14 cifre per il CDU\n
+    - la scansione della marca da bollo e il numero identificativo di 14 cifre per il CDU *\n
 
 Una volta caricati i dati relativi al pagamento potrà inviare l'istanza al Comune che provvederà a compilare il CDU richiesto.
+
+* Si ricorda che nel caso in cui il CDU sia stato richiesto per Successione Ereditaria o Esproprio, il Bollo per il CDU non è dovuto.
     
 Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di comunicarlo immediatamente all'amministratore del sistema rispondendo a questa mail.\n
 In caso di problemi o richieste non esiti a contattare l'amministratore del sistema al seguente indirizzo cdu@comune.isernia.it.\n \n

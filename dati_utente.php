@@ -65,7 +65,7 @@
             <!--th data-field="state" data-checkbox="true"></th-->
 			<th data-field="id" data-sortable="false" data-formatter="nameFormatterRemove" data-visible="true">Rimuovi</th>
 			<th data-field="id_istanza" data-sortable="false" data-formatter="nameFormatterSend" data-visible="true">Invia</th>
-            <th data-field="tipo" data-sortable="true" data-filter-control="select" data-visible="true">Tipo Istanza</th>
+            <th data-field="tipo" data-sortable="true" data-filter-control="select" data-formatter="nameFormatterTipo" data-visible="true">Tipo Istanza</th>
             <th data-field="data_istanza" data-sortable="true" data-filter-control="input" data-visible="true">Data Istanza</th>
             <th data-field="terreni" data-sortable="true" data-filter-control="input" data-visible="true">Terreni</th>
             <th data-field="file_s" data-sortable="false" data-formatter="nameFormatterFile1" data-visible="true">Diritti Istruttori</th>
@@ -95,10 +95,18 @@ function nameFormatterSend(value, row) {
         return' <a id="myLink" type="button" class="btn btn-info" style="background-color: lightgrey; border-color: lightgrey;"><i class="fas fa-play-circle"></i></a>';
       }
     }else{
-      if (row.file_s == null || row.file_bi == null || row.file_bc == null){
-        return' <a id="myLink" type="button" class="btn btn-info" style="background-color: lightgrey; border-color: lightgrey;"><i class="fas fa-play-circle"></i></a>';
+      if (row.motivo == 'Successione ereditaria' || row.motivo == 'Esproprio'){
+        if (row.file_s == null || row.file_bi == null){
+          return' <a id="myLink" type="button" class="btn btn-info" style="background-color: lightgrey; border-color: lightgrey;"><i class="fas fa-play-circle"></i></a>';
+        }else{
+            return' <a id="myLink" type="button" class="btn btn-info" href="invia_istanza.php?idi='+row.id_istanza+'&idu=<?php echo $usr_id; ?>"><i class="fas fa-play-circle"></i></a>';
+        }
       }else{
-          return' <a id="myLink" type="button" class="btn btn-info" href="invia_istanza.php?idi='+row.id_istanza+'&idu=<?php echo $usr_id; ?>"><i class="fas fa-play-circle"></i></a>';
+        if (row.file_s == null || row.file_bi == null || row.file_bc == null){
+          return' <a id="myLink" type="button" class="btn btn-info" style="background-color: lightgrey; border-color: lightgrey;"><i class="fas fa-play-circle"></i></a>';
+        }else{
+            return' <a id="myLink" type="button" class="btn btn-info" href="invia_istanza.php?idi='+row.id_istanza+'&idu=<?php echo $usr_id; ?>"><i class="fas fa-play-circle"></i></a>';
+        }
       }
     }
   }else{
@@ -114,6 +122,18 @@ function nameFormatterRemove(value, row) {
 	  return' <a type="button" class="btn btn-info" href="remove_ist.php?idi='+row.id_istanza+'"><i class="fas fa-trash-alt"></i></a>';
   }else{
     return' <a type="button" class="btn btn-info" style="background-color: lightgrey; border-color: lightgrey;"><i class="fas fa-trash-alt"></i></a>';
+  }
+}
+
+function nameFormatterTipo(value, row) {
+  if(row.tipo == 'Visura'){
+    return row.tipo
+  }else{
+    if(row.motivo == 'Successione ereditaria' || row.motivo == 'Esproprio'){
+      return row.tipo + ' (' + row.motivo + ')';
+    }else{
+      return row.tipo
+    }
   }
 }
 
@@ -279,7 +299,7 @@ function nameFormatterFile2(value, row) {
 
 // funzione per visualizzare/caricare autocertificazione bolli cdu apre modal che richiama upload_bc.php
 function nameFormatterFile3(value, row) {
-	if (row.tipo == 'Visura'){
+	if (row.tipo == 'Visura' || row.motivo == 'Successione ereditaria' || row.motivo == 'Esproprio'){
     return' <span> - </span>';
   }else{
     if (row.file_bc == null){
@@ -359,7 +379,7 @@ function nameFormatterFile3(value, row) {
 
 // funzione per visualizzare/caricare autocertificazione bolli cdu integrativi apre modal che richiama upload_bci.php
 function nameFormatterFile5(value, row) {
-	if (row.tipo == 'Visura'){
+	if (row.tipo == 'Visura' || row.motivo == 'Successione ereditaria' || row.motivo == 'Esproprio'){
     return' <span> - </span>';
   }else{
     if(row.n_bolli != null && row.inviato == 't'){

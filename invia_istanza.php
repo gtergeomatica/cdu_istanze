@@ -84,7 +84,7 @@ Questa mail è stata generata automaticamente in quanto in data " . $data_invio[
     Tel: ". $telefono . " \n
     Mail: ". $mail . " \n
     Indirizzo: ". $via . ", " . $cap . ", " . $city . " \n
-    In qualità di " . $ruolo . " \n\n
+    In qualità di " . $ruolo . " \n
 
 La presente richiesta è per uso: " . $motivo . " \n
 
@@ -180,7 +180,6 @@ Servizio basato su GisHosting di Gter srl\n
 	$oggetto2 ="Nuova Istanza ".$tipo;
     $headers2 = $nostro_recapito .
     "Reply-To: " .$loro_recapito. "\r\n" .
-    "Cc: " .$mail_admin. "\r\n" .
 	"Content-Type: text/plain; charset=utf-8" . "\r\n";
 	"Content-Transfer-Encoding: base64" . "\r\n";
 	mail ("$mail", "$oggetto2", "$testo2","$headers2");
