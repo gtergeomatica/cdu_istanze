@@ -181,7 +181,6 @@ pg_close($conn_isernia);
 	  <form action="nuova_pwd.php" method="post" enctype="multipart/form-data">
 	  <div class="form-group">
   		Inserisci il tuo username:<br><br>
-      <!--input type="hidden" name="user" id="user'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>"-->
   		<input type="text" name="myUser" id="myUser" required><br><br>
   		<input type="submit" value="Invia" name="submitpwd">
 		  </div>

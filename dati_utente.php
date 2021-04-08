@@ -149,7 +149,6 @@ function nameFormatterFile1(value, row) {
 	  <form action="upload.php?idi='+row.id_istanza+'" method="post" enctype="multipart/form-data">\
 	  <div class="form-group">\
   		Seleziona la ricevuta di pagamento:<br><br>\
-      <input type="hidden" name="user" id="user'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
   		<input type="file" name="fileToUpload" id="fileToUpload'+row.id_istanza+'" required><br><br>\
       <label>Estremi versamento</label>\
       <input type="text" name="estremi_s" id="estremi_s'+row.id_istanza+'" required><br><br>\
@@ -188,8 +187,7 @@ function nameFormatterFile1(value, row) {
       <a type="button" class="btn btn-info" href="remove_s.php?idi='+row.id_istanza+'" title="Rimuovi dettagli pagamento diritti segreteria"><i class="fas fa-trash"></i></a>\
       <a type="button" class="btn btn-info" data-dismiss="modal" title="Torna alla pagina principale">Chiudi</a>\
       </span>\
-        <!--input type="hidden" name="user" id="user'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
-        <input type="file" name="fileToUpload" id="fileToUpload'+row.id_istanza+'"><br><br>\
+        <!--input type="file" name="fileToUpload" id="fileToUpload'+row.id_istanza+'"><br><br>\
         <label>Estremi versamento</label>\
         <input type="text" name="estremi_s" id="estremi_s'+row.id_istanza+'" value="'+row.estremi_s+'" required><br><br>\
   		  <input type="submit" value="Invia" name="submitfile">\
@@ -229,7 +227,6 @@ function nameFormatterFile2(value, row) {
       <form action="upload_bi.php?idi='+row.id_istanza+'" method="post" enctype="multipart/form-data">\
       <div class="form-group">\
         Seleziona la ricevuta di pagamento:<br><br>\
-        <input type="hidden" name="userBi" id="userBi'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
         <input type="file" name="fileToUploadBi" id="fileToUploadBi'+row.id_istanza+'" required><br><br>\
         <label>Identificativo bollo (14 cifre)</label>\
         <input type="text" name="estremi_bi" id="estremi_bi'+row.id_istanza+'" minlength="14" maxlength="14" required><br><br>\
@@ -268,8 +265,7 @@ function nameFormatterFile2(value, row) {
           <a type="button" class="btn btn-info" href="remove_bi.php?idi='+row.id_istanza+'" title="Rimuovi dettagli pagamento bollo istanza"><i class="fas fa-trash"></i></a>\
           <a type="button" class="btn btn-info" data-dismiss="modal" title="Torna alla pagina principale">Chiudi</a>\
           </span>\
-          <!--input type="hidden" name="userBi" id="userBi'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
-          <input type="file" name="fileToUploadBi" id="fileToUploadBi'+row.id_istanza+'" required><br><br>\
+          <!--input type="file" name="fileToUploadBi" id="fileToUploadBi'+row.id_istanza+'" required><br><br>\
           <label>Identificativo bollo (14 cifre)</label>\
           <input type="text" name="estremi_bi" id="estremi_bi'+row.id_istanza+'" minlength="14" maxlength="14" required><br><br>\
           <input type="submit" value="Invia" name="submitfile">\
@@ -310,7 +306,6 @@ function nameFormatterFile3(value, row) {
         <form action="upload_bc.php?idi='+row.id_istanza+'" method="post" enctype="multipart/form-data">\
         <div class="form-group">\
           Seleziona la ricevuta di pagamento:<br><br>\
-          <input type="hidden" name="userBc" id="userBc'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
           <input type="file" name="fileToUploadBc" id="fileToUploadBc'+row.id_istanza+'" required><br><br>\
           <label>Identificativo bollo (14 cifre)</label>\
           <input type="text" name="estremi_bc" id="estremi_bc'+row.id_istanza+'" minlength="14" maxlength="14" required><br><br>\
@@ -348,8 +343,7 @@ function nameFormatterFile3(value, row) {
             <a type="button" class="btn btn-info" href="remove_bc.php?idi='+row.id_istanza+'" title="Rimuovi dettagli pagamento bollo CDU"><i class="fas fa-trash"></i></a>\
             <a type="button" class="btn btn-info" data-dismiss="modal" title="Torna alla pagina principale">Chiudi</a>\
             </span>\
-            <!--input type="hidden" name="userBc" id="userBc'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
-            <input type="file" name="fileToUploadBc" id="fileToUploadBc'+row.id_istanza+'" required><br><br>\
+            <!--input type="file" name="fileToUploadBc" id="fileToUploadBc'+row.id_istanza+'" required><br><br>\
             <label>Identificativo bollo (14 cifre)</label>\
             <input type="text" name="estremi_bc" id="estremi_bc'+row.id_istanza+'" minlength="14" maxlength="14" required><br><br>\
             <input type="submit" value="Invia" name="submitfile">\
@@ -392,7 +386,6 @@ function nameFormatterFile5(value, row) {
             <form id="formBCI'+row.id_istanza+'" action="upload_bci.php?idi='+row.id_istanza+'&nb='+row.n_bolli+'" method="post" enctype="multipart/form-data">\
             <div class="form-group">\
               Seleziona la ricevuta di pagamento:<br><br>\
-              <input type="hidden" name="userBci" id="userBci'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
               <input type="file" class="form-control" name="fileToUploadBci" id="fileToUploadBci'+row.id_istanza+'" style="height: auto;"><br>\
               <div class="help-block with-errors"></div>\
               </div>\
@@ -441,7 +434,6 @@ function nameFormatterFile5(value, row) {
             <form id="formBCI'+row.id_istanza+'" action="upload_bci.php?idi='+row.id_istanza+'&nb='+row.n_bolli+'" method="post" enctype="multipart/form-data">\
             <div class="form-group">\
               Seleziona la nuova ricevuta di pagamento:<br><br>\
-              <input type="hidden" name="userBci" id="userBci'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
               <input type="file" class="form-control" name="fileToUploadBci" id="fileToUploadBci'+row.id_istanza+'" style="height: auto;"><br>\
               <div class="help-block with-errors"></div>\
               </div>\

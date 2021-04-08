@@ -2,7 +2,7 @@
 session_start();
 //questo file viene richiamato dal modal quando l'utente clicca sul bottone per caricare i diritti istruttori
 // salva in $_SESSION lo username passato tramite il value dell'input hidden con name user nel modal serve per check su login
-$_SESSION['user'] = pg_escape_string($_POST['user']);
+//$_SESSION['user'] = pg_escape_string($_POST['user']);
 $estremi_s = pg_escape_string($_POST['estremi_s']);
 
 include("root_connection.php");

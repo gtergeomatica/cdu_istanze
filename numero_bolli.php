@@ -3,7 +3,7 @@ session_start();
 //questo file viene richiamato quando l'admin invia il numero di bolli dal modal
 
 // salva in $_SESSION lo username passato tramite il value dell'input hidden con name userNb nel modal serve per check su login
-$_SESSION['user'] = pg_escape_string($_POST['userNb']);
+//$_SESSION['user'] = pg_escape_string($_POST['userNb']);
 //echo $_SESSION['user'] ."<br>";
 
 //richiama file connessioni al DB

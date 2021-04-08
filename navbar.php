@@ -3,7 +3,8 @@ session_start();
 //echo basename($_SERVER['PHP_SELF']);
 //require_once('req.php');
 ?>
-<?php  
+<?php 
+    $user = pg_escape_string($_SESSION['user']);
     //$curPageName = substr($_SERVER["SCRIPT_NAME"],strrpos($_SERVER["SCRIPT_NAME"],"/")+1);  
     //echo "The current page name is: ".$curPageName;  
     //echo "</br>";
@@ -35,7 +36,7 @@ session_start();
                         <?php if ($_SESSION['user'] != ''){ ?>
                             <li class="nav-item"><a class="nav-link js-scroll-trigger" href="./dashboard.php#about">Dashboard</a></li>
                             <li class="nav-item"><a class="nav-link js-scroll-trigger" href="./logout.php">Esci</a></li>
-                            <li class="nav-item"><a class="nav-link js-scroll-trigger"><?php echo $_SESSION['user'];?></a></li>
+                            <li class="nav-item"><a class="nav-link js-scroll-trigger"><?php echo $user;?></a></li>
                         <?php }else { ?>
                             <li class="nav-item"><a class="nav-link js-scroll-trigger" href="./dashboard.php#about">Accedi</a></li>
                         <?php } ?>

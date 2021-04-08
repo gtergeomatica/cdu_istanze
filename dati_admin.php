@@ -182,8 +182,6 @@ function nameFormatterFile6(value, row) {
         <form action="rm_admin.php?idu='+row.id+'" method="post" enctype="multipart/form-data">\
         <div class="form-group">\
           Vuoi davvero rimuovere l\'utente <b>'+row.usr_login+'</b> da amministratore?<br><br>\
-          <input type="hidden" name="userAd" id="userAd'+row.id+'" value="<?php echo $_SESSION['user']; ?>">\
-          <!--input type="text" name="numeroBolli" id="numeroBolli'+row.id_istanza+'" required><br><br-->\
           <input type="submit" value="Si" name="submitadmin">\
           </div>\
         </form>\
@@ -210,8 +208,6 @@ function nameFormatterFile6(value, row) {
         <form action="admin.php?idu='+row.id+'" method="post" enctype="multipart/form-data">\
         <div class="form-group">\
           Vuoi davvero rendere l\'utente <b>'+row.usr_login+'</b> amministratore?<br><br>\
-          <input type="hidden" name="userAd" id="userAd'+row.id+'" value="<?php echo $_SESSION['user']; ?>">\
-          <!--input type="text" name="numeroBolli" id="numeroBolli'+row.id_istanza+'" required><br><br-->\
           <input type="submit" value="Si" name="submitadmin">\
           </div>\
         </form>\
@@ -383,7 +379,6 @@ function nameFormatterFile5(value, row) {
         <form action="numero_bolli.php?idi='+row.id_istanza+'" method="post" enctype="multipart/form-data">\
         <div class="form-group">\
           Indica numero Bolli da pagare per CDU:<br><br>\
-          <input type="hidden" name="userNb" id="userNb'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
           <input type="text" name="numeroBolli" id="numeroBolli'+row.id_istanza+'" required><br><br>\
           <input type="submit" value="Invia" name="submitnum">\
           </div>\
@@ -412,7 +407,6 @@ function nameFormatterFile5(value, row) {
           <form action="numero_bolli.php?idi='+row.id_istanza+'" method="post" enctype="multipart/form-data">\
           <div class="form-group">\
           Indica numero Bolli da pagare per CDU:<br><br>\
-            <input type="hidden" name="userNb" id="userNb'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
             <input type="text" name="numeroBolli" id="numeroBolli'+row.id_istanza+'" required><br><br>\
             <input type="submit" value="Invia" name="submitnum">\
             </div>\
@@ -491,7 +485,6 @@ function nameFormatterFile4(value, row) {
         <form action="upload_cdu.php?idi='+row.id_istanza+'" method="post" enctype="multipart/form-data">\
         <div class="form-group">\
           Seleziona il file del CDU:<br><br>\
-          <input type="hidden" name="userCdu" id="userCdu'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
           <input type="file" name="fileToUploadCdu" id="fileToUploadCdu'+row.id_istanza+'"><br><br>\
           <input type="submit" value="Carica file" name="submitfile">\
           </div>\
@@ -527,8 +520,7 @@ function nameFormatterFile4(value, row) {
                 <a type="button" class="btn btn-info" href="remove_cdu.php?idi='+row.id_istanza+'" title="Rimuovi file Visura"><i class="fas fa-trash"></i></a>\
                 <a type="button" class="btn btn-info" data-dismiss="modal" title="Torna alla pagina principale">Chiudi</a>\
                 </span>\
-                <!--input type="hidden" name="userCdu" id="userCdu'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
-                <input type="file" name="fileToUploadCdu" id="fileToUploadCdu'+row.id_istanza+'"><br><br>\
+                <!--input type="file" name="fileToUploadCdu" id="fileToUploadCdu'+row.id_istanza+'"><br><br>\
                 <input type="submit" value="Carica file" name="submitfile">\
                 </div>\
               </form>\
@@ -561,8 +553,7 @@ function nameFormatterFile4(value, row) {
                   <a type="button" class="btn btn-info" href="remove_cdu.php?idi='+row.id_istanza+'" title="Rimuovi file CDU"><i class="fas fa-trash"></i></a>\
                   <a type="button" class="btn btn-info" data-dismiss="modal" title="Torna alla pagina principale">Chiudi</a>\
                 </span>\
-                <!--input type="hidden" name="userCdu" id="userCdu'+row.id_istanza+'" value="<?php echo $_SESSION['user']; ?>">\
-                <input type="file" name="fileToUploadCdu" id="fileToUploadCdu'+row.id_istanza+'"><br><br>\
+                <!--input type="file" name="fileToUploadCdu" id="fileToUploadCdu'+row.id_istanza+'"><br><br>\
                 <input type="submit" value="Carica file" name="submitfile">\
                 </div>\
               </form>\

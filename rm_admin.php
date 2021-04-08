@@ -1,7 +1,7 @@
 <?php
 session_start();
 //questo file viene richiamato quando l'admin clicca sul pulsante nella tabella utenti per rimuovere un utente da amministratore
-$_SESSION['user'] = pg_escape_string($_POST['userAd']);
+//$_SESSION['user'] = pg_escape_string($_POST['userAd']);
 //echo $_SESSION['user'] ."<br>";
 
 include("root_connection.php");

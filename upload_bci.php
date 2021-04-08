@@ -2,7 +2,7 @@
 session_start();
 //questo file viene richiamato dal modal quando l'utente clicca sul bottone per caricare il bollo del cdu
 // salva in $_SESSION lo username passato tramite il value dell'input hidden con name userBC nel modal serve per check su login
-$_SESSION['user'] = pg_escape_string($_POST['userBci']);
+//$_SESSION['user'] = pg_escape_string($_POST['userBci']);
 $estremi_bci = pg_escape_string($_POST['estremi_bci']);
 //check su validità estremi integrativi lato php (sostituito con check lato js)
 /* $n_bolli=$_GET['nb'];

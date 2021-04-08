@@ -3,7 +3,7 @@ session_start();
 /* echo $_SESSION['user'] ."<br>";
 echo $_POST['user']."<br>"; */
 // Questo file viene richiamato quando l'admin clicca sul bottone nella tabella per rendere un altro utente admin
-$_SESSION['user'] = pg_escape_string($_POST['userAd']);
+//$_SESSION['user'] = pg_escape_string($_POST['userAd']);
 
 //Richiama connessioni al DB
 include("root_connection.php");

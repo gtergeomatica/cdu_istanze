@@ -2,7 +2,7 @@
 session_start();
 //questo file viene richiamato dal modal quando l'admin clicca sul bottone per caricare il cdu
 // salva in $_SESSION lo username passato tramite il value dell'input hidden con name userCdu nel modal serve per check su login
-$_SESSION['user'] = pg_escape_string($_POST['userCdu']);
+//$_SESSION['user'] = pg_escape_string($_POST['userCdu']);
 //echo $_SESSION['user'] ."<br>";
 
 include("root_connection.php");

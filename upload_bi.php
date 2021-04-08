@@ -2,7 +2,7 @@
 session_start();
 //questo file viene richiamato dal modal quando l'utente clicca sul bottone per caricare il bollo dell'istanza
 // salva in $_SESSION lo username passato tramite il value dell'input hidden con name userBi nel modal serve per check su login
-$_SESSION['user'] = pg_escape_string($_POST['userBi']);
+//$_SESSION['user'] = pg_escape_string($_POST['userBi']);
 $estremi_bi = pg_escape_string($_POST['estremi_bi']);
 
 include("root_connection.php");
