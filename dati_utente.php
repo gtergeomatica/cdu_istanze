@@ -88,26 +88,18 @@
 // funzione sul pulsante invia istanza richiama file invia_istanza.php
 function nameFormatterSend(value, row) {
   if (row.inviato != 't'){
-    if (row.tipo == 'Visura'){
+    if (row.tipo == 'Visura' || row.motivo == 'Successione ereditaria' || row.motivo == 'Esproprio'){
       if (row.file_s != null){
         return' <a id="myLink" type="button" class="btn btn-info" href="invia_istanza.php?idi='+row.id_istanza+'&idu=<?php echo $usr_id; ?>"><i class="fas fa-play-circle"></i></a>';
       }else{
         return' <a id="myLink" type="button" class="btn btn-info" style="background-color: lightgrey; border-color: lightgrey;"><i class="fas fa-play-circle"></i></a>';
       }
     }else{
-      if (row.motivo == 'Successione ereditaria' || row.motivo == 'Esproprio'){
-        if (row.file_s == null || row.file_bi == null){
-          return' <a id="myLink" type="button" class="btn btn-info" style="background-color: lightgrey; border-color: lightgrey;"><i class="fas fa-play-circle"></i></a>';
-        }else{
-            return' <a id="myLink" type="button" class="btn btn-info" href="invia_istanza.php?idi='+row.id_istanza+'&idu=<?php echo $usr_id; ?>"><i class="fas fa-play-circle"></i></a>';
-        }
-      }else{
         if (row.file_s == null || row.file_bi == null || row.file_bc == null){
           return' <a id="myLink" type="button" class="btn btn-info" style="background-color: lightgrey; border-color: lightgrey;"><i class="fas fa-play-circle"></i></a>';
         }else{
             return' <a id="myLink" type="button" class="btn btn-info" href="invia_istanza.php?idi='+row.id_istanza+'&idu=<?php echo $usr_id; ?>"><i class="fas fa-play-circle"></i></a>';
         }
-      }
     }
   }else{
     return' <a id="myLink" type="button" class="btn btn-info" style="background-color: lightgrey; border-color: lightgrey;"><i class="fas fa-play-circle"></i></a>';
@@ -125,6 +117,7 @@ function nameFormatterRemove(value, row) {
   }
 }
 
+// funzione per visualizzare tipo e motivo dell'istanza
 function nameFormatterTipo(value, row) {
   if(row.tipo == 'Visura'){
     return row.tipo
@@ -218,7 +211,7 @@ function nameFormatterFile1(value, row) {
 
 // funzione per visualizzare/caricare autocertificazione bollo istanza apre modal che richiama upload_bi.php
 function nameFormatterFile2(value, row) {
-	if (row.tipo == 'Visura'){
+	if (row.tipo == 'Visura' || row.motivo == 'Successione ereditaria' || row.motivo == 'Esproprio'){
     return' <span> - </span>';
   }else{
     if (row.file_bi == null){
