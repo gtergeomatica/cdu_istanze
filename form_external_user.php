@@ -138,15 +138,16 @@ if ($check_user==1){
 	$result = pg_execute($conn_isernia, "myquery1", array($username, $password2, $mail, $name, $surname, $codfisc, $docid, $street, $cap, $city, $tel, $affil, $docdate));
 
 
-    //recupero nome, cognome e indirizzo mail dell'amministratore per invio mail
-	$query_lizmap = "SELECT usr_email, firstname, lastname FROM jlx_user where usr_login=$1;";
+    //recupero nome, cognome e indirizzo mail dell'amministratore per invio mail,
+	//commentata perchè non c'è bisogno di recuperare dati admin visto che non inviamo mail direttamente a lui
+	/* $query_lizmap = "SELECT usr_email, firstname, lastname FROM jlx_user where usr_login=$1;";
 	$result = pg_prepare($conn_lizmap, "myquery2", $query_lizmap);
 	$result = pg_execute($conn_lizmap, "myquery2", array($user_admin));
 	while($r = pg_fetch_assoc($result)) {
 		$mail_admin=trim($r['usr_email']);
 		$f_admin = $r['firstname'];
 		$l_admin = $r['lastname'];
-	}
+	} */
 
 	//*******************************************************//
 	// INVIO MAIL
