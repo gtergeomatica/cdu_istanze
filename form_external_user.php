@@ -122,7 +122,7 @@ while($r = pg_fetch_assoc($result)) {
 if ($check_user==1){
 	
 
-	echo "L'utente " . $name . " " .$surname. " con username <b>" . $username . "</b> è stato creato. <br>Eseguire il Login per richiedere il CDU.<br>";
+	echo "L'utente " . $name . " " .$surname. " con username <b>" . $username . "</b> è stato creato. <br>Eseguire il Login per richiedere il CDU/Visura.<br>";
 	
 	echo '<br><a href="./dashboard.php" class="btn btn-light btn-xl"> Vai a Richiesta CDU/Visura </a>';
 
@@ -157,13 +157,14 @@ if ($check_user==1){
 
     $testo = "
 
-Egr. " . $f_admin . " " .$l_admin. "\n
-questa mail e' stata generata automaticamente in quanto si è appena registrato nel sistema di istanza CDU online un utente con i seguenti dettagli:\n
+Questa mail e' stata generata automaticamente in quanto si è appena registrato nel sistema di istanza CDU online un utente con i seguenti dettagli:\n
 
     Username: ". $username . " \n
     Nome: ". $name . " \n
     Cognome: ". $surname . " \n
     Codice Fiscale: ". $codfisc . " \n
+    Documento di identita': " . $docid . "\n
+    Data scadenza documento: " . $docdate . "\n
     Tel: ". $tel . " \n
     Mail: ". $mail . " \n
     Indirizzo: ". $street . " " . $cap . " " . $city . " \n \n
@@ -188,10 +189,11 @@ Se avete ricevuto questo messaggio per errore, vi preghiamo di distruggerlo e di
 ";
 
 	$headers = $nostro_recapito .
+	"Cc: " .$mail_admin. "\r\n" .
 	"Content-Type: text/plain; charset=utf-8" . "\r\n";
 	"Content-Transfer-Encoding: base64" . "\r\n";
 
-	mail ("$mail_admin", "$oggetto", "$testo", "$headers");
+	mail ("$loro_recapito", "$oggetto", "$testo", "$headers");
 
 // Mail a noi
 	$testo2 = "
@@ -256,7 +258,6 @@ Servizio basato su GisHosting di Gter srl\n
 	$oggetto3 ="Iscrizione a sistema di istanza CDU online del Comune di Isernia";
     $headers3 = $nostro_recapito .
     "Reply-To: " .$loro_recapito. "\r\n" .
-    "Cc: " .$mail_admin. "\r\n" .
 	"Content-Type: text/plain; charset=utf-8" . "\r\n";
 	"Content-Transfer-Encoding: base64" . "\r\n";
 	mail ("$mail", "$oggetto3", "$testo3","$headers3");
