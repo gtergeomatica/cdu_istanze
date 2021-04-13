@@ -71,7 +71,7 @@ questa mail e' stata generata automaticamente in quanto ha richiesto di cambiare
 Può cambiare la sua password a questo link https://cduisernia.gter.it/isernia/cambia_password.php \n
     
 Se riceve questo messaggio per errore, la preghiamo di distruggerlo e di comunicarlo immediatamente all'amministratore del sistema rispondendo a questa mail.\n
-In caso di problemi o richieste non esiti a contattare l'amministratore del sistema al seguente indirizzo segreteriagenerale@comune.isernia.it.\n \n
+In caso di problemi o richieste non esiti a contattare l'amministratore del sistema al seguente indirizzo cdu@comune.isernia.it.\n \n
             
 Cordiali saluti, \n
 L'amministratore del sistema.
@@ -79,7 +79,7 @@ L'amministratore del sistema.
 -- 
 Comune di Isernia
 Piazza Marconi, 3 - 86170 Isernia (IS)
-E-mail: segreteriagenerale@comune.isernia.it
+E-mail: cdu@comune.isernia.it
 
 Servizio basato su GisHosting di Gter srl\n
 
