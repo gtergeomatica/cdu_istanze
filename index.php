@@ -3,6 +3,7 @@ session_start();
 $curPageName = substr($_SERVER["SCRIPT_NAME"],strrpos($_SERVER["SCRIPT_NAME"],"/")+1);
 $user_admin="comuneisernia";
 //$gruppo = 'comuneisernia3_group';
+//commento
 $cliente = 'Comune di Isernia';
 ?>
 
